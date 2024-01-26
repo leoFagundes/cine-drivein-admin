@@ -1,0 +1,13 @@
+@import "../../Global.scss";
+
+.infoSchedule {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 350px;
+
+  p {
+    margin-top: -5px;
+  }
+}

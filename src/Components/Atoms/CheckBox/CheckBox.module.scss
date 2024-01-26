@@ -1,0 +1,10 @@
+@import "../../../Global.scss";
+
+.checkBoxContainer {
+  border-radius: 4px;
+  background-color: $main-white;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

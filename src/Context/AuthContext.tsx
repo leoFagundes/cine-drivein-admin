@@ -1,24 +1,41 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+  SetStateAction,
+} from "react";
+import { UserType } from "../Types/types";
 
-export const AuthContext = createContext();
+type AuthContextType = {
+  isLoggedIn: boolean;
+  user: UserType | null;
+  login: (userData: UserType) => void;
+  logout: () => void;
+  updateUser: (userUpdated: SetStateAction<UserType | null>) => void;
+};
 
-export const AuthProvider = ({ children }) => {
+export const AuthContext = createContext({} as AuthContextType);
+
+type AuthProviderType = {
+  children: ReactNode;
+};
+
+export const AuthProvider = ({ children }: AuthProviderType) => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    // Inicializa o estado de autenticação com base no localStorage
     const storedAuth = localStorage.getItem("auth");
     return storedAuth ? JSON.parse(storedAuth) : false;
   });
-  const [user, setUser] = useState(() => {
-    // Inicializa o estado do usuário com base no localStorage
+  const [user, setUser] = useState<UserType | null>(() => {
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
-  const login = (userData) => {
+  const login = (userData: UserType) => {
     setIsLoggedIn(true);
     setUser(userData);
 
-    // Atualiza o localStorage com as informações do usuário
     localStorage.setItem("auth", JSON.stringify(true));
     localStorage.setItem("user", JSON.stringify(userData));
   };
@@ -27,18 +44,16 @@ export const AuthProvider = ({ children }) => {
     setIsLoggedIn(false);
     setUser(null);
 
-    // Remove as informações do usuário do localStorage ao fazer logout
     localStorage.removeItem("auth");
     localStorage.removeItem("user");
   };
 
-  const updateUser = (userUpdated) => {
+  const updateUser = (userUpdated: SetStateAction<UserType | null>) => {
     setUser(userUpdated);
     localStorage.setItem("user", JSON.stringify(userUpdated));
   };
 
   useEffect(() => {
-    // Atualiza o localStorage sempre que o estado de autenticação muda
     localStorage.setItem("auth", JSON.stringify(isLoggedIn));
   }, [isLoggedIn]);
 

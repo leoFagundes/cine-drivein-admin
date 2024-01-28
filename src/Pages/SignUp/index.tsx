@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { FormTemplate } from '../../Components/Templates/FormTemplate/FormTemplate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router';
 import UserRepositories from '../../Services/repositories/UserRepositories';
-import { User } from '../../Types/types';
+import { UserType } from '../../Types/types';
 
 const ERROR_USERNAME_MESSAGE = 'Nome de usuário inválido.'
 const ERROR_EMAIL_MESSAGE = 'Email inválido.'
 const ERROR_EMAIL_ALREADY_EXIST = 'Este e-mail já está em uso.'
+const ERROR_USERNAME_ALREADY_EXIST = 'Este nome de usuário já está em uso.'
 const ERROR_PASSWORD_MESSAGE = 'Senha inválida.'
 const ERROR_TOKEN_MESSAGE = 'Token de administrador inválido.'
 
@@ -95,8 +96,14 @@ export default function SignUp() {
     }
 
     // Verifica se o e-mail já está em uso
-    if (allUsers.some((user: User) => user.email === email)) {
+    if (allUsers.some((user: UserType) => user.email === email)) {
       setEmailError(ERROR_EMAIL_ALREADY_EXIST)
+      return;
+    }
+
+    // Verifica se o nome já está em uso
+    if (allUsers.some((user: UserType) => user.username === username)) {
+      setUsername(ERROR_USERNAME_ALREADY_EXIST)
       return;
     }
 
@@ -109,47 +116,48 @@ export default function SignUp() {
     }
   }
 
+  const INPUTS = [
+    {
+      value: username,
+      placeholder: 'Nome de usuário',
+      onChange: (e: ChangeEvent<HTMLInputElement>) => handleUsernameWith(e.target.value),
+      type: 'text',
+      errorLabel: usernameError
+    },
+    {
+      value: email,
+      placeholder: 'Email',
+      onChange: (e: ChangeEvent<HTMLInputElement>) => handleEmailWith(e.target.value),
+      type: 'text',
+      errorLabel: emailError
+    },
+    {
+      value: password,
+      placeholder: 'Senha',
+      onChange: (e: ChangeEvent<HTMLInputElement>) => handlePasswordWith(e.target.value),
+      type: 'password',
+      errorLabel: passwordError
+    },
+  ]
+
   return (
     <FormTemplate
       label="Crie sua conta"
-      inputs={[
-        {
-          value: username,
-          placeholder: 'Nome de usuário',
-          onChange: (e) => handleUsernameWith(e.target.value),
-          type: 'text',
-          errorLabel: usernameError
-        },
-        {
-          value: email,
-          placeholder: 'Email',
-          onChange: (e) => handleEmailWith(e.target.value),
-          type: 'text',
-          errorLabel: emailError
-        },
-        {
-          value: password,
-          placeholder: 'Senha',
-          onChange: (e) => handlePasswordWith(e.target.value),
-          type: 'password',
-          errorLabel: passwordError
-        },
-      ]}
+      inputs={INPUTS}
       buttonLabel='Criar conta'
       buttonOnClick={handleSubmit}
       linkLabel='Fazer login'
       linkIcon={<FontAwesomeIcon size='sm' icon={faRightToBracket} />}
       linkOnClick={() => navigate("/login")}
-      isCreateAccount
-      createAccountInputs={[
+      createAccountTokenInfo={
         {
           value: token,
           placeholder: 'Token de administrador',
           onChange: (e) => handleTokenWith(e.target.value),
           type: 'password',
           errorLabel: tokenError
-        },
-      ]}
+        }
+      }
     />
   )
 }

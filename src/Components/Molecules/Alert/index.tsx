@@ -4,39 +4,39 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 import style from "./Alert.module.scss";
 
-type Props = {
-  showAlert: boolean;
-  setShowAlert: React.Dispatch<React.SetStateAction<boolean>>
-  mensagem: string;
-  tempoExibicao: number;
+type AlertType = {
+  isAlertOpen: boolean;
+  setIsAlertOpen: React.Dispatch<React.SetStateAction<boolean>>
+  message: string;
+  alertDisplayTime: number;
   onClose: () => void;
   type: "success" | "danger";
 };
 
 export default function Alert({
-  showAlert,
-  setShowAlert,
-  mensagem,
-  tempoExibicao,
+  isAlertOpen,
+  setIsAlertOpen,
+  message,
+  alertDisplayTime,
   onClose,
   type,
-}: Props) {
+}: AlertType) {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setShowAlert(false);
+      setIsAlertOpen(false);
       onClose();
-    }, tempoExibicao);
+    }, alertDisplayTime);
 
     return () => clearTimeout(timeout);
-  }, [tempoExibicao, onClose, setShowAlert]);
+  }, [alertDisplayTime, onClose, setIsAlertOpen]);
 
-  return showAlert ? (
+  return isAlertOpen ? (
     <div
       className={`${style.alert} ${type === "success" ? style.success : style.danger}`}
     >
-      <p>{mensagem}</p>
-      <FontAwesomeIcon className={style.closeIco} icon={faXmark} onClick={() => setShowAlert(false)} />
+      <p>{message}</p>
+      <FontAwesomeIcon className={style.closeIco} icon={faXmark} onClick={() => setIsAlertOpen(false)} />
     </div>
   ) : null;
 }

@@ -10,7 +10,8 @@ import Alert from '../../Components/Molecules/Alert';
 
 const ERROR_USERNAME_MESSAGE = 'Nome de usuário inválido.'
 const ERROR_PASSWORD_MESSAGE = 'Senha inválida.'
-const INVALID_LOGIN = 'Nome de usuário ou Senha incorretos.'
+const INVALID_USERNAME_LOGIN = 'Falha no Login - Nome de usuário incorreto.'
+const INVALID_PASSWORD_LOGIN = 'Falha no Login - Senha incorreta.'
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -81,8 +82,8 @@ export default function Login() {
       login(providerRequest.user);
       navigate("/admin", { state: { from: "loginSuccess" } });
     } else {
-      setUsernameError(INVALID_LOGIN);
-      setPasswordError(INVALID_LOGIN);
+      setUsernameError(INVALID_USERNAME_LOGIN);
+      setPasswordError(INVALID_PASSWORD_LOGIN);
       return
     }
   }
@@ -114,10 +115,10 @@ export default function Login() {
         linkOnClick={() => navigate("/signUp")}
       />
       <Alert
-        showAlert={showAlertCreateUser}
-        setShowAlert={setShowAlertCreateUser}
-        mensagem="Conta criada com sucesso."
-        tempoExibicao={5000}
+        isAlertOpen={showAlertCreateUser}
+        setIsAlertOpen={setShowAlertCreateUser}
+        message="Conta criada com sucesso."
+        alertDisplayTime={5000}
         onClose={closeAlert}
         type="success"
       />

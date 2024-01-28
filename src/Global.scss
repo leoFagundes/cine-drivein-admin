@@ -16,6 +16,11 @@ $font-size-medium-large: 18px;
 $font-size-large: 20px;
 $font-size-extra-large: 22px;
 
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
 body {
   background-color: $background-secondary-color;
 }
@@ -37,13 +42,29 @@ body {
 }
 
 .fontSizeMediumLarge {
-  font-size: font-size-medium-large;
+  font-size: $font-size-medium-large;
 }
 
 .fontSizeLarge {
-  font-size: font-size-large;
+  font-size: $font-size-large;
 }
 
 .fontSizeExtraLarge {
   font-size: $font-size-extra-large;
+}
+
+.fontWeightRegular {
+  font-weight: $font-weight-regular;
+}
+
+.fontWeightMedium {
+  font-weight: $font-weight-medium;
+}
+
+.fontWeightSemibold {
+  font-weight: $font-weight-semibold;
+}
+
+.fontWeightBold {
+  font-weight: $font-weight-bold;
 }

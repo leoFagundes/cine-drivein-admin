@@ -4,7 +4,7 @@ import {Sidebar} from "../../Components/Organism/Sidebar";
 
 export default function Home() {
   return (
-    <div><Sidebar /></div>
+    <section className={style.homeContainer}><Text>teste</Text></section>
   )
 }
 

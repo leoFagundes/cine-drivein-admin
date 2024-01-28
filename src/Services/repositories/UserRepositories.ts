@@ -1,4 +1,4 @@
-import { User, UserLogin } from "../../Types/types";
+import { UserType, UserLogin } from "../../Types/types";
 import { api } from "../api";
 
 class UserRepositories {
@@ -44,7 +44,7 @@ class UserRepositories {
     }
   }
 
-  static async createUser(newUser: User) {
+  static async createUser(newUser: UserType) {
     try {
       await api.post("/users", newUser);
       return true;

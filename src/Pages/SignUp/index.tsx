@@ -103,7 +103,7 @@ export default function SignUp() {
 
     // Verifica se o nome já está em uso
     if (allUsers.some((user: UserType) => user.username === username)) {
-      setUsername(ERROR_USERNAME_ALREADY_EXIST)
+      setUsernameError(ERROR_USERNAME_ALREADY_EXIST)
       return;
     }
 

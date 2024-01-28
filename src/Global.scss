@@ -68,3 +68,51 @@ body {
 .fontWeightBold {
   font-weight: $font-weight-bold;
 }
+
+.fontColorPrimaryColor {
+  color: $primary-color;
+}
+
+.fontColorMainWhite {
+  color: $main-white;
+}
+
+.fontColorInvalidColor {
+  color: $invalid-color;
+}
+
+.fontColorSuccessColor {
+  color: $success-color;
+}
+
+.fontColorGrayColor {
+  color: $gray-color;
+}
+
+.fontColorPlaceholderColor {
+  color: $placeholder-color;
+}
+
+.fontColorBackgroundColor {
+  color: $background-color;
+}
+
+.fontColorBackgroundSecondaryColor {
+  color: $background-secondary-color;
+}
+
+.textAlignJustify {
+  text-align: justify;
+}
+
+.textAlignCenter {
+  text-align: center;
+}
+
+.textAlignLeft {
+  text-align: left;
+}
+
+.textAlignRight {
+  text-align: right;
+}

@@ -1,0 +1,70 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif:wght@400;500;600;700&display=swap");
+
+$primary-color: #0088c2;
+$main-white: #f9f9f9;
+$invalid-color: #ff5555;
+$success-color: #268f3ff5;
+$gray-color: #d9d9d9;
+$placeholder-color: #4a4a4a;
+$background-color: #212529;
+$background-secondary-color: #1d2022;
+
+$font-size-small: 12px;
+$font-size-medium-small: 14px;
+$font-size-medium: 16px;
+$font-size-medium-large: 18px;
+$font-size-large: 20px;
+$font-size-extra-large: 22px;
+
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+body {
+  background-color: $background-secondary-color;
+}
+
+* {
+  font-family: "Montserrat", sans-serif;
+}
+
+.fontSizeSmall {
+  font-size: $font-size-small;
+}
+
+.fontSizeMediumSmall {
+  font-size: $font-size-medium-small;
+}
+
+.fontSizeMedium {
+  font-size: $font-size-medium;
+}
+
+.fontSizeMediumLarge {
+  font-size: $font-size-medium-large;
+}
+
+.fontSizeLarge {
+  font-size: $font-size-large;
+}
+
+.fontSizeExtraLarge {
+  font-size: $font-size-extra-large;
+}
+
+.fontWeightRegular {
+  font-weight: $font-weight-regular;
+}
+
+.fontWeightMedium {
+  font-weight: $font-weight-medium;
+}
+
+.fontWeightSemibold {
+  font-weight: $font-weight-semibold;
+}
+
+.fontWeightBold {
+  font-weight: $font-weight-bold;
+}

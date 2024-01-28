@@ -1,0 +1,18 @@
+@import "../../../Global.scss";
+
+.mainText {
+  text-align: center;
+  color: $main-white;
+}
+
+.isLink {
+  font-size: $font-size-small;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-decoration-line: underline;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

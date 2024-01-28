@@ -1,0 +1,29 @@
+@import "../../../Global.scss";
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $primary-color;
+  padding: 12px 8px;
+  font-size: 16px;
+  color: $main-white;
+  border: 1px solid $primary-color;
+  margin-top: 24px;
+  border-radius: 4px;
+  width: 160px;
+  height: 40px;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus {
+    outline: 1px solid $primary-color;
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Dispatch } from "react";
+import React, { useEffect, } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
@@ -29,7 +29,7 @@ export default function Alert({
     }, tempoExibicao);
 
     return () => clearTimeout(timeout);
-  }, [tempoExibicao, onClose]);
+  }, [tempoExibicao, onClose, setShowAlert]);
 
   return showAlert ? (
     <div

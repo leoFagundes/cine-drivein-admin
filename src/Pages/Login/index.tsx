@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import style from './Login.module.scss'
 import { FormTemplate } from '../../Components/Templates/FormTemplate/FormTemplate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -33,7 +33,7 @@ export default function Login() {
       setShowAlertCreateUser(true);
       navigate("/login", { replace: true });
     }
-  }, []);
+  }, [from, navigate]);
 
   const handleUsernameWith = (value: string) => {
     setUsername(value);

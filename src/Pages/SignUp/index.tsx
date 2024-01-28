@@ -1,5 +1,4 @@
-import style from './SignUp.module.scss'
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormTemplate } from '../../Components/Templates/FormTemplate/FormTemplate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
@@ -82,7 +81,7 @@ export default function SignUp() {
   };
 
   useEffect(() => {
-    if (token && token == process.env.REACT_APP_ADMIN_TOKEN) {
+    if (token && token === process.env.REACT_APP_ADMIN_TOKEN) {
       setIsAdmin(true)
     }
   }, [token])

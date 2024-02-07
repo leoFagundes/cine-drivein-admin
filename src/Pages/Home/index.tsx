@@ -1,10 +1,8 @@
-import Text from '../../Components/Atoms/Text';
-import style from './Home.module.scss'
-import {Sidebar} from "../../Components/Organism/Sidebar";
+import {AdminTemplate} from "../../Components/Templates/AdminTemplate";
 
 export default function Home() {
   return (
-    <section className={style.homeContainer}><Text>teste</Text></section>
+    <AdminTemplate />
   )
 }
 

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import style from './CheckBox.module.scss'
 
 type Props = {

@@ -1,16 +1,15 @@
-import style from './LogoImage.module.scss'
-
 type Props = {
   size?: string;
+  marginTop?: string;
+  marginBottom?: string;
 }
 
-export default function LogoImage({ size }: Props) {
+export default function LogoImage({ size, marginBottom, marginTop }: Props) {
   return (
     <img
-      className={style.logoImage}
-      style={{ height: size ? size : "" }}
+      style={{ height: size ? size : undefined, marginTop, marginBottom }}
       src={process.env.PUBLIC_URL + "/assets/images/logo-drivein.svg"}
-      alt="Logo Image"
+      alt="Logo"
     />
   )
 }

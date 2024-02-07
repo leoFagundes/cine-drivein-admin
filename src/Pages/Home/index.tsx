@@ -1,8 +1,8 @@
-import {AdminTemplate} from "../../Components/Templates/AdminTemplate";
+import {LayoutWithSidebar} from "../../Components/Organism/LayoutWithSidebar";
 
 export default function Home() {
   return (
-    <AdminTemplate />
+    <LayoutWithSidebar />
   )
 }
 

@@ -1,11 +1,11 @@
-import {Sidebar} from "../../Organism/Sidebar";
+import {Sidebar} from "../Sidebar";
 import styles from './AdminTemplate.module.scss';
 import {ReactNode} from "react";
 
 type AdminTemplateType = {
   children?: ReactNode;
 }
-export const AdminTemplate = ({children}: AdminTemplateType) => {
+export const LayoutWithSidebar = ({children}: AdminTemplateType) => {
   return (
     <>
       <Sidebar />

@@ -41,8 +41,8 @@ export const FormTemplate = ({ label, inputs, buttonLabel, buttonOnClick, linkLa
   }
   return (
     <section className={styles.container}>
-      <LogoImage />
-      <Text fontSize='extraLarge'>{label}</Text>
+      <LogoImage marginBottom="40px" />
+      <Text marginBottom="32px" fontSize='extraLarge'>{label}</Text>
       <div className={styles.inputs}>
         {
           inputs.map((item, index) => {
@@ -61,6 +61,7 @@ export const FormTemplate = ({ label, inputs, buttonLabel, buttonOnClick, linkLa
       </div>
       {createAccountTokenInfo && <div className={styles.adminContent}>
         <Caption
+          marginTop="4px"
           onClick={() => setChecked(!isChecked)}
           label={'Dar permissões de admin para este usuário?'}
           checkboxRight={<CheckBox checked={isChecked} onChange={() => setChecked(!isChecked)} />}
@@ -72,13 +73,13 @@ export const FormTemplate = ({ label, inputs, buttonLabel, buttonOnClick, linkLa
             onChange={createAccountTokenInfo.onChange}
             placeholder={createAccountTokenInfo.placeholder}
             errorLabel={createAccountTokenInfo.errorLabel}
-            marginTop='4px'
+            marginTop='8px'
             type={createAccountTokenInfo.type}
           />
         }
       </div>}
       <Button label={buttonLabel} onClick={buttonOnClick} />
-      <Caption onClick={linkOnClick} isLink iconLeft={linkIcon} label={linkLabel} />
+      <Caption marginTop="14px" onClick={linkOnClick} isLink iconLeft={linkIcon} label={linkLabel} />
     </section>
   )
 }

@@ -9,10 +9,19 @@ type Props = {
   fontColor?: "primary-color" | "main-white" | "invalid-color" | "success-color" | "gray-color" | "placeholder-color" | "background-color" | "background-secondary-color"
   fontAlign?: 'center' | 'justify' | 'left' | 'right'
   marginTop?: string;
+  marginBottom?:string;
 }
 
-export default function Text({ children, isLink = false, fontSize = "medium", fontWeight = "regular", fontColor="main-white", marginTop, fontAlign = 'center' }: Props) {
-
+export default function Text({
+   children,
+   isLink = false,
+   fontSize = "medium",
+   fontWeight = "regular",
+   fontColor="main-white",
+   marginTop,
+   marginBottom,
+   fontAlign = 'center'
+ }: Props) {
   const fontSizeClass = {
     small: style.fontSizeSmall,
     mediumSmall: style.fontSizeMediumSmall,
@@ -49,7 +58,7 @@ export default function Text({ children, isLink = false, fontSize = "medium", fo
 
   return (
     <label
-      style={{marginTop}}
+      style={{marginTop, marginBottom}}
       className={`${isLink ? style.isLink : ''}
             ${fontSizeClass}
             ${fontWeightClass} 

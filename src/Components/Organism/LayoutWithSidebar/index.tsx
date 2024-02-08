@@ -1,17 +1,88 @@
-import {Sidebar} from "../Sidebar";
+import { useLocation, useNavigate } from "react-router";
+import { useAuth } from "../../../Context/AuthContext";
+import { Sidebar } from "../Sidebar";
 import styles from './AdminTemplate.module.scss';
-import {ReactNode} from "react";
+import { ReactNode, useEffect, useState } from "react";
+import Alert from "../../Molecules/Alert";
+import Home from "../../../Pages/Home";
 
 type AdminTemplateType = {
-  children?: ReactNode;
+  isAdminPage?: ReactNode;
 }
-export const LayoutWithSidebar = ({children}: AdminTemplateType) => {
+
+export const LayoutWithSidebar = ({ isAdminPage = false }: AdminTemplateType) => {
+  const [currentPage, setCurrentPage] = useState('home');
+  const [showLoginSuccessAlert, setShowLoginSuccessAlert] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { isLoggedIn, user } = useAuth();
+  const { from } = location.state || { from: { pathname: "/" } };
+
+  const closeAlert = () => {
+    setShowLoginSuccessAlert(false);
+  };
+
+  useEffect(() => {
+
+    const checkAuthentication = async () => {
+
+      if (from === "200:LoginSuccess") {
+        setShowLoginSuccessAlert(true);
+        navigate("/", { replace: true });
+      }
+
+      if (!isLoggedIn) {
+        const queryParams = { from: "401:UnauthorizedPageAccess" };
+        navigate("/login", { state: queryParams });
+      }
+    };
+
+    checkAuthentication();
+  }, [from, navigate, isLoggedIn]);
+
+  const renderContent = () => {
+    if (currentPage === "home") {
+      return <Home />;
+    }
+    if (currentPage === "profile") {
+      // return <Profile />;
+      return 'profile'
+    }
+    if (currentPage === "order") {
+      // return <Orders />;
+      return 'order'
+    }
+    if (currentPage === "stock") {
+      // return <Stock />;
+      return 'stock'
+    }
+    if (currentPage === "register") {
+      // return <Register />;
+      return 'register'
+    }
+    if (currentPage === "users") {
+      // return <Users />;
+      return 'users'
+    }
+
+    return <Home />;
+  };
+
   return (
     <>
-      <Sidebar />
+      <Sidebar page={currentPage} setPage={setCurrentPage} />
       <div className={styles.container}>
         <div className={styles.elementsContainer}>
-          {children}
+          <Alert
+            isAlertOpen={showLoginSuccessAlert}
+            setIsAlertOpen={setShowLoginSuccessAlert}
+            message={`Bem-Vindo(a), ${user?.username}.`}
+            alertDisplayTime={5000}
+            onClose={closeAlert}
+            type="success"
+          />
+          {renderContent()}
         </div>
       </div>
     </>

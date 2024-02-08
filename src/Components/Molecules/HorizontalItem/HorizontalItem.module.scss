@@ -1,4 +1,4 @@
-@import '../../../Global.scss';
+@import "../../../Global.scss";
 
 .sidebarItemContainer {
   display: flex;
@@ -51,6 +51,7 @@
   background-color: $main-white;
   border-radius: 10px;
   color: $background-color;
+  width: 40px;
 }
 
 .iconContainerActivate {
@@ -61,4 +62,10 @@
   border-radius: 10px;
   background-color: $primary-color;
   color: $main-white;
+  width: 40px;
+}
+
+.avatarProfileImage {
+  width: 40px;
+  transform: scale(1.4);
 }

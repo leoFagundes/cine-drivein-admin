@@ -110,7 +110,7 @@ export default function SignUp() {
     try {
       await UserRepositories.createUser({ username, password, email, isAdmin });
       console.log("Usuário criado com sucesso");
-      navigate("/login", { state: { from: "userCreated" } });
+      navigate("/login", { state: { from: "201:UserCreated" } });
     } catch (error) {
       console.error("Erro ao criar usuário:", error);
     }

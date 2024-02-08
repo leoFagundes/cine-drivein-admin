@@ -1,8 +1,10 @@
-import {LayoutWithSidebar} from "../../Components/Organism/LayoutWithSidebar";
+import styles from './Home.module.scss'
 
 export default function Home() {
   return (
-    <LayoutWithSidebar />
+    <section className={styles.homeContainer}>
+      Home
+    </section>
   )
 }
 

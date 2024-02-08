@@ -18,7 +18,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string>('');
-  const [showAlertCreateUser, setShowAlertCreateUser] = useState(false);
+  const [showCreatedUserAlert, setShowCreatedUserAlert] = useState(false);
+  const [showUnauthorizedPageAccessAlert, setShowUnauthorizedPageAccessAlert] = useState(false);
 
   const navigate = useNavigate()
   const location = useLocation();
@@ -26,12 +27,18 @@ export default function Login() {
   const { from } = location.state || { from: { pathname: "/" } };
 
   const closeAlert = () => {
-    setShowAlertCreateUser(false);
+    setShowCreatedUserAlert(false);
+    setShowUnauthorizedPageAccessAlert(false)
   };
 
   useEffect(() => {
-    if (from === "userCreated") {
-      setShowAlertCreateUser(true);
+    if (from === "201:UserCreated") {
+      setShowCreatedUserAlert(true);
+      navigate("/login", { replace: true });
+    }
+
+    if (from === "401:UnauthorizedPageAccess") {
+      setShowUnauthorizedPageAccessAlert(true);
       navigate("/login", { replace: true });
     }
   }, [from, navigate]);
@@ -80,7 +87,7 @@ export default function Login() {
     if (providerRequest) {
       console.log(providerRequest.user.isAdmin);
       login(providerRequest.user);
-      navigate("/admin", { state: { from: "loginSuccess" } });
+      navigate("/", { state: { from: "200:LoginSuccess" } });
     } else {
       setUsernameError(INVALID_USERNAME_LOGIN);
       setPasswordError(INVALID_PASSWORD_LOGIN);
@@ -115,12 +122,20 @@ export default function Login() {
         linkOnClick={() => navigate("/signUp")}
       />
       <Alert
-        isAlertOpen={showAlertCreateUser}
-        setIsAlertOpen={setShowAlertCreateUser}
+        isAlertOpen={showCreatedUserAlert}
+        setIsAlertOpen={setShowCreatedUserAlert}
         message="Conta criada com sucesso."
         alertDisplayTime={5000}
         onClose={closeAlert}
         type="success"
+      />
+      <Alert
+        isAlertOpen={showUnauthorizedPageAccessAlert}
+        setIsAlertOpen={setShowUnauthorizedPageAccessAlert}
+        message="Acesso inválido, faça login para continuar."
+        alertDisplayTime={5000}
+        onClose={closeAlert}
+        type="danger"
       />
     </section>
   )

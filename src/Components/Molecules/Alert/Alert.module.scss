@@ -3,7 +3,7 @@
 .alert {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   gap: 10px;
   position: fixed;
   padding: 5px 15px;
@@ -13,6 +13,8 @@
   animation: alertAnimation 0.5s ease forwards;
   z-index: 99;
   color: $main-white;
+  height: 60px;
+  min-width: 250px;
 
   .closeIco {
     &:hover {

@@ -6,7 +6,7 @@ $invalid-color: #ff5555;
 $success-color: #268f3ff5;
 $gray-color: #d9d9d9;
 $placeholder-color: #4a4a4a;
-$background-color: #212529;
+$background-color: #212528;
 $background-secondary-color: #1d2022;
 
 $font-size-small: 12px;
@@ -26,6 +26,9 @@ body {
 }
 
 * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
 }
 
@@ -67,4 +70,52 @@ body {
 
 .fontWeightBold {
   font-weight: $font-weight-bold;
+}
+
+.fontColorPrimaryColor {
+  color: $primary-color;
+}
+
+.fontColorMainWhite {
+  color: $main-white;
+}
+
+.fontColorInvalidColor {
+  color: $invalid-color;
+}
+
+.fontColorSuccessColor {
+  color: $success-color;
+}
+
+.fontColorGrayColor {
+  color: $gray-color;
+}
+
+.fontColorPlaceholderColor {
+  color: $placeholder-color;
+}
+
+.fontColorBackgroundColor {
+  color: $background-color;
+}
+
+.fontColorBackgroundSecondaryColor {
+  color: $background-secondary-color;
+}
+
+.textAlignJustify {
+  text-align: justify;
+}
+
+.textAlignCenter {
+  text-align: center;
+}
+
+.textAlignLeft {
+  text-align: left;
+}
+
+.textAlignRight {
+  text-align: right;
 }

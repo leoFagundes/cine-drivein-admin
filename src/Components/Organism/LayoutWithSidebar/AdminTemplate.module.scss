@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+}
+
+.elementsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  width: 100%;
+  margin-top: 60px;
+  height: calc(100% - 60px);
+  padding-top: 32px;
+
+  @media (min-width: 720px) {
+    padding-top: 40px;
+    margin-top: 0;
+    margin-left: 176px;
+    width: calc(100% - 176px);
+    height: 100vh;
+  }
+}

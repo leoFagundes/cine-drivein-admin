@@ -1,0 +1,64 @@
+@import '../../../Global.scss';
+
+.sidebarItemContainer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: fit-content;
+  border-radius: 10px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 16px;
+  padding-right: 16px;
+  cursor: pointer;
+  transition: 200ms ease-in;
+
+  &:hover {
+    background-color: $placeholder-color;
+  }
+  :hover {
+    cursor: pointer;
+  }
+}
+
+.sidebarItemContainerActivate {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: fit-content;
+  border-radius: 10px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 16px;
+  padding-right: 16px;
+  background-color: $placeholder-color;
+  cursor: pointer;
+
+  :hover {
+    cursor: pointer;
+  }
+}
+
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 9px;
+  background-color: $main-white;
+  border-radius: 10px;
+  color: $background-color;
+}
+
+.iconContainerActivate {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 9px;
+  border-radius: 10px;
+  background-color: $primary-color;
+  color: $main-white;
+}

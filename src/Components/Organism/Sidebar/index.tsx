@@ -77,15 +77,16 @@ export const Sidebar = () => {
         className={styles.container}
         animate={isOpen ? "open" : "closed"}
         variants={variants}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
       >
-        <div className={styles.closeIconContainer}>
+        <div className={styles.mobileCloseIconContainer}>
           <FontAwesomeIcon onClick={() => setIsDisplayOn(false)} size="2xl" icon={faXmark} />
         </div>
 
         <LogoImage size="70px" />
         {
           sideBarElementsInfo.map((item, index) => {
-            const marginTop = index === 0 ? '32px' : '24px';
+            const marginTop = index === 0 ? '32px' : '16px';
             const IS_SELECTED = page === item.key;
 
             return (

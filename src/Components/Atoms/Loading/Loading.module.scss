@@ -1,0 +1,34 @@
+@import "../../../Global";
+
+.loader {
+  margin-bottom: 32px;
+  --c: no-repeat linear-gradient(#0088c2 0 0);
+  background: var(--c), var(--c), var(--c), var(--c), var(--c), var(--c),
+    var(--c), var(--c), var(--c);
+  background-size: 20px 20px;
+  animation: l32-1 1s infinite, l32-2 1s infinite;
+}
+@keyframes l32-1 {
+  0%,
+  100% {
+    width: 60px;
+    height: 60px;
+  }
+  35%,
+  65% {
+    width: 84px;
+    height: 84px;
+  }
+}
+@keyframes l32-2 {
+  0%,
+  40% {
+    background-position: 0 0, 0 50%, 0 100%, 50% 100%, 100% 100%, 100% 50%,
+      100% 0, 50% 0, 50% 50%;
+  }
+  60%,
+  100% {
+    background-position: 0 50%, 0 100%, 50% 100%, 100% 100%, 100% 50%, 100% 0,
+      50% 0, 0 0, 50% 50%;
+  }
+}

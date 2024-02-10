@@ -12,13 +12,18 @@ type AdminTemplateType = {
 }
 
 export const LayoutWithSidebar = ({ isAdminPage = false }: AdminTemplateType) => {
-  const [currentPage, setCurrentPage] = useState('home');
+  const storedPage = localStorage.getItem('currentPage');
+  const [currentPage, setCurrentPage] = useState(storedPage || 'home');
   const [showLoginSuccessAlert, setShowLoginSuccessAlert] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
   const { isLoggedIn, user } = useAuth();
   const { from } = location.state || { from: { pathname: "/" } };
+
+  useEffect(() => {
+    localStorage.setItem('currentPage', currentPage);
+  }, [currentPage]);
 
   const closeAlert = () => {
     setShowLoginSuccessAlert(false);

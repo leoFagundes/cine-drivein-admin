@@ -8,10 +8,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faUserXmark, faUserPen, faUserCheck } from "@fortawesome/free-solid-svg-icons";
 import DeleteModal from '../../Components/Organism/DeleteModal';
 import Alert from '../../Components/Molecules/Alert';
+import UpdateUserModal from '../../Components/Organism/UpdateUserModal';
 
 export default function Users() {
   const [users, setUsers] = useState<UserType[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
 
@@ -41,11 +43,13 @@ export default function Users() {
       const updatedUsers = users.filter((user) => user._id !== userId);
       setUsers(updatedUsers);
       setShowDeleteAlert(true);
-      setIsModalOpen(false)
+      setIsDeleteModalOpen(false)
     } catch (error) {
       console.log('Erro ao deletar usuários', error)
     }
   };
+
+  if (isLoading) return <LoadingFullScreenTemplate />
 
   return (
     <section className={styles.usersContainer}>
@@ -70,10 +74,11 @@ export default function Users() {
             </div>
             <div className={styles.userManage}>
               {isAdmin && <FontAwesomeIcon color='#268f3ff5' size="sm" icon={faUserCheck} />}
-              <FontAwesomeIcon className={styles.userManageEdit} size="sm" icon={faUserPen} />
-              <FontAwesomeIcon onClick={() => setIsModalOpen(true)} className={styles.userManageDelete} size="sm" icon={faUserXmark} />
+              <FontAwesomeIcon onClick={() => setIsUpdateModalOpen(true)} className={styles.userManageEdit} size="sm" icon={faUserPen} />
+              <FontAwesomeIcon onClick={() => setIsDeleteModalOpen(true)} className={styles.userManageDelete} size="sm" icon={faUserXmark} />
             </div>
-            <DeleteModal onClick={() => handleConfirmDelete(_id ? _id : '')} itemId={_id ? _id : ''} itemType='usuário' onClose={() => setIsModalOpen(false)} isOpen={isModalOpen} />
+            <DeleteModal onClick={() => handleConfirmDelete(_id ? _id : '')} itemId={_id ? _id : ''} itemType='usuário' onClose={() => setIsDeleteModalOpen(false)} isOpen={isDeleteModalOpen} />
+            <UpdateUserModal onClick={() => ''} onClose={() => setIsUpdateModalOpen(false)} isOpen={isUpdateModalOpen} />
           </div>
         ))}
       </div>

@@ -1,0 +1,86 @@
+@import "../../Global.scss";
+
+.usersContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.usersContent {
+  display: flex;
+  justify-content: center;
+  row-gap: 32px;
+  column-gap: 22px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.userCard {
+  display: flex;
+  align-items: center;
+  width: 400px;
+  height: 100px;
+  padding: 22px 12px;
+  background-color: $background-secondary-color;
+  border-radius: 10px;
+  position: relative;
+
+  .userProfileImage {
+    width: 40px;
+    height: 40px;
+    transform: scale(1.4);
+  }
+
+  .userDefaultProfileImage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 9px;
+    background-color: $main-white;
+    border-radius: 10px;
+    color: $background-color;
+    width: 40px;
+    height: 40px;
+  }
+
+  .userInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 12px;
+    gap: 8px;
+    word-break: break-all;
+  }
+
+  .userManage {
+    display: flex;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    gap: 12px;
+
+    .userManageEdit {
+      transition: 0.3s ease-in-out;
+
+      &:hover {
+        color: $primary-color;
+        cursor: pointer;
+      }
+    }
+
+    .userManageDelete {
+      transition: 0.3s ease-in-out;
+
+      &:hover {
+        color: $invalid-color;
+        cursor: pointer;
+      }
+    }
+  }
+
+  @media screen and (max-width: 720px) {
+    width: 340px;
+  }
+}

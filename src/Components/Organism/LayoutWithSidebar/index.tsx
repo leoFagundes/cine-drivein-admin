@@ -5,6 +5,7 @@ import styles from './AdminTemplate.module.scss';
 import { ReactNode, useEffect, useState } from "react";
 import Alert from "../../Molecules/Alert";
 import Home from "../../../Pages/Home";
+import Users from "../../../Pages/Users";
 
 type AdminTemplateType = {
   isAdminPage?: ReactNode;
@@ -62,8 +63,7 @@ export const LayoutWithSidebar = ({ isAdminPage = false }: AdminTemplateType) =>
       return 'register'
     }
     if (currentPage === "users") {
-      // return <Users />;
-      return 'users'
+      return <Users />;
     }
 
     return <Home />;

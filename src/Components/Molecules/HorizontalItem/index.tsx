@@ -23,7 +23,7 @@ export const HorizontalItem = ({ pageKey, label, icon, profileImage, onClick, ma
         <img
           className={styles.avatarProfileImage}
           src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${profileImage}`}
-          alt={`Profile Image - ${label}`}
+          alt={`Profile Icon - ${label}`}
         />
         :
         <div className={iconClassName}>

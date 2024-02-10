@@ -13,7 +13,7 @@ class UserRepositories {
     }
   }
 
-  static async getUserById(id: number) {
+  static async getUserById(id: string) {
     try {
       const response = await api.get(`/users/${id}`);
       console.log(response.data);
@@ -24,7 +24,7 @@ class UserRepositories {
     }
   }
 
-  static async deleteUser(id: number) {
+  static async deleteUser(id: string) {
     try {
       const response = await api.delete(`/users/${id}`);
       console.log(response.data.message);
@@ -34,7 +34,7 @@ class UserRepositories {
     }
   }
 
-  static async updateUser(id: number, bodyJson: {}) {
+  static async updateUser(id: string, bodyJson: {}) {
     try {
       const response = await api.put(`/users/${id}`, bodyJson);
       console.log(response.data);

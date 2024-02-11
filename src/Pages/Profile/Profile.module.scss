@@ -1,0 +1,113 @@
+@import "../../Global.scss";
+
+.profileContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.userCard {
+  display: flex;
+  align-items: center;
+  width: 400px;
+  height: 100px;
+  padding: 22px 12px;
+  background-color: $background-secondary-color;
+  border-radius: 10px;
+  position: relative;
+
+  .userProfileImage {
+    width: 40px;
+    height: 40px;
+    transform: scale(1.4);
+  }
+
+  .userDefaultProfileImage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 9px;
+    background-color: $main-white;
+    border-radius: 10px;
+    color: $background-color;
+    width: 40px;
+    height: 40px;
+  }
+
+  .userInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 12px;
+    gap: 8px;
+    word-break: break-all;
+  }
+
+  .userManage {
+    display: flex;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    gap: 12px;
+  }
+
+  @media screen and (max-width: 720px) {
+    width: 340px;
+  }
+}
+
+.userIcons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 70%;
+  min-width: 340px;
+  height: fit-content;
+  padding: 22px 12px;
+  background-color: $background-secondary-color;
+  border-radius: 10px;
+  position: relative;
+  margin-top: 32px;
+  column-gap: 22px;
+  row-gap: 20px;
+
+  .userDefaultProfileImage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 9px;
+    background-color: $main-white;
+    border-radius: 10px;
+    color: $background-color;
+    width: 50px;
+    height: 50px;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &:active {
+      scale: 0.95;
+    }
+  }
+
+  .profileIcon {
+    border: 1px solid transparent;
+    border-radius: 15px;
+    transition: border 0.4s ease;
+    width: 50px;
+    height: 50px;
+    transform: scale(1.4);
+
+    &:hover {
+      cursor: pointer;
+      border: 1px solid $main-white;
+    }
+
+    &:active {
+      scale: 0.95;
+    }
+  }
+}

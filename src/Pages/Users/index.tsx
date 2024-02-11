@@ -9,6 +9,8 @@ import { faUser, faUserXmark, faUserPen, faUserCheck } from "@fortawesome/free-s
 import DeleteModal from '../../Components/Organism/DeleteModal';
 import Alert from '../../Components/Molecules/Alert';
 import UpdateUserModal from '../../Components/Organism/UpdateUserModal';
+import { useAuth } from '../../Context/AuthContext';
+import AccessLimitedToAdmins from '../../Components/Organism/AccessLimitedToAdmins';
 
 export default function Users() {
   const [users, setUsers] = useState<UserType[]>([]);
@@ -16,6 +18,7 @@ export default function Users() {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const { user, logout } = useAuth();
 
   const closeAlert = () => {
     setShowDeleteAlert(false);
@@ -44,6 +47,9 @@ export default function Users() {
       setUsers(updatedUsers);
       setShowDeleteAlert(true);
       setIsDeleteModalOpen(false)
+      if (userId === user?._id) {
+        logout()
+      }
     } catch (error) {
       console.log('Erro ao deletar usuários', error)
     }
@@ -53,6 +59,7 @@ export default function Users() {
 
   return (
     <section className={styles.usersContainer}>
+      <AccessLimitedToAdmins />
       <Text fontSize='extraLarge' fontWeight='semibold'>Usuários</Text>
       <div className={styles.usersContent}>
         {users.map(({ _id, username, password, email, isAdmin, profileImage }) => (

@@ -8,11 +8,7 @@ import Home from "../../../Pages/Home";
 import Users from "../../../Pages/Users";
 import Profile from "../../../Pages/Profile";
 
-type AdminTemplateType = {
-  isAdminPage?: ReactNode;
-}
-
-export const LayoutWithSidebar = ({ isAdminPage = false }: AdminTemplateType) => {
+export const LayoutWithSidebar = () => {
   const storedPage = localStorage.getItem('currentPage');
   const [currentPage, setCurrentPage] = useState(storedPage || 'home');
   const [showLoginSuccessAlert, setShowLoginSuccessAlert] = useState(false);

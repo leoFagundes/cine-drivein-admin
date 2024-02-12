@@ -1,17 +1,51 @@
-import {Sidebar} from "../Sidebar";
+import { Sidebar } from "../Sidebar";
 import styles from './AdminTemplate.module.scss';
-import {ReactNode} from "react";
+import { ReactNode } from "react";
+import Home from "../../../Pages/Home";
+import Users from "../../../Pages/Users";
+import Profile from "../../../Pages/Profile";
 
-type AdminTemplateType = {
+type LayoutWithSidebarType = {
   children?: ReactNode;
+  currentPage: string;
+  setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
 }
-export const LayoutWithSidebar = ({children}: AdminTemplateType) => {
+
+export const LayoutWithSidebar = ({ children, currentPage, setCurrentPage }: LayoutWithSidebarType) => {
+
+  const renderContent = () => {
+    if (currentPage === "home") {
+      return <Home />;
+    }
+    if (currentPage === "profile") {
+      return <Profile />;
+    }
+    if (currentPage === "order") {
+      // return <Orders />;
+      return 'order'
+    }
+    if (currentPage === "stock") {
+      // return <Stock />;
+      return 'stock'
+    }
+    if (currentPage === "register") {
+      // return <Register />;
+      return 'register'
+    }
+    if (currentPage === "users") {
+      return <Users />;
+    }
+
+    return <Home />;
+  };
+
   return (
     <>
-      <Sidebar />
+      <Sidebar page={currentPage} setPage={setCurrentPage} />
       <div className={styles.container}>
         <div className={styles.elementsContainer}>
           {children}
+          {renderContent()}
         </div>
       </div>
     </>

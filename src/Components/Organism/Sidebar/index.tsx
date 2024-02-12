@@ -3,6 +3,7 @@ import LogoImage from "../../Atoms/LogoImage";
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faUser,
   faHouse,
   faScroll,
   faBoxesStacked,
@@ -14,43 +15,65 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { HorizontalItem } from "../../Molecules/HorizontalItem";
+import { useAuth } from '../../../Context/AuthContext';
+import { useNavigate } from 'react-router';
 
-export const Sidebar = () => {
-  const [page, setPage] = useState('home');
+type SideBarType = {
+  page: string
+  setPage: React.Dispatch<React.SetStateAction<string>>
+}
+
+export const Sidebar = ({ page, setPage }: SideBarType) => {
   const [isDisplayOn, setIsDisplayOn] = useState(false);
   const [width, setWidth] = useState(window.innerWidth);
   const isOpen = isDisplayOn || width > 720;
+  const { logout, user } = useAuth();
+  const navigate = useNavigate()
 
-  const sideBarElementsInfo = [{
-    key: 'home',
-    label: 'Home',
-    icon: faHouse,
-    onClick: () => setPage('home'),
-  }, {
-    key: 'order',
-    label: 'Pedidos',
-    icon: faScroll,
-    onClick: () => setPage('order'),
-  }, {
-    key: 'stock',
-    label: 'Estoque',
-    icon: faBoxesStacked,
-    onClick: () => setPage('stock'),
-  }, {
-    key: 'register',
-    label: 'Cadastro',
-    icon: faBoxesPacking,
-    onClick: () => setPage('register'),
-  }, {
-    key: 'users',
-    label: 'Usuários',
-    icon: faUserGroup,
-    onClick: () => setPage('users'),
-  }, {
-    label: 'Sair',
-    icon: faRightFromBracket,
-    onClick: () => setIsDisplayOn(false),
-  }];
+  const handleLogoutClick = () => {
+    logout()
+    navigate('/login')
+  }
+
+  const sideBarElementsInfo = [
+    {
+      key: 'profile',
+      label: user?.username || 'Perfil',
+      profileImage: user?.profileImage || '',
+      icon: faUser,
+      onClick: () => setPage('profile'),
+    }, {
+      key: 'home',
+      label: 'Home',
+      icon: faHouse,
+      onClick: () => setPage('home'),
+    }, {
+      key: 'order',
+      label: 'Pedidos',
+      icon: faScroll,
+      onClick: () => setPage('order'),
+    }, {
+      key: 'stock',
+      label: 'Estoque',
+      icon: faBoxesStacked,
+      onClick: () => setPage('stock'),
+    }, {
+      key: 'register',
+      label: 'Cadastro',
+      icon: faBoxesPacking,
+      onClick: () => setPage('register'),
+    }, {
+      key: 'users',
+      label: 'Usuários',
+      icon: faUserGroup,
+      onClick: () => setPage('users'),
+    }, {
+      key: 'exit',
+      label: 'Sair',
+      icon: faRightFromBracket,
+      onClick: handleLogoutClick,
+    }
+  ];
 
 
   useEffect(() => {
@@ -70,7 +93,7 @@ export const Sidebar = () => {
   return (
     <>
       <button onClick={() => setIsDisplayOn(true)} className={styles.hamburguerContainer}>
-        <FontAwesomeIcon size="3x" icon={faBars}/>
+        <FontAwesomeIcon size="3x" icon={faBars} />
       </button>
 
       <motion.div
@@ -80,7 +103,7 @@ export const Sidebar = () => {
         transition={{ duration: 0.5, ease: "easeInOut" }}
       >
         <div className={styles.mobileCloseIconContainer}>
-          <FontAwesomeIcon onClick={() => setIsDisplayOn(false)} size="2xl" icon={faXmark} />
+          <FontAwesomeIcon onClick={() => setIsDisplayOn(false)} size="xl" icon={faXmark} />
         </div>
 
         <LogoImage size="70px" />
@@ -91,10 +114,12 @@ export const Sidebar = () => {
 
             return (
               <HorizontalItem
+                key={item.key}
                 pageKey={item.key}
                 isSelected={IS_SELECTED}
                 label={item.label}
                 icon={item.icon}
+                profileImage={item.profileImage}
                 onClick={item.onClick}
                 marginTop={marginTop}
               />

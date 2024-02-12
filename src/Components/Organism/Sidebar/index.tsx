@@ -103,7 +103,7 @@ export const Sidebar = ({ page, setPage }: SideBarType) => {
         transition={{ duration: 0.5, ease: "easeInOut" }}
       >
         <div className={styles.mobileCloseIconContainer}>
-          <FontAwesomeIcon onClick={() => setIsDisplayOn(false)} size="2xl" icon={faXmark} />
+          <FontAwesomeIcon onClick={() => setIsDisplayOn(false)} size="xl" icon={faXmark} />
         </div>
 
         <LogoImage size="70px" />

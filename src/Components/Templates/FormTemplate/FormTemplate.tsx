@@ -19,9 +19,9 @@ type FormTemplateType = {
   }>;
   buttonLabel: string;
   buttonOnClick: VoidFunction;
-  linkLabel: string;
-  linkIcon: React.ReactNode;
-  linkOnClick: VoidFunction;
+  linkLabel?: string;
+  linkIcon?: React.ReactNode;
+  linkOnClick?: VoidFunction;
   createAccountTokenInfo?: {
     value: string;
     placeholder: string;
@@ -30,9 +30,10 @@ type FormTemplateType = {
     errorLabel: string;
     caption?: ReactNode;
   }
+  logo?: boolean
 }
 
-export const FormTemplate = ({ label, inputs, buttonLabel, buttonOnClick, linkLabel, linkIcon, linkOnClick, createAccountTokenInfo }: FormTemplateType) => {
+export const FormTemplate = ({ label, inputs, buttonLabel, buttonOnClick, linkLabel, linkIcon, linkOnClick, createAccountTokenInfo, logo = true }: FormTemplateType) => {
   const [isChecked, setChecked] = useState(false);
   const getInputMargin = (index: number, errorLabel: string) => {
     if (index === 0) return ''
@@ -41,7 +42,7 @@ export const FormTemplate = ({ label, inputs, buttonLabel, buttonOnClick, linkLa
   }
   return (
     <section className={styles.container}>
-      <LogoImage marginBottom="40px" />
+      {logo && <LogoImage marginBottom="40px" />}
       <Text marginBottom="32px" fontSize='extraLarge'>{label}</Text>
       <div className={styles.inputs}>
         {
@@ -79,7 +80,7 @@ export const FormTemplate = ({ label, inputs, buttonLabel, buttonOnClick, linkLa
         }
       </div>}
       <Button label={buttonLabel} onClick={buttonOnClick} />
-      <Caption marginTop="14px" onClick={linkOnClick} isLink iconLeft={linkIcon} label={linkLabel} />
+      <Caption marginTop="14px" onClick={linkOnClick} isLink iconLeft={linkIcon} label={linkLabel || ''} />
     </section>
   )
 }

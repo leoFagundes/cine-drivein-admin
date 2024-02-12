@@ -22,7 +22,7 @@ $font-weight-semibold: 600;
 $font-weight-bold: 700;
 
 body {
-  background-color: $background-secondary-color;
+  background-color: $background-color;
 }
 
 * {
@@ -118,4 +118,68 @@ body {
 
 .textAlignRight {
   text-align: right;
+}
+
+.backgroundPrimaryColor {
+  background-color: $primary-color;
+}
+
+.backgroundMainWhite {
+  background-color: $main-white;
+}
+
+.backgroundInvalidColor {
+  background-color: $invalid-color;
+}
+
+.backgroundSuccessColor {
+  background-color: $success-color;
+}
+
+.backgroundGrayColor {
+  background-color: $gray-color;
+}
+
+.backgroundPlaceholderColor {
+  background-color: $placeholder-color;
+}
+
+.backgroundBackgroundColor {
+  background-color: $background-color;
+}
+
+.backgroundBackgroundSecondaryColor {
+  background-color: $background-secondary-color;
+}
+
+.borderPrimaryColor {
+  border: 1px solid $primary-color;
+}
+
+.borderMainWhite {
+  border: 1px solid $main-white;
+}
+
+.borderInvalidColor {
+  border: 1px solid $invalid-color;
+}
+
+.borderSuccessColor {
+  border: 1px solid $success-color;
+}
+
+.borderGrayColor {
+  border: 1px solid $gray-color;
+}
+
+.borderPlaceholderColor {
+  border: 1px solid $placeholder-color;
+}
+
+.borderBackgroundColor {
+  border: 1px solid $background-color;
+}
+
+.borderBackgroundSecondaryColor {
+  border: 1px solid $background-secondary-color;
 }

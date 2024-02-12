@@ -12,6 +12,7 @@ const ERROR_EMAIL_ALREADY_EXIST = 'Este e-mail já está em uso.'
 const ERROR_USERNAME_ALREADY_EXIST = 'Este nome de usuário já está em uso.'
 const ERROR_PASSWORD_MESSAGE = 'Senha inválida.'
 const ERROR_TOKEN_MESSAGE = 'Token de administrador inválido.'
+const ERROR_USERNAME_TO0_LONG = 'Usuário deve ter entre 3-12 caracteres.'
 
 
 export default function SignUp() {
@@ -52,6 +53,9 @@ export default function SignUp() {
 
     if (!username.trim()) {
       setUsernameError(ERROR_USERNAME_MESSAGE);
+      isValid = false;
+    } else if (username.trim().length < 3 || username.trim().length > 12) {
+      setUsernameError(ERROR_USERNAME_TO0_LONG);
       isValid = false;
     } else {
       setUsernameError("");

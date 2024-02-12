@@ -12,33 +12,49 @@ const ERROR_USERNAME_MESSAGE = 'Nome de usuário inválido.'
 const ERROR_PASSWORD_MESSAGE = 'Senha inválida.'
 const INVALID_USERNAME_LOGIN = 'Falha no Login - Nome de usuário incorreto.'
 const INVALID_PASSWORD_LOGIN = 'Falha no Login - Senha incorreta.'
+const ALERT_MESSAGE_USER_CREATED = 'Conta criada com sucesso.'
+const ALERT_MESSAGE_UNAUTHORIZED_ACCESS = 'Acesso inválido, faça login para continuar.'
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string>('');
-  const [showCreatedUserAlert, setShowCreatedUserAlert] = useState(false);
-  const [showUnauthorizedPageAccessAlert, setShowUnauthorizedPageAccessAlert] = useState(false);
+  const [alertInfo, setAlertInfo] = useState<{ isOpen: boolean, message: string, type: string }>({
+    isOpen: false,
+    message: "",
+    type: ""
+  });
 
   const navigate = useNavigate()
   const location = useLocation();
   const { login } = useAuth();
   const { from } = location.state || { from: { pathname: "/" } };
 
+  const showAlert = (message: string, type: string) => {
+    setAlertInfo({
+      isOpen: true,
+      message: message,
+      type: type
+    });
+  };
+
   const closeAlert = () => {
-    setShowCreatedUserAlert(false);
-    setShowUnauthorizedPageAccessAlert(false)
+    setAlertInfo({
+      isOpen: false,
+      message: "",
+      type: ""
+    });
   };
 
   useEffect(() => {
     if (from === "201:UserCreated") {
-      setShowCreatedUserAlert(true);
+      showAlert(ALERT_MESSAGE_USER_CREATED, "success");
       navigate("/login", { replace: true });
     }
 
     if (from === "401:UnauthorizedPageAccess") {
-      setShowUnauthorizedPageAccessAlert(true);
+      showAlert(ALERT_MESSAGE_UNAUTHORIZED_ACCESS, "danger");
       navigate("/login", { replace: true });
     }
   }, [from, navigate]);
@@ -122,20 +138,12 @@ export default function Login() {
         linkOnClick={() => navigate("/signUp")}
       />
       <Alert
-        isAlertOpen={showCreatedUserAlert}
-        setIsAlertOpen={setShowCreatedUserAlert}
-        message="Conta criada com sucesso."
+        isAlertOpen={alertInfo.isOpen}
+        setIsAlertOpen={closeAlert}
+        message={alertInfo.message}
         alertDisplayTime={5000}
         onClose={closeAlert}
-        type="success"
-      />
-      <Alert
-        isAlertOpen={showUnauthorizedPageAccessAlert}
-        setIsAlertOpen={setShowUnauthorizedPageAccessAlert}
-        message="Acesso inválido, faça login para continuar."
-        alertDisplayTime={5000}
-        onClose={closeAlert}
-        type="danger"
+        type={alertInfo.type}
       />
     </section>
   )

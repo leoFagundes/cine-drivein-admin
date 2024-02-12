@@ -10,7 +10,7 @@ type AlertType = {
   message: string;
   alertDisplayTime: number;
   onClose: () => void;
-  type: "success" | "danger";
+  type: string;
 };
 
 export default function Alert({

@@ -11,8 +11,9 @@ type InputType = {
   type?: string;
   marginTop?: string;
   caption?: ReactNode;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
 }
-export const Input = ({ value, placeholder, onChange, errorLabel, type, marginTop, caption }: InputType) => {
+export const Input = ({ value, placeholder, onChange, errorLabel, type, marginTop, caption, onKeyDown }: InputType) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
   const handlePassword = () => {
@@ -24,7 +25,7 @@ export const Input = ({ value, placeholder, onChange, errorLabel, type, marginTo
   const IS_PASSWORD_VISIBLE_TYPE = isPasswordVisible ? undefined : type;
   return (
     <div style={{ marginTop }} className={styles.container}>
-      <input type={IS_PASSWORD_VISIBLE_TYPE} value={value} placeholder={placeholder} onChange={onChange} className={IS_ERROR_INPUT_STYLE} />
+      <input type={IS_PASSWORD_VISIBLE_TYPE} value={value} placeholder={placeholder} onChange={onChange} className={IS_ERROR_INPUT_STYLE} onKeyDown={onKeyDown} />
       {type === 'password' &&
         <div aria-label='icone de olho' onClick={handlePassword} className={styles.icon}>
           <FontAwesomeIcon color='#4a4a4a' size='lg' icon={IS_PASSWORD_VISIBLE_ICON} />

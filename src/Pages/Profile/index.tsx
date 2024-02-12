@@ -91,10 +91,6 @@ export default function Profile() {
     )
   }
   else {
-    return (
-      <>
-        teste
-      </>
-    )
+    return <></>
   }
 }

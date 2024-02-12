@@ -40,6 +40,12 @@ export const FormTemplate = ({ label, inputs, buttonLabel, buttonOnClick, linkLa
     if (errorLabel) return '12px'
     return '24px'
   }
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      buttonOnClick();
+    }
+  };
   return (
     <section className={styles.container}>
       {logo && <LogoImage marginBottom="40px" />}
@@ -56,6 +62,7 @@ export const FormTemplate = ({ label, inputs, buttonLabel, buttonOnClick, linkLa
               errorLabel={item.errorLabel}
               marginTop={getInputMargin(index, item.errorLabel)}
               caption={item.caption}
+              onKeyDown={handleKeyPress}
             />
           })
         }
@@ -76,6 +83,7 @@ export const FormTemplate = ({ label, inputs, buttonLabel, buttonOnClick, linkLa
             errorLabel={createAccountTokenInfo.errorLabel}
             marginTop='8px'
             type={createAccountTokenInfo.type}
+            onKeyDown={handleKeyPress}
           />
         }
       </div>}

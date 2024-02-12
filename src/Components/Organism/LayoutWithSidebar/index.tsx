@@ -1,48 +1,17 @@
-import { useLocation, useNavigate } from "react-router";
-import { useAuth } from "../../../Context/AuthContext";
 import { Sidebar } from "../Sidebar";
 import styles from './AdminTemplate.module.scss';
-import { ReactNode, useEffect, useState } from "react";
-import Alert from "../../Molecules/Alert";
+import { ReactNode } from "react";
 import Home from "../../../Pages/Home";
 import Users from "../../../Pages/Users";
 import Profile from "../../../Pages/Profile";
 
-export const LayoutWithSidebar = () => {
-  const storedPage = localStorage.getItem('currentPage');
-  const [currentPage, setCurrentPage] = useState(storedPage || 'home');
-  const [showLoginSuccessAlert, setShowLoginSuccessAlert] = useState(false);
+type LayoutWithSidebarType = {
+  children?: ReactNode;
+  currentPage: string;
+  setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
+}
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { isLoggedIn, user } = useAuth();
-  const { from } = location.state || { from: { pathname: "/" } };
-
-  useEffect(() => {
-    localStorage.setItem('currentPage', currentPage);
-  }, [currentPage]);
-
-  const closeAlert = () => {
-    setShowLoginSuccessAlert(false);
-  };
-
-  useEffect(() => {
-
-    const checkAuthentication = async () => {
-
-      if (from === "200:LoginSuccess") {
-        setShowLoginSuccessAlert(true);
-        navigate("/", { replace: true });
-      }
-
-      if (!isLoggedIn) {
-        const queryParams = { from: "401:UnauthorizedPageAccess" };
-        navigate("/login", { state: queryParams });
-      }
-    };
-
-    checkAuthentication();
-  }, [from, navigate, isLoggedIn]);
+export const LayoutWithSidebar = ({ children, currentPage, setCurrentPage }: LayoutWithSidebarType) => {
 
   const renderContent = () => {
     if (currentPage === "home") {
@@ -75,14 +44,7 @@ export const LayoutWithSidebar = () => {
       <Sidebar page={currentPage} setPage={setCurrentPage} />
       <div className={styles.container}>
         <div className={styles.elementsContainer}>
-          <Alert
-            isAlertOpen={showLoginSuccessAlert}
-            setIsAlertOpen={setShowLoginSuccessAlert}
-            message={`Bem-Vindo(a), ${user?.username}.`}
-            alertDisplayTime={5000}
-            onClose={closeAlert}
-            type="success"
-          />
+          {children}
           {renderContent()}
         </div>
       </div>

@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
-import { LayoutWithSidebar } from "./Components/Organism/LayoutWithSidebar";
+import AppPage from "./Pages/AppPage";
 
 const Router = () => (
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<LayoutWithSidebar />} />
+      <Route path="/" element={<AppPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signUp" element={<SignUp />} />
     </Routes>

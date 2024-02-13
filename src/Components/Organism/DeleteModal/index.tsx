@@ -27,7 +27,7 @@ export default function DeleteModal({ itemType, onClose, isOpen, itemId, onClick
             <Text fontWeight='semibold' fontColor='placeholder-color'>Você realmente deseja <span>excluir</span> esse {itemType}?</Text>
             <Text fontColor='placeholder-color'>Essa ação não poderá ser revertida</Text>
             <div className={styles.modalButtons}>
-              <Button onClick={onClose} label='Cancelar' />
+              {/* <Button onClick={onClose} label='Cancelar' /> */}
               <Button onClick={() => onClick(itemId)} backGroundColor='invalid-color' label='Excluir' />
             </div>
             <FontAwesomeIcon onClick={onClose} className={styles.closeModalIcon} size="lg" icon={faXmark} />

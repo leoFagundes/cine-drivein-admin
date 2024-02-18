@@ -98,7 +98,7 @@ export default function Stock() {
         <div className={styles.filters}>
           <Input
             type="text"
-            placeholder="Pesquisar por nome ou código do item"
+            placeholder="Nome ou código"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />

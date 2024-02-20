@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import Home from "../../../Pages/Home";
 import Users from "../../../Pages/Users";
 import Profile from "../../../Pages/Profile";
+import Register from "../../../Pages/Register";
 
 type LayoutWithSidebarType = {
   children?: ReactNode;
@@ -29,8 +30,7 @@ export const LayoutWithSidebar = ({ children, currentPage, setCurrentPage }: Lay
       return 'stock'
     }
     if (currentPage === "register") {
-      // return <Register />;
-      return 'register'
+      return <Register />;
     }
     if (currentPage === "users") {
       return <Users />;

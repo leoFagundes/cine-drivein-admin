@@ -1,0 +1,66 @@
+@import "../../../Global.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: $background-secondary-color;
+  padding: 22px 32px;
+  width: 320px;
+  height: 270px;
+  border-radius: 10px;
+  gap: 16px;
+  border: 2px solid transparent;
+  transition: border 0.3s ease-in-out;
+
+  .iconContent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    background-color: $background-color;
+    padding: 22px;
+    border-radius: 50%;
+    transition: color 0.3s ease-in-out;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  label:hover {
+    cursor: pointer;
+  }
+
+  @media screen and (max-width: 720px) {
+    width: 155px;
+    height: 135px;
+    padding: 16px 22px;
+    gap: 8px;
+
+    .iconContent {
+      width: 60px;
+      height: 60px;
+      padding: 16px;
+
+      svg {
+        scale: 0.6;
+      }
+    }
+
+    label {
+      font-size: $font-size-medium-small;
+    }
+  }
+}
+
+.isActiveContainer {
+  border: 2px solid $placeholder-color;
+
+  .iconContent {
+    // color: $primary-color;
+    background-color: $primary-color;
+  }
+}

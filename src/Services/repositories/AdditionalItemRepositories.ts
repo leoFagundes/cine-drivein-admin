@@ -5,7 +5,6 @@ class AdditionalItemRepositories {
   static async getAdditionalItems() {
     try {
       const response = await api.get("/additionalItems");
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error("Erro ao localizar itens adicionais:", error);
@@ -16,7 +15,6 @@ class AdditionalItemRepositories {
   static async getAdditionalItemById(id: string) {
     try {
       const response = await api.get(`/additionalItems/${id}`);
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error("Erro ao localizar item adicional:", error);
@@ -26,8 +24,7 @@ class AdditionalItemRepositories {
 
   static async deleteAdditionalItem(id: string) {
     try {
-      const response = await api.delete(`/additionalItems/${id}`);
-      console.log(response.data.message);
+      await api.delete(`/additionalItems/${id}`);
     } catch (error) {
       console.error("Erro ao deletar item adicional:", error);
       throw error;
@@ -36,8 +33,7 @@ class AdditionalItemRepositories {
 
   static async updateAdditionalItem(id: string, bodyJson: {}) {
     try {
-      const response = await api.put(`/additionalItems/${id}`, bodyJson);
-      console.log(response.data);
+      await api.put(`/additionalItems/${id}`, bodyJson);
     } catch (error) {
       console.error("Erro ao atualizar item adicional:", error);
       throw error;

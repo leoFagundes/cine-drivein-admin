@@ -80,7 +80,7 @@ export default function Users() {
               <Text>{email}</Text>
             </div>
             <div className={styles.userManage}>
-              {isAdmin && <FontAwesomeIcon color='#268f3ff5' size="sm" icon={faUserCheck} />}
+              {isAdmin && <FontAwesomeIcon title='Usuário Administrador' color='#268f3ff5' size="sm" icon={faUserCheck} />}
               <FontAwesomeIcon onClick={() => setIsUpdateModalOpen(true)} className={styles.userManageEdit} size="sm" icon={faUserPen} />
               <FontAwesomeIcon onClick={() => setIsDeleteModalOpen(true)} className={styles.userManageDelete} size="sm" icon={faUserXmark} />
             </div>

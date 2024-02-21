@@ -72,7 +72,7 @@
 
             option {
               display: flex;
-              justify-content: center;
+              justify-content: flex-start;
               padding: 5px;
 
               &:hover {
@@ -109,18 +109,30 @@
               color: $main-white;
               transition: background-color 0.2s;
 
-              &:hover {
+              svg:hover {
                 cursor: pointer;
-                background-color: $invalid-color;
-
-                label {
-                  cursor: pointer;
-                }
+                animation: svg-shake 0.5s ease-in-out infinite;
               }
+            }
+
+            .hovered {
+              background-color: $invalid-color;
             }
           }
         }
       }
     }
+  }
+}
+
+@keyframes svg-shake {
+  0% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+  100% {
+    transform: rotate(-5deg);
   }
 }

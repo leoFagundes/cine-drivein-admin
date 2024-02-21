@@ -7,6 +7,8 @@ import Caption from '../../Molecules/Caption';
 import CheckBox from '../../Atoms/CheckBox';
 import { AdditionalItem, Item } from '../../../Types/types';
 import AdditionalItemRepositories from '../../../Services/repositories/AdditionalItemRepositories';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
 
 type CaptionKey = 'general' | 'sauces' | 'drinks' | 'sweets';
 
@@ -193,13 +195,29 @@ export default function RegisterFormTemplate({ label, inputs, buttonOnClick, but
     option.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleMouseOver = (index: number) => {
+    const item = document.querySelectorAll(`.${styles.item}`)[index];
+    item.classList.add(styles.hovered);
+  };
+
+  const handleMouseOut = (index: number) => {
+    const item = document.querySelectorAll(`.${styles.item}`)[index];
+    item.classList.remove(styles.hovered);
+  };
+
   const renderAdditionals = (additionals: any, key: string) => {
     return additionals.map((item: any, index: number) => {
       const additionalItem = additionalItems?.find(additional => additional._id === item.additionalItem);
       if (additionalItem) {
         return (
-          <div key={index} onClick={() => handleItemRemove(key, item.additionalItem)} className={styles.item}>
+          <div key={index} className={styles.item}>
             <Text fontSize='mediumSmall'>{additionalItem.name}</Text>
+            <FontAwesomeIcon
+              onMouseOver={() => handleMouseOver(index)}
+              onMouseOut={() => handleMouseOut(index)}
+              onClick={() => handleItemRemove(key, item.additionalItem)}
+              icon={faClose}
+            />
           </div>
         );
       }

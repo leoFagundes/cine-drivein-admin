@@ -5,8 +5,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faUserCheck, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { profileIconData } from "./profileIconData";
 import UserRepositories from '../../Services/repositories/UserRepositories';
+import { useState } from 'react';
 
 export default function Profile() {
+  const [imageLoaded, setImageLoaded] = useState(false);
   const { user, updateUser } = useAuth();
 
   const handleClick = async (profileImageUpdate: string) => {
@@ -77,11 +79,17 @@ export default function Profile() {
           </div>
           {profileIconData.map(({ seed }, index) => (
             <div key={index}>
+              {!imageLoaded &&
+                <div className={styles.loading}>
+                  <span className={styles.loader}></span>
+                </div>
+              }
               <img
                 className={`${styles.profileIcon}`}
                 src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`}
                 alt={"avatar" + seed}
                 onClick={() => handleClick(seed)}
+                onLoad={() => setImageLoaded(true)}
               />
             </div>
           ))}

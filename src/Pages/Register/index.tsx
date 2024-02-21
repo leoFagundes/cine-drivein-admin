@@ -3,7 +3,7 @@ import styles from './Register.module.scss'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBurger, faWineBottle } from "@fortawesome/free-solid-svg-icons";
 import RegisterCard from '../../Components/Molecules/RegisterCard';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import RegisterFormTemplate from '../../Components/Templates/RegisterFormTemplate';
 import { AdditionalItem, Item } from '../../Types/types';
 import Alert from '../../Components/Molecules/Alert';
@@ -18,6 +18,7 @@ const ERROR_COD_ITEM_MESSAGE = 'Código do item inválido.';
 const ERROR_TYPE_MESSAGE = 'Tipo inválido.';
 const ERROR_VALUE_MESSAGE = 'Valor inválido.';
 const ERROR_QUANTITY_MESSAGE = 'Quantidade inválida.';
+const ERROR_COD_ITEM_ALREADY_EXIST = 'Já existe um item com esse código.'
 
 const ALERT_MESSAGE_SUBITEM_CREATED = 'Subitem criado com sucesso.'
 const ALERT_MESSAGE_ITEM_CREATED = 'Item criado com sucesso.'
@@ -26,6 +27,7 @@ export default function Register() {
   const [isItemActive, setIsItemActive] = useState(false)
   const [isSubItemActive, setIsSubItemActive] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [allItems, setAllItems] = useState<Item[]>()
   const [subitem, setSubitem] = useState<AdditionalItem>({
     name: '',
     description: '',
@@ -80,6 +82,20 @@ export default function Register() {
       type: ""
     });
   };
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const items = await ItemRepositories.getItems()
+        setAllItems(items)
+      } catch (error) {
+        console.log("Não foi possível carregar os itens:", error)
+      }
+    }
+
+    fetchItems()
+
+  }, [])
 
   const validateSubitemForm = () => {
     let isValid = true;
@@ -195,6 +211,11 @@ export default function Register() {
   const handleSubmitItem = async () => {
     if (!validateItemForm()) {
       console.log('Formulário Inválido.')
+      return
+    }
+
+    if (allItems?.some((itemToFind: Item) => itemToFind.cod_item === item.cod_item)) {
+      setItemError({ ...itemError, cod_itemError: ERROR_COD_ITEM_ALREADY_EXIST })
       return
     }
 

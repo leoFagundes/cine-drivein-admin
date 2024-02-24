@@ -8,3 +8,46 @@
     cursor: pointer;
   }
 }
+
+.checkbox-wrapper-37 input[type="checkbox"] {
+  display: none;
+}
+
+.checkbox-wrapper-37 .terms-label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: $main-white;
+}
+
+.checkbox-wrapper-37 .checkbox-svg {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.checkbox-wrapper-37 .checkbox-box {
+  fill: $main-white;
+  stroke: $primary-color;
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  transition: stroke-dashoffset 0.6s ease-in;
+}
+
+.checkbox-wrapper-37 .checkbox-tick {
+  stroke: $primary-color;
+  stroke-dasharray: 172;
+  stroke-dashoffset: 172;
+  transition: stroke-dashoffset 0.6s ease-in;
+}
+
+.checkbox-wrapper-37
+  input[type="checkbox"]:checked
+  + .terms-label
+  .checkbox-box,
+.checkbox-wrapper-37
+  input[type="checkbox"]:checked
+  + .terms-label
+  .checkbox-tick {
+  stroke-dashoffset: 0;
+}

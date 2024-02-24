@@ -251,19 +251,19 @@ export default function RegisterFormTemplate({ label, inputs, buttonOnClick, but
             <Text fontWeight='semibold'>Adicionar um subitem</Text>
             <div className={styles.captions}>
               <div>
-                <Caption label='Geral' checkboxLeft={<CheckBox onChange={() => handleCaptionChange('general')} checked={subitemStates.general} />} />
+                <Caption label='Geral' checkboxLeft={<CheckBox id='general' onChange={() => handleCaptionChange('general')} checked={subitemStates.general} />} />
                 <Text fontColor='placeholder-color' fontSize='small' fontWeight='semibold'>({itemWithSubitems?.additionals?.length} {itemWithSubitems?.additionals?.length === 1 ? 'opção escolhida' : 'opções escolhidas'})</Text>
               </div>
               <div>
-                <Caption label='Molhos' checkboxLeft={<CheckBox onChange={() => handleCaptionChange('sauces')} checked={subitemStates.sauces} />} />
+                <Caption label='Molhos' checkboxLeft={<CheckBox id='sauces' onChange={() => handleCaptionChange('sauces')} checked={subitemStates.sauces} />} />
                 <Text fontColor='placeholder-color' fontSize='small' fontWeight='semibold'>({itemWithSubitems?.additionals_sauces?.length} {itemWithSubitems?.additionals_sauces?.length === 1 ? 'opção escolhida' : 'opções escolhidas'})</Text>
               </div>
               <div>
-                <Caption label='Bebidas' checkboxLeft={<CheckBox onChange={() => handleCaptionChange('drinks')} checked={subitemStates.drinks} />} />
+                <Caption label='Bebidas' checkboxLeft={<CheckBox id='drinks' onChange={() => handleCaptionChange('drinks')} checked={subitemStates.drinks} />} />
                 <Text fontColor='placeholder-color' fontSize='small' fontWeight='semibold'>({itemWithSubitems?.additionals_drinks?.length} {itemWithSubitems?.additionals_drinks?.length === 1 ? 'opção escolhida' : 'opções escolhidas'})</Text>
               </div>
               <div>
-                <Caption label='Doces' checkboxLeft={<CheckBox onChange={() => handleCaptionChange('sweets')} checked={subitemStates.sweets} />} />
+                <Caption label='Doces' checkboxLeft={<CheckBox id='sweets' onChange={() => handleCaptionChange('sweets')} checked={subitemStates.sweets} />} />
                 <Text fontColor='placeholder-color' fontSize='small' fontWeight='semibold'>({itemWithSubitems?.additionals_sweets?.length} {itemWithSubitems?.additionals_sweets?.length === 1 ? 'opção escolhida' : 'opções escolhidas'})</Text>
               </div>
             </div>

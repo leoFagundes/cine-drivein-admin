@@ -103,7 +103,7 @@ export const profileIconData = [
   { seed: "Juno II" },
   { seed: "Tiger II" },
   { seed: "Pepper II" },
-  { seed: "Mocha I" },
+  { seed: "Mothaz I" },
   { seed: "Socks I" },
   { seed: "Peanut II" },
   { seed: "Oliver III" },

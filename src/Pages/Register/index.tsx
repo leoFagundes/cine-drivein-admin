@@ -108,19 +108,19 @@ export default function Register() {
       newSubitemError.nameError = '';
     }
 
-    if (!subitem.description.trim()) {
-      newSubitemError.descriptionError = ERROR_DESCRIPTION_MESSAGE;
-      isValid = false;
-    } else {
-      newSubitemError.descriptionError = '';
-    }
+    // if (!subitem.description.trim()) {
+    //   newSubitemError.descriptionError = ERROR_DESCRIPTION_MESSAGE;
+    //   isValid = false;
+    // } else {
+    //   newSubitemError.descriptionError = '';
+    // }
 
-    if (!subitem.photo.trim()) {
-      newSubitemError.photoError = ERROR_PHOTO_MESSAGE;
-      isValid = false;
-    } else {
-      newSubitemError.photoError = '';
-    }
+    // if (!subitem.photo.trim()) {
+    //   newSubitemError.photoError = ERROR_PHOTO_MESSAGE;
+    //   isValid = false;
+    // } else {
+    //   newSubitemError.photoError = '';
+    // }
 
     setSubitemError(newSubitemError);
     return isValid;
@@ -144,12 +144,12 @@ export default function Register() {
       newItemError.descriptionError = '';
     }
 
-    if (!item.photo.trim()) {
-      newItemError.photoError = ERROR_PHOTO_MESSAGE;
-      isValid = false;
-    } else {
-      newItemError.photoError = '';
-    }
+    // if (!item.photo.trim()) {
+    //   newItemError.photoError = ERROR_PHOTO_MESSAGE;
+    //   isValid = false;
+    // } else {
+    //   newItemError.photoError = '';
+    // }
 
     if (!item.cod_item.trim()) {
       newItemError.cod_itemError = ERROR_COD_ITEM_MESSAGE;

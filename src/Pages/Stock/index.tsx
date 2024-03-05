@@ -111,7 +111,7 @@ export default function Stock() {
           <Dropdown
             options={sort_options}
             value={selectedSort}
-            placeholder="Ordenar"
+            placeholder="Ordenar Quantidade"
             onChange={(value) => setSelectedSort(value)}
           />
           <Dropdown

@@ -39,7 +39,6 @@ export default function ItemCard({ item, handleDeleteClick, handleUpdateClick, h
       {isLargeScreen ?
         <div className={styles.itemInfo}>
           <Text fontWeight='semibold' fontSize='mediumLarge'>{item.name}</Text>
-          <Text fontWeight='regular' fontSize='small'>{item.description}</Text>
           <div>
             <span>
               <Text fontWeight='medium' fontSize='medium'>Código:</Text>

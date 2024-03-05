@@ -3,7 +3,7 @@
 .container {
   display: flex;
   width: 530px;
-  height: 180px;
+  height: 130px;
   border-radius: 5px;
   background-color: $main-white;
   padding: 8px;
@@ -20,6 +20,7 @@
     border-radius: 5px;
     border: 1px solid $placeholder-color;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    margin-right: 12px;
 
     & > div {
       height: 100%;
@@ -43,11 +44,16 @@
       justify-content: flex-end;
       gap: 2px;
       flex: 1;
+
+      span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
     }
   }
 
   label {
-    margin-left: 12px;
     color: black;
     text-align: left;
   }

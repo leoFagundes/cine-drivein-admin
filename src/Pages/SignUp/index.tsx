@@ -1,19 +1,19 @@
-import { ChangeEvent, useEffect, useState } from 'react';
-import { FormTemplate } from '../../Components/Templates/FormTemplate/FormTemplate';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router';
-import UserRepositories from '../../Services/repositories/UserRepositories';
-import { UserType } from '../../Types/types';
+import { ChangeEvent, useEffect, useState } from "react";
+import { FormTemplate } from "../../Components/Templates/FormTemplate/FormTemplate";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router";
+import UserRepositories from "../../Services/repositories/UserRepositories";
+import { UserType } from "../../Types/types";
 
-const ERROR_USERNAME_MESSAGE = 'Nome de usuário inválido.'
-const ERROR_EMAIL_MESSAGE = 'Email inválido.'
-const ERROR_EMAIL_ALREADY_EXIST = 'Este e-mail já está em uso.'
-const ERROR_USERNAME_ALREADY_EXIST = 'Este nome de usuário já está em uso.'
-const ERROR_PASSWORD_MESSAGE = 'Senha inválida.'
-const ERROR_TOKEN_MESSAGE = 'Token de administrador inválido.'
-const ERROR_USERNAME_TO0_LONG = 'Usuário deve ter entre 3-12 caracteres.'
-
+const ERROR_USERNAME_MESSAGE = "Nome de usuário inválido.";
+const ERROR_EMAIL_MESSAGE = "Email inválido.";
+const ERROR_FORMAT_EMAIL = "Deve estar no formato nome@gmail.com";
+const ERROR_EMAIL_ALREADY_EXIST = "Este e-mail já está em uso.";
+const ERROR_USERNAME_ALREADY_EXIST = "Este nome de usuário já está em uso.";
+const ERROR_PASSWORD_MESSAGE = "Senha inválida.";
+const ERROR_TOKEN_MESSAGE = "Token de administrador inválido.";
+const ERROR_USERNAME_TO0_LONG = "Usuário deve ter entre 3-12 caracteres.";
 
 export default function SignUp() {
   const [username, setUsername] = useState("");
@@ -21,32 +21,32 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
-  const [usernameError, setUsernameError] = useState<string>('');
-  const [passwordError, setPasswordError] = useState<string>('');
-  const [emailError, setEmailError] = useState<string>('');
+  const [usernameError, setUsernameError] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
   const [tokenError, setTokenError] = useState("");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleUsernameWith = (value: string) => {
     setUsername(value);
-    setUsernameError('');
-  }
+    setUsernameError("");
+  };
 
   const handleEmailWith = (value: string) => {
     setEmail(value);
-    setEmailError('');
-  }
+    setEmailError("");
+  };
 
   const handlePasswordWith = (value: string) => {
     setPassword(value);
-    setPasswordError('');
-  }
+    setPasswordError("");
+  };
 
   const handleTokenWith = (value: string) => {
     setToken(value);
-    setTokenError('');
-  }
+    setTokenError("");
+  };
 
   const validateForm = () => {
     let isValid = true;
@@ -63,6 +63,11 @@ export default function SignUp() {
 
     if (!email.trim()) {
       setEmailError(ERROR_EMAIL_MESSAGE);
+      isValid = false;
+    } else if (
+      !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email.trim())
+    ) {
+      setEmailError(ERROR_FORMAT_EMAIL);
       isValid = false;
     } else {
       setEmailError("");
@@ -87,27 +92,27 @@ export default function SignUp() {
 
   useEffect(() => {
     if (token && token === process.env.REACT_APP_ADMIN_TOKEN) {
-      setIsAdmin(true)
+      setIsAdmin(true);
     }
-  }, [token])
+  }, [token]);
 
   const handleSubmit = async () => {
     const allUsers = await UserRepositories.getUsers();
 
     if (!validateForm()) {
-      console.log('Formulário Inválido.')
-      return
+      console.log("Formulário Inválido.");
+      return;
     }
 
     // Verifica se o e-mail já está em uso
     if (allUsers.some((user: UserType) => user.email === email)) {
-      setEmailError(ERROR_EMAIL_ALREADY_EXIST)
+      setEmailError(ERROR_EMAIL_ALREADY_EXIST);
       return;
     }
 
     // Verifica se o nome já está em uso
     if (allUsers.some((user: UserType) => user.username === username)) {
-      setUsernameError(ERROR_USERNAME_ALREADY_EXIST)
+      setUsernameError(ERROR_USERNAME_ALREADY_EXIST);
       return;
     }
 
@@ -118,50 +123,51 @@ export default function SignUp() {
     } catch (error) {
       console.error("Erro ao criar usuário:", error);
     }
-  }
+  };
 
   const INPUTS = [
     {
       value: username,
-      placeholder: 'Nome de usuário',
-      onChange: (e: ChangeEvent<HTMLInputElement>) => handleUsernameWith(e.target.value),
-      type: 'text',
-      errorLabel: usernameError
+      placeholder: "Nome de usuário",
+      onChange: (e: ChangeEvent<HTMLInputElement>) =>
+        handleUsernameWith(e.target.value),
+      type: "text",
+      errorLabel: usernameError,
     },
     {
       value: email,
-      placeholder: 'Email',
-      onChange: (e: ChangeEvent<HTMLInputElement>) => handleEmailWith(e.target.value),
-      type: 'text',
-      errorLabel: emailError
+      placeholder: "Email",
+      onChange: (e: ChangeEvent<HTMLInputElement>) =>
+        handleEmailWith(e.target.value),
+      type: "text",
+      errorLabel: emailError,
     },
     {
       value: password,
-      placeholder: 'Senha',
-      onChange: (e: ChangeEvent<HTMLInputElement>) => handlePasswordWith(e.target.value),
-      type: 'password',
-      errorLabel: passwordError
+      placeholder: "Senha",
+      onChange: (e: ChangeEvent<HTMLInputElement>) =>
+        handlePasswordWith(e.target.value),
+      type: "password",
+      errorLabel: passwordError,
     },
-  ]
+  ];
 
   return (
     <FormTemplate
       label="Crie sua conta"
       inputs={INPUTS}
-      buttonLabel='Criar conta'
+      buttonLabel="Criar conta"
       buttonOnClick={handleSubmit}
-      linkLabel='Fazer login'
-      linkIcon={<FontAwesomeIcon size='sm' icon={faRightToBracket} />}
+      linkLabel="Fazer login"
+      linkIcon={<FontAwesomeIcon size="sm" icon={faRightToBracket} />}
       linkOnClick={() => navigate("/login")}
-      createAccountTokenInfo={
-        {
-          value: token,
-          placeholder: 'Token de administrador',
-          onChange: (e) => handleTokenWith(e.target.value),
-          type: 'password',
-          errorLabel: tokenError
-        }
-      }
+      createAccountTokenInfo={{
+        value: token,
+        placeholder: "Token de administrador",
+        onChange: (e) => handleTokenWith(e.target.value),
+        type: "password",
+        errorLabel: tokenError,
+      }}
     />
-  )
+  );
 }

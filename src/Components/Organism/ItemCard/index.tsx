@@ -59,9 +59,11 @@ export default function ItemCard({
       </div>
       {isLargeScreen ? (
         <div className={styles.itemInfo}>
-          <Text fontWeight="semibold" fontSize="mediumLarge">
-            {item.name}
-          </Text>
+          <div className={styles.itemTitle}>
+            <Text fontWeight="semibold" fontSize="mediumLarge">
+              {item.name}
+            </Text>
+          </div>
           <div>
             <span>
               <Text fontWeight="medium" fontSize="medium">
@@ -151,12 +153,14 @@ export default function ItemCard({
           size={isLargeScreen ? "lg" : "sm"}
           icon={faPenToSquare}
           color="black"
+          className={styles.updateIcon}
         />
         <FontAwesomeIcon
           onClick={() => handleDeleteClick(item._id ? item._id : "")}
           size={isLargeScreen ? "lg" : "sm"}
           icon={faTrash}
           color="black"
+          className={styles.deleteIcon}
         />
       </div>
     </div>

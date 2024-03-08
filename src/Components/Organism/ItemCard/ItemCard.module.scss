@@ -2,8 +2,8 @@
 
 .container {
   display: flex;
-  width: 530px;
-  height: 130px;
+  width: 500px;
+  min-height: 140px;
   border-radius: 5px;
   background-color: $main-white;
   padding: 8px;
@@ -14,7 +14,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    min-height: 140px;
     width: 180px;
     min-width: 180px;
     border-radius: 5px;
@@ -37,6 +37,11 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
+
+    .itemTitle {
+      display: inline-block;
+      max-width: 200px;
+    }
 
     & > div {
       display: flex;
@@ -64,6 +69,19 @@
     top: 8px;
     right: 8px;
     gap: 8px;
+
+    .updateIcon,
+    .deleteIcon {
+      transition: color 0.3s ease-in-out;
+    }
+
+    .updateIcon:hover {
+      color: $primary-color;
+    }
+
+    .deleteIcon:hover {
+      color: $invalid-color;
+    }
 
     &:hover {
       cursor: pointer;

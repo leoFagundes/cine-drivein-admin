@@ -1,14 +1,46 @@
+@import "../../Global.scss";
+
 .stockContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
+
+  .manageVisibilyState {
+    display: flex;
+    gap: 16px;
+
+    div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 180px;
+      padding: 16px;
+      background-color: $background-secondary-color;
+      border-radius: 5px;
+      margin-top: 32px;
+      border: 1px solid transparent;
+      transition: border 0.3s ease-in-out;
+
+      &.isActive {
+        border: 1px solid $main-white;
+      }
+
+      &:hover,
+      label:hover {
+        cursor: pointer;
+      }
+    }
+  }
 }
 
 .stockContent {
   padding: 22px;
   margin-top: 22px;
   margin-bottom: 22px;
+  width: 95%;
+  background-color: $background-secondary-color;
+  border-radius: 10px;
 
   .filters {
     display: flex;

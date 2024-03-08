@@ -1,5 +1,5 @@
-import styles from './Dropdown.module.scss';
-import { ChangeEvent, ReactNode } from "react";
+import styles from "./Dropdown.module.scss";
+import { ReactNode } from "react";
 
 type DropdownProps = {
   options: string[];
@@ -8,18 +8,31 @@ type DropdownProps = {
   onChange: (value: string) => void;
   marginTop?: string;
   caption?: ReactNode;
-}
+};
 
-export const Dropdown = ({ options, value, placeholder, onChange, marginTop, caption }: DropdownProps) => {
+export const Dropdown = ({
+  options,
+  value,
+  placeholder,
+  onChange,
+  marginTop,
+  caption,
+}: DropdownProps) => {
   return (
     <div style={{ marginTop }} className={styles.container}>
-      <select value={value} onChange={(e) => onChange(e.target.value)} className={styles.select}>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={styles.select}
+      >
         <option value="">{placeholder}</option>
         {options.map((option, index) => (
-          <option key={index} value={option}>{option}</option>
+          <option key={index} value={option}>
+            {option}
+          </option>
         ))}
       </select>
       {caption && <label className={styles.caption}>{caption}</label>}
     </div>
   );
-}
+};

@@ -1,0 +1,23 @@
+@import "../../../Global.scss";
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 250px;
+  height: 50px;
+  border-radius: 5px;
+  background-color: $main-white;
+  padding: 8px;
+  color: black;
+  position: relative;
+
+  .deleteIcon {
+    transition: color 0.3s ease-in-out;
+
+    &:hover {
+      cursor: pointer;
+      color: $invalid-color;
+    }
+  }
+}

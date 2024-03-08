@@ -213,7 +213,7 @@ export default function Stock() {
             <div className={styles.filters}>
               <Input
                 type="text"
-                placeholder="Nome ou código"
+                placeholder="Nome"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />

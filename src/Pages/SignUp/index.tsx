@@ -5,6 +5,7 @@ import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router";
 import UserRepositories from "../../Services/repositories/UserRepositories";
 import { UserType } from "../../Types/types";
+import { LoadingFullScreenTemplate } from "../../Components/Templates/LoadingFullScreenTemplate";
 
 const ERROR_USERNAME_MESSAGE = "Nome de usuário inválido.";
 const ERROR_EMAIL_MESSAGE = "Email inválido.";
@@ -25,6 +26,7 @@ export default function SignUp() {
   const [passwordError, setPasswordError] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
   const [tokenError, setTokenError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -116,12 +118,15 @@ export default function SignUp() {
       return;
     }
 
+    setIsLoading(true);
     try {
       await UserRepositories.createUser({ username, password, email, isAdmin });
       console.log("Usuário criado com sucesso");
       navigate("/login", { state: { from: "201:UserCreated" } });
+      setIsLoading(false);
     } catch (error) {
       console.error("Erro ao criar usuário:", error);
+      setIsLoading(false);
     }
   };
 
@@ -151,6 +156,8 @@ export default function SignUp() {
       errorLabel: passwordError,
     },
   ];
+
+  if (isLoading) return <LoadingFullScreenTemplate />;
 
   return (
     <FormTemplate

@@ -47,17 +47,20 @@ export default function Users() {
   }, []);
 
   const handleConfirmDelete = async (userId: string) => {
+    setIsLoading(true);
     try {
       await UserRepositories.deleteUser(userId);
       const updatedUsers = users.filter((user) => user._id !== userId);
       setUsers(updatedUsers);
       setShowDeleteAlert(true);
       setIsDeleteModalOpen(false);
+      setIsLoading(false);
       if (userId === user?._id) {
         logout();
       }
     } catch (error) {
       console.log("Erro ao deletar usuários", error);
+      setIsLoading(false);
     }
   };
 

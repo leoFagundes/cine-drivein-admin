@@ -77,6 +77,7 @@ export default function Stock() {
   };
 
   const handleDeleteClick = async (id: string, type: "item" | "subitem") => {
+    setIsLoading(true);
     if (type === "item") {
       try {
         await ItemRepositories.deleteItem(id);
@@ -84,8 +85,10 @@ export default function Stock() {
         setItems(updatedItems);
         setShowDeleteAlert(true);
         setIsDeleteModalOpen(false);
+        setIsLoading(false);
       } catch (error) {
         console.error("Erro ao deletar o item:", error);
+        setIsLoading(false);
       }
     } else {
       try {
@@ -94,8 +97,10 @@ export default function Stock() {
         setSubItems(updatedSubitems);
         setShowDeleteAlert(true);
         setIsDeleteModalOpen(false);
+        setIsLoading(false);
       } catch (error) {
         console.error("Erro ao deletar o item:", error);
+        setIsLoading(false);
       }
     }
   };

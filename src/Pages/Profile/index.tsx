@@ -5,9 +5,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faUserCheck, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { profileIconData } from "./profileIconData";
 import UserRepositories from '../../Services/repositories/UserRepositories';
+import { useState, useEffect } from 'react';
 
 export default function Profile() {
+  const [loadingIndex, setLoadingIndex] = useState(0);
   const { user, updateUser } = useAuth();
+  const requestInterval = 1;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (loadingIndex < profileIconData.length) {
+        setLoadingIndex(prevIndex => prevIndex + 1);
+      }
+    }, requestInterval);
+    return () => clearInterval(interval);
+  }, [loadingIndex]);
 
   const handleClick = async (profileImageUpdate: string) => {
     let updatedProfileImage = profileImageUpdate;
@@ -75,7 +87,7 @@ export default function Profile() {
           <div onClick={() => handleClick('random')} className={`${styles.userDefaultProfileImage}`}>
             <FontAwesomeIcon size="2xl" icon={faQuestion} />
           </div>
-          {profileIconData.map(({ seed }, index) => (
+          {profileIconData.slice(0, loadingIndex).map(({ seed }, index) => (
             <div key={index}>
               <img
                 className={`${styles.profileIcon}`}
@@ -86,11 +98,9 @@ export default function Profile() {
             </div>
           ))}
         </div>
-
       </section>
     )
-  }
-  else {
+  } else {
     return <></>
   }
 }

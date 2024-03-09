@@ -70,9 +70,8 @@ export const FormTemplate = ({ label, inputs, buttonLabel, buttonOnClick, linkLa
       {createAccountTokenInfo && <div className={styles.adminContent}>
         <Caption
           marginTop="4px"
-          onClick={() => setChecked(!isChecked)}
           label={'Dar permissões de admin para este usuário?'}
-          checkboxRight={<CheckBox checked={isChecked} onChange={() => setChecked(!isChecked)} />}
+          checkboxRight={<CheckBox id='admin-checkbox' checked={isChecked} onChange={() => setChecked(!isChecked)} />}
           fontSize='small'
         />
         {isChecked &&

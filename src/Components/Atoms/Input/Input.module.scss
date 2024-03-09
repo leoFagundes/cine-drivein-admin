@@ -27,7 +27,7 @@
   }
 
   &:focus {
-    border: 2px solid $primary-color;
+    border: 2px solid $primary-color !important;
   }
 
   &__isNegative {
@@ -40,7 +40,7 @@
     font-weight: 600;
     outline: none;
     color: $placeholder-color;
-    border: 2px solid $invalid-color;
+    border: 2px solid $invalid-color !important;
 
     &::placeholder {
       color: $placeholder-color;

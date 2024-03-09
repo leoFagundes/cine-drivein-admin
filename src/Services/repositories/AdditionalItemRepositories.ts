@@ -24,8 +24,7 @@ class AdditionalItemRepositories {
 
   static async deleteAdditionalItem(id: string) {
     try {
-      const response = await api.delete(`/additionalItems/${id}`);
-      console.log(response.data.message);
+      await api.delete(`/additionalItems/${id}`);
     } catch (error) {
       console.error("Erro ao deletar item adicional:", error);
       throw error;

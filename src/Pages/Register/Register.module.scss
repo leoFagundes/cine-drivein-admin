@@ -1,0 +1,22 @@
+.registerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+
+  .registerContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .cards {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 32px;
+      margin-bottom: 32px;
+      display: flex;
+      gap: 22px;
+    }
+  }
+}

@@ -5,7 +5,6 @@ class ItemRepositories {
   static async getItems() {
     try {
       const response = await api.get("/items");
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error("Erro ao localizar itens:", error);
@@ -13,10 +12,21 @@ class ItemRepositories {
     }
   }
 
+  static async getUniqueTypes() {
+    try {
+      const items: Item[] = await this.getItems();
+      const types = items.map((item) => item.type);
+      const uniqueTypes = Array.from(new Set(types));
+      return uniqueTypes;
+    } catch (error) {
+      console.error("Erro ao obter tipos únicos:", error);
+      throw error;
+    }
+  }
+
   static async getItemById(id: string) {
     try {
       const response = await api.get(`/items/${id}`);
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error("Erro ao localizar item:", error);
@@ -37,7 +47,6 @@ class ItemRepositories {
   static async updateItem(id: string, bodyJson: {}) {
     try {
       const response = await api.put(`/items/${id}`, bodyJson);
-      console.log(response.data);
     } catch (error) {
       console.error("Erro ao atualizar item:", error);
       throw error;

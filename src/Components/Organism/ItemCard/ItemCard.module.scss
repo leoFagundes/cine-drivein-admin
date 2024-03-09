@@ -1,0 +1,125 @@
+@import "../../../Global.scss";
+
+.container {
+  display: flex;
+  width: 500px;
+  min-height: 140px;
+  border-radius: 5px;
+  background-color: $main-white;
+  padding: 8px;
+  color: black;
+  position: relative;
+
+  .itemImage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 140px;
+    width: 180px;
+    min-width: 180px;
+    border-radius: 5px;
+    border: 1px solid $placeholder-color;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    margin-right: 12px;
+
+    & > div {
+      height: 100%;
+      width: 100%;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: (50%, 50%);
+      filter: saturate(120%) contrast(105%);
+    }
+  }
+
+  .itemInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+
+    .itemTitle {
+      display: inline-block;
+      max-width: 200px;
+    }
+
+    & > div {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 2px;
+      flex: 1;
+
+      span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+    }
+  }
+
+  label {
+    color: black;
+    text-align: left;
+  }
+
+  .itemManage {
+    display: flex;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    gap: 8px;
+
+    .updateIcon,
+    .deleteIcon {
+      transition: color 0.3s ease-in-out;
+    }
+
+    .updateIcon:hover {
+      color: $primary-color;
+    }
+
+    .deleteIcon:hover {
+      color: $invalid-color;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+@media (max-width: 720px) {
+  .container {
+    width: 320px;
+    height: 75px;
+    padding: 0;
+
+    .itemImage {
+      border-radius: 0;
+      width: 90px;
+      min-width: 75px;
+    }
+
+    .itemInfo {
+      padding: 4px 0;
+    }
+
+    label {
+      margin-left: 8px;
+    }
+
+    .itemManage {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      top: 4px;
+      right: 4px;
+      height: 90%;
+    }
+  }
+}
+
+.invisibleItem {
+  opacity: 0.5;
+}

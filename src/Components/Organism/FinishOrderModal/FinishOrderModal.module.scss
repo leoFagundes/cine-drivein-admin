@@ -25,6 +25,7 @@
   max-width: 450px;
   width: 70%;
   min-height: 160px;
+  max-height: 500px;
   height: fit-content;
   flex-direction: column;
   align-items: center;
@@ -35,6 +36,22 @@
   animation: modalAnimation 0.5s ease forwards;
   z-index: 2;
   box-shadow: 0 0 5px black;
+
+  .inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    margin-top: 22px;
+
+    .checkboxContainer {
+      display: flex;
+      gap: 8px;
+
+      input:hover {
+        cursor: pointer;
+      }
+    }
+  }
 
   .closeModalIcon {
     position: absolute;

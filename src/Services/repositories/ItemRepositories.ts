@@ -46,7 +46,7 @@ class ItemRepositories {
 
   static async updateItem(id: string, bodyJson: {}) {
     try {
-      const response = await api.put(`/items/${id}`, bodyJson);
+      await api.put(`/items/${id}`, bodyJson);
     } catch (error) {
       console.error("Erro ao atualizar item:", error);
       throw error;

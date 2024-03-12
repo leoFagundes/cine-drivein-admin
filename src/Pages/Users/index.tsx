@@ -69,9 +69,6 @@ export default function Users() {
   return (
     <section className={styles.usersContainer}>
       <AccessLimitedToAdmins />
-      <Text fontSize="extraLarge" fontWeight="semibold">
-        Usuários
-      </Text>
       <div className={styles.usersContent}>
         {users.map(
           ({ _id, username, password, email, isAdmin, profileImage }) => (
@@ -97,6 +94,7 @@ export default function Users() {
                     color="#268f3ff5"
                     size="sm"
                     icon={faUserCheck}
+                    title="Usuário administrador"
                   />
                 )}
                 <FontAwesomeIcon
@@ -132,7 +130,6 @@ export default function Users() {
             currentClickedUser?._id ? currentClickedUser._id : ""
           )
         }
-        itemId={currentClickedUser?._id ? currentClickedUser._id : ""}
         itemType="usuário"
         onClose={() => setIsDeleteModalOpen(false)}
         isOpen={isDeleteModalOpen}

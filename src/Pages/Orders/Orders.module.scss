@@ -1,0 +1,22 @@
+@import "../../Global.scss";
+
+.orderContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: $background-secondary-color;
+  padding: 8px;
+  border-radius: 5px 0 0 5px;
+  box-shadow: 0 1px 5px rgba(184, 184, 184, 0.3);
+  top: 8px;
+  right: 0;
+  position: fixed;
+}

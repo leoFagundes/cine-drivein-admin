@@ -136,9 +136,6 @@ export default function Stock() {
 
   return (
     <section className={styles.stockContainer}>
-      <Text fontSize="extraLarge" fontWeight="semibold">
-        Estoque
-      </Text>
       <div className={styles.manageVisibilyState}>
         <div
           onClick={() => {
@@ -247,7 +244,6 @@ export default function Stock() {
             isActive.itemActive ? "item" : "subitem"
           )
         }
-        itemId={curretnClickedItem?.name ? curretnClickedItem.name : ""}
         itemType="item"
         onClose={() => setIsDeleteModalOpen(false)}
         isOpen={isDeleteModalOpen}

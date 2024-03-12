@@ -1,20 +1,22 @@
-import style from './CheckBox.module.scss'
+import style from "./CheckBox.module.scss";
 
 type Props = {
-  checked: boolean
+  checked: boolean;
   onChange: VoidFunction;
   id: string;
-}
+};
 
 export default function CheckBox({ onChange, checked, id }: Props) {
-
   const handleCheckboxChange = () => {
     onChange && onChange();
   };
 
   return (
     <>
-      <div className={style['checkbox-wrapper-37']}>
+      <div
+        onClick={handleCheckboxChange}
+        className={style["checkbox-wrapper-37"]}
+      >
         <input
           type="checkbox"
           name="checkbox"
@@ -36,13 +38,13 @@ export default function CheckBox({ onChange, checked, id }: Props) {
               width="200"
               height="200"
               className={style["checkbox-box"]}
-              stroke-width="40"
+              strokeWidth="40"
               mask="url(#path-1-inside-1_476_5-37)"
             ></rect>
             <path
               className={style["checkbox-tick"]}
               d="M52 111.018L76.9867 136L149 64"
-              stroke-width="22"
+              strokeWidth="22"
             ></path>
           </svg>
         </label>
@@ -55,5 +57,5 @@ export default function CheckBox({ onChange, checked, id }: Props) {
         onChange={handleCheckboxChange}
       /> */}
     </>
-  )
+  );
 }

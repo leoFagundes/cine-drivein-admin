@@ -1,0 +1,127 @@
+@import "../../../Global.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  .orderContent {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    position: relative;
+    padding: 32px 12px;
+    background-color: $main-white;
+    color: black;
+    border: 1px solid transparent;
+    outline: 1px solid transparent;
+
+    .deleteIcon {
+      top: 4px;
+      right: 4px;
+      position: absolute;
+      transition: 0.3s ease-in-out;
+
+      &:hover {
+        cursor: pointer;
+        color: $invalid-color;
+      }
+    }
+
+    .printIcon {
+      top: 4px;
+      right: 4px;
+      position: absolute;
+      transition: 0.3s ease-in-out;
+
+      &:hover {
+        cursor: pointer;
+        color: $primary-color;
+      }
+    }
+
+    &.isCanceled {
+      border-color: $invalid-color;
+      outline-color: $invalid-color;
+    }
+    &.isFinished {
+      border-color: $primary-color;
+      outline-color: $primary-color;
+    }
+
+    .orderInfo {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .orderItems {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+
+      .orderItem {
+        .itemHeader {
+          display: flex;
+          align-items: center;
+          position: relative;
+          gap: 12px;
+
+          .itemImage {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50px;
+            width: 50px;
+            border-radius: 5px;
+            border: 1px solid $placeholder-color;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+
+            & > div {
+              height: 100%;
+              width: 100%;
+              border-radius: 5px;
+              background-size: cover;
+              background-repeat: no-repeat;
+              background-position: (50%, 50%);
+              filter: saturate(120%) contrast(105%);
+            }
+          }
+        }
+
+        .itemInfo {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 4px;
+          margin: 4px 0;
+        }
+      }
+    }
+
+    .orderValue {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+  }
+}
+
+.line {
+  display: flex;
+  border-top: 1px solid black;
+  margin-bottom: 32px;
+  margin-top: 32px;
+}

@@ -1,30 +1,42 @@
-import Text from '../../Components/Atoms/Text';
-import { useAuth } from '../../Context/AuthContext';
-import styles from './Profile.module.scss'
+import Text from "../../Components/Atoms/Text";
+import { useAuth } from "../../Context/AuthContext";
+import styles from "./Profile.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faUserCheck, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUser,
+  faUserCheck,
+  faQuestion,
+} from "@fortawesome/free-solid-svg-icons";
 import { profileIconData } from "./profileIconData";
-import UserRepositories from '../../Services/repositories/UserRepositories';
-import { useState, useEffect } from 'react';
+import UserRepositories from "../../Services/repositories/UserRepositories";
+import { useState, useEffect } from "react";
+import { LoadingFullScreenTemplate } from "../../Components/Templates/LoadingFullScreenTemplate";
 
 export default function Profile() {
   const [loadingIndex, setLoadingIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const { user, updateUser } = useAuth();
   const requestInterval = 1;
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (loadingIndex < profileIconData.length) {
-        setLoadingIndex(prevIndex => prevIndex + 1);
+        setLoadingIndex((prevIndex) => prevIndex + 1);
       }
     }, requestInterval);
+
+    if (loadingIndex >= profileIconData.length) {
+      setIsLoading(false);
+      clearInterval(interval);
+    }
+
     return () => clearInterval(interval);
   }, [loadingIndex]);
 
   const handleClick = async (profileImageUpdate: string) => {
     let updatedProfileImage = profileImageUpdate;
 
-    if (profileImageUpdate === 'random') {
+    if (profileImageUpdate === "random") {
       updatedProfileImage = generateRandomName();
     }
 
@@ -57,34 +69,44 @@ export default function Profile() {
     return result;
   };
 
+  if (isLoading) return <LoadingFullScreenTemplate />;
+
   if (user) {
     return (
       <section className={styles.profileContainer}>
         <div className={styles.userCard}>
-          {user.profileImage !== '' ?
+          {user.profileImage !== "" ? (
             <img
               className={styles.userProfileImage}
               src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${user.profileImage}`}
               alt={`Profile Icon - ${user.username}`}
             />
-            :
+          ) : (
             <div className={styles.userDefaultProfileImage}>
               <FontAwesomeIcon size="lg" icon={faUser} />
             </div>
-          }
+          )}
           <div className={styles.userInfo}>
             <Text>{user.username}</Text>
             <Text>{user.email}</Text>
           </div>
           <div className={styles.userManage}>
-            {user.isAdmin && <FontAwesomeIcon color='#268f3ff5' size="sm" icon={faUserCheck} />}
+            {user.isAdmin && (
+              <FontAwesomeIcon color="#268f3ff5" size="sm" icon={faUserCheck} />
+            )}
           </div>
         </div>
         <div className={styles.userIcons}>
-          <div onClick={() => handleClick('')} className={`${styles.userDefaultProfileImage}`}>
+          <div
+            onClick={() => handleClick("")}
+            className={`${styles.userDefaultProfileImage}`}
+          >
             <FontAwesomeIcon size="xl" icon={faUser} />
           </div>
-          <div onClick={() => handleClick('random')} className={`${styles.userDefaultProfileImage}`}>
+          <div
+            onClick={() => handleClick("random")}
+            className={`${styles.userDefaultProfileImage}`}
+          >
             <FontAwesomeIcon size="2xl" icon={faQuestion} />
           </div>
           {profileIconData.slice(0, loadingIndex).map(({ seed }, index) => (
@@ -99,8 +121,8 @@ export default function Profile() {
           ))}
         </div>
       </section>
-    )
+    );
   } else {
-    return <></>
+    return <></>;
   }
 }

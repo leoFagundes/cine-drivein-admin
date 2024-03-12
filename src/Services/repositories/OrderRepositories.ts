@@ -5,7 +5,6 @@ class OrderRepositories {
   static async getOrders() {
     try {
       const response = await api.get("/orders");
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error("Erro ao obter pedidos:", error);
@@ -16,7 +15,6 @@ class OrderRepositories {
   static async getOrderById(id: string) {
     try {
       const response = await api.get(`/orders/${id}`);
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error("Erro ao obter pedido:", error);
@@ -36,8 +34,7 @@ class OrderRepositories {
 
   static async updateOrder(id: string, bodyJson: {}) {
     try {
-      const response = await api.put(`/orders/${id}`, bodyJson);
-      console.log(response.data);
+      await api.put(`/orders/${id}`, bodyJson);
     } catch (error) {
       console.error("Erro ao atualizar pedido:", error);
       throw error;

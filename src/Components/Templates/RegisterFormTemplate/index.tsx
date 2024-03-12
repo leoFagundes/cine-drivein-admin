@@ -225,10 +225,12 @@ export default function RegisterFormTemplate({
     }
   };
 
-  const filteredOptions = subitemOptions?.filter((option) =>
-    option.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredOptions = subitemOptions?.filter(
+    (option) =>
+      option.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (option.description &&
+        option.description.toLowerCase().includes(searchTerm.toLowerCase()))
   );
-
   const handleMouseOver = (index: number) => {
     const item = document.querySelectorAll(`.${styles.item}`)[index];
     item.classList.add(styles.hovered);

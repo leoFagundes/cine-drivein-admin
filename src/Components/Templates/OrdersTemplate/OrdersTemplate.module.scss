@@ -69,7 +69,12 @@
       justify-content: center;
       align-items: center;
       position: absolute;
+      top: 24px;
       width: 100%;
+
+      label {
+        max-width: 350px;
+      }
     }
   }
 }

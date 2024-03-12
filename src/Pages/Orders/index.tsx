@@ -43,7 +43,7 @@ export default function Orders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [fetchCompleted, setFetchCompleted] = useState(false);
   const [alreadyPrinted, setAlreadyPrinted] = useState(() => {
-    const storedList = localStorage.getItem("list");
+    const storedList = localStorage.getItem("listAlreadyPrinted");
     return storedList ? JSON.parse(storedList) : [];
   });
 
@@ -52,7 +52,7 @@ export default function Orders() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("list", JSON.stringify(alreadyPrinted));
+    localStorage.setItem("listAlreadyPrinted", JSON.stringify(alreadyPrinted));
   }, [alreadyPrinted]);
 
   useEffect(() => {
@@ -103,7 +103,11 @@ export default function Orders() {
 
   return (
     <section className={styles.orderContainer}>
-      <OrdersTemplate orders={orders} setOrders={setOrders} />
+      <OrdersTemplate
+        orders={orders}
+        setOrders={setOrders}
+        setAlreadyPrinted={setAlreadyPrinted}
+      />
       <Timer seconds={UPDATE_TIME} reset={fetchCompleted} />{" "}
     </section>
   );

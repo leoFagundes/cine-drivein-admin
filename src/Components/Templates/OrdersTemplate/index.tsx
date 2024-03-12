@@ -13,12 +13,17 @@ import FinishOrderModal from "../../Organism/FinishOrderModal";
 type OrdersType = {
   orders: Order[];
   setOrders: React.Dispatch<React.SetStateAction<Order[]>>;
+  setAlreadyPrinted: React.Dispatch<any>;
 };
 
 const CANCEL_ORDER_MESSAGE = "Pedido cancelado com sucesso.";
 const DELETE_ORDER_MESSAGE = "Pedido deletado com sucesso.";
 
-export default function OrdersTemplate({ orders, setOrders }: OrdersType) {
+export default function OrdersTemplate({
+  orders,
+  setOrders,
+  setAlreadyPrinted,
+}: OrdersType) {
   const [isLoading, setIsLoading] = useState(false);
   const [isActive, setIsActive] = useState({
     activeOrders: true,
@@ -72,6 +77,11 @@ export default function OrdersTemplate({ orders, setOrders }: OrdersType) {
       setIsLoading(true);
       try {
         await OrderRepositories.deleteOrder(id);
+
+        setAlreadyPrinted((prevList: string[]) =>
+          prevList.filter((item) => item !== id)
+        );
+
         const updatedOrders = orders.filter((order) => order._id !== id);
         setOrders(updatedOrders);
         setIsLoading(false);
@@ -168,7 +178,9 @@ export default function OrdersTemplate({ orders, setOrders }: OrdersType) {
           ) : (
             <div className={styles.noContent}>
               {isActive.activeOrders && (
-                <Text>Não há pedidos ativos no momento.</Text>
+                <Text fontSize="mediumLarge">
+                  Não há pedidos ativos no momento.
+                </Text>
               )}
             </div>
           )}
@@ -195,7 +207,7 @@ export default function OrdersTemplate({ orders, setOrders }: OrdersType) {
           ) : (
             <div className={styles.noContent}>
               {isActive.finishedCanceledOrders && (
-                <Text>
+                <Text fontSize="mediumLarge">
                   Não há pedidos finalizados ou cancelados no momento.
                 </Text>
               )}

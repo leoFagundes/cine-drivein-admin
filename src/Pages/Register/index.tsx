@@ -298,7 +298,7 @@ export default function Register() {
               },
               {
                 value: subitem.description,
-                placeholder: "Descrição",
+                placeholder: "Descrição (para filtro)",
                 onChange: (e: ChangeEvent<HTMLInputElement>) => {
                   setSubitem({ ...subitem, description: e.target.value });
                   setSubitemError({ ...subitemError, descriptionError: "" });

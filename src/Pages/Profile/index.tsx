@@ -14,7 +14,6 @@ import { LoadingFullScreenTemplate } from "../../Components/Templates/LoadingFul
 
 export default function Profile() {
   const [loadingIndex, setLoadingIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
   const { user, updateUser } = useAuth();
   const requestInterval = 1;
 
@@ -24,12 +23,6 @@ export default function Profile() {
         setLoadingIndex((prevIndex) => prevIndex + 1);
       }
     }, requestInterval);
-
-    if (loadingIndex >= profileIconData.length) {
-      setIsLoading(false);
-      clearInterval(interval);
-    }
-
     return () => clearInterval(interval);
   }, [loadingIndex]);
 
@@ -68,8 +61,6 @@ export default function Profile() {
     }
     return result;
   };
-
-  if (isLoading) return <LoadingFullScreenTemplate />;
 
   if (user) {
     return (

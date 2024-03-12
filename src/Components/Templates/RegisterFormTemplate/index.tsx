@@ -408,7 +408,7 @@ export default function RegisterFormTemplate({
                       >
                         {filteredOptions?.map((option) => (
                           <option key={option._id} value={option._id}>
-                            <Text>{option.name}</Text>
+                            {option.name}
                           </option>
                         ))}
                       </select>

@@ -1,4 +1,3 @@
-import Text from "../../Components/Atoms/Text";
 import styles from "./Register.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBurger, faWineBottle } from "@fortawesome/free-solid-svg-icons";
@@ -13,7 +12,7 @@ import ItemRepositories from "../../Services/repositories/ItemRepositories";
 
 const ERROR_NAME_MESSAGE = "Nome inválido.";
 const ERROR_DESCRIPTION_MESSAGE = "Descrição inválida.";
-const ERROR_PHOTO_MESSAGE = "Foto inválida.";
+// const ERROR_PHOTO_MESSAGE = "Foto inválida.";
 const ERROR_COD_ITEM_MESSAGE = "Código do item inválido.";
 const ERROR_TYPE_MESSAGE = "Tipo inválido.";
 const ERROR_VALUE_MESSAGE = "Valor inválido.";
@@ -259,9 +258,6 @@ export default function Register() {
 
   return (
     <section className={styles.registerContainer}>
-      <Text fontSize="extraLarge" fontWeight="semibold">
-        Cadastro de novos itens
-      </Text>
       <div className={styles.registerContent}>
         <div className={styles.cards}>
           <RegisterCard
@@ -302,7 +298,7 @@ export default function Register() {
               },
               {
                 value: subitem.description,
-                placeholder: "Descrição",
+                placeholder: "Descrição (para filtro)",
                 onChange: (e: ChangeEvent<HTMLInputElement>) => {
                   setSubitem({ ...subitem, description: e.target.value });
                   setSubitemError({ ...subitemError, descriptionError: "" });

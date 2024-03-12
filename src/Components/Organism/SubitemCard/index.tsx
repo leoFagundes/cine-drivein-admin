@@ -15,9 +15,18 @@ export default function SubitemCard({
 }: SubitemCardType) {
   return (
     <div className={styles.container}>
-      <Text fontWeight="medium" fontColor="background-secondary-color">
-        {subitem.name}
-      </Text>
+      <div className={styles.subitemInfo}>
+        <Text fontWeight="medium" fontColor="background-secondary-color">
+          {subitem.name}
+        </Text>
+        <Text
+          fontWeight="regular"
+          fontSize="small"
+          fontColor="placeholder-color"
+        >
+          {subitem.description && `(${subitem.description})`}
+        </Text>
+      </div>
 
       <FontAwesomeIcon
         className={styles.deleteIcon}

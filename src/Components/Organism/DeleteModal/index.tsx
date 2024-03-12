@@ -9,15 +9,13 @@ type DeleteModalType = {
   isOpen: boolean;
   onClose: VoidFunction;
   itemType: string;
-  itemId: string;
-  onClick: (id: string) => void;
+  onClick: VoidFunction;
 };
 
 export default function DeleteModal({
   itemType,
   onClose,
   isOpen,
-  itemId,
   onClick,
 }: DeleteModalType) {
   const handleCloseModalWith = (event: MouseEvent) => {
@@ -39,7 +37,7 @@ export default function DeleteModal({
             <div className={styles.modalButtons}>
               {/* <Button onClick={onClose} label='Cancelar' /> */}
               <Button
-                onClick={() => onClick(itemId)}
+                onClick={onClick}
                 backGroundColor="invalid-color"
                 label="Excluir"
               />

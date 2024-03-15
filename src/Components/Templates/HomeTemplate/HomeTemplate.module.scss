@@ -1,0 +1,137 @@
+@import "../../../Global.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 32px;
+  margin-bottom: 32px;
+
+  .homeContent {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 32px;
+  }
+
+  .boxTemplate {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: $background-secondary-color;
+    padding: 22px;
+    border-radius: 10px;
+    height: 100%;
+    width: 310px;
+  }
+
+  .scheduleControlContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    max-height: 300px;
+
+    @media screen and (max-width: 1278px) {
+      flex-direction: row;
+    }
+
+    @media screen and (max-width: 721px) {
+      flex-direction: column;
+    }
+
+    .openingControl {
+      border: 1px solid $primary-color;
+
+      &.isCloseBorder {
+        border: 1px solid $invalid-color !important;
+      }
+    }
+
+    .scheduleControl {
+      .shceduleBoxInputTime {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        padding: 4px;
+        gap: 8px;
+
+        .scheduleInputTime {
+          background: $main-white;
+          border: 1px solid transparent;
+          border-radius: 5px;
+          width: 60px;
+          height: 20px;
+          padding: 4px;
+          outline: none;
+          font-weight: 500;
+          font-size: 14px;
+          text-align: center;
+          letter-spacing: 2px;
+          box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.3);
+
+          &:focus {
+            border: 1px solid $primary-color !important;
+          }
+
+          &::placeholder {
+            color: $placeholder-color;
+            font-size: 12px;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+
+  .reportControlContainer {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 22px;
+
+    @media screen and (max-width: 950px) {
+      flex-wrap: nowrap;
+    }
+
+    @media screen and (max-width: 721px) {
+      flex-wrap: wrap;
+    }
+
+    .statusContent {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 4px;
+      padding: 0 12px;
+      width: 100%;
+      flex: 1;
+      min-height: 10px;
+      border: 1px solid $placeholder-color;
+      background-color: $background-color;
+      border-radius: 5px;
+    }
+  }
+
+  .ChartContainer {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: $background-secondary-color;
+    padding: 22px;
+    border-radius: 10px;
+    flex: 1;
+    gap: 22px;
+
+    .char {
+      width: 100%;
+      background-color: $main-white;
+      padding: 12px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5) inset;
+      min-width: 550px;
+    }
+  }
+}

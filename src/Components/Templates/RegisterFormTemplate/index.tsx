@@ -30,6 +30,8 @@ type RegisterFormTemplateType = {
     type?: string;
     errorLabel: string;
     caption?: ReactNode;
+    suggestions?: string[];
+    onSelectSuggestion?: (value: string) => void;
   }>;
   withSubitem?: boolean;
   buttonOnClick: VoidFunction;
@@ -282,6 +284,8 @@ export default function RegisterFormTemplate({
                 marginTop={getInputMargin(index, item.errorLabel)}
                 caption={item.caption}
                 onKeyDown={handleKeyPress}
+                suggestions={item.suggestions}
+                onSelectSuggestion={item.onSelectSuggestion}
               />
             );
           })}

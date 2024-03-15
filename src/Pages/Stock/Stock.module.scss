@@ -8,7 +8,9 @@
 
   .manageVisibilyState {
     display: flex;
-    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    column-gap: 16px;
 
     div {
       display: flex;

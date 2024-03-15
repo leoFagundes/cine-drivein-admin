@@ -27,6 +27,7 @@ export default function Register() {
   const [isSubItemActive, setIsSubItemActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [allItems, setAllItems] = useState<Item[]>();
+  const [uniqueTypes, setUniqueTypes] = useState<string[]>([]);
   const [subitem, setSubitem] = useState<AdditionalItem>({
     name: "",
     description: "",
@@ -98,6 +99,19 @@ export default function Register() {
 
     fetchItems();
   }, [setAllItems, setItem]);
+
+  useEffect(() => {
+    const fetchUniqueTypes = async () => {
+      try {
+        const types = await ItemRepositories.getUniqueTypes();
+        setUniqueTypes(types);
+      } catch (error) {
+        console.error("Erro ao obter tipos únicos:", error);
+      }
+    };
+
+    fetchUniqueTypes();
+  }, []);
 
   const validateSubitemForm = () => {
     let isValid = true;
@@ -256,6 +270,10 @@ export default function Register() {
     }
   };
 
+  const handleSelectSuggestion = (selectedValue: string) => {
+    setItem({ ...item, type: selectedValue });
+  };
+
   return (
     <section className={styles.registerContainer}>
       <div className={styles.registerContent}>
@@ -374,6 +392,8 @@ export default function Register() {
                 },
                 type: "text",
                 errorLabel: itemError.typeError,
+                suggestions: uniqueTypes,
+                onSelectSuggestion: handleSelectSuggestion,
               },
               {
                 value: item.value !== 0 ? item.value.toString() : "",
@@ -387,7 +407,7 @@ export default function Register() {
               },
               {
                 value: item.quantity !== 0 ? item.quantity.toString() : "",
-                placeholder: "Quantidade",
+                placeholder: "Quantidade (desativado)",
                 onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                   setItem({ ...item, quantity: parseInt(e.target.value) });
                   setItemError({ ...itemError, quantityError: "" });

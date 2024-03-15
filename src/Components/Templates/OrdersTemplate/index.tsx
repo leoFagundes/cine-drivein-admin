@@ -226,7 +226,6 @@ export default function OrdersTemplate({
         isOpen={isDeleteModalOpen}
       />
       <FinishOrderModal
-        onClick={() => ""}
         orderData={curretnClickedItem}
         orders={orders}
         setOrders={setOrders}

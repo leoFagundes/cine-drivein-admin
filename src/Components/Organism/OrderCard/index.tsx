@@ -41,6 +41,13 @@ export default function OrderCard({
   onClickDeleteOrder,
   onClickFinishOrder,
 }: OrderCardType) {
+  const createdAtDate = new Date(order.createdAt ? order.createdAt : "");
+
+  const hora = createdAtDate.getHours().toString().padStart(2, "0");
+  const minuto = createdAtDate.getMinutes().toString().padStart(2, "0");
+  const segundo = createdAtDate.getSeconds().toString().padStart(2, "0");
+  const horaFormatada = `${hora}:${minuto}:${segundo}`;
+
   const groupOrderItems = (orderItems: ItemInOrder[]): GroupedOrderItem[] => {
     const groupedItems: GroupedItems = {};
 
@@ -214,6 +221,9 @@ export default function OrderCard({
           </Text>
           <Text fontSize="mediumSmall" fontColor="background-secondary-color">
             <strong>Telefone:</strong> {order.phone}
+          </Text>
+          <Text fontSize="small" fontColor="background-secondary-color">
+            Criado em {horaFormatada}
           </Text>
         </div>
         <div className={styles.line} />

@@ -10,7 +10,6 @@ import {
 import { profileIconData } from "./profileIconData";
 import UserRepositories from "../../Services/repositories/UserRepositories";
 import { useState, useEffect } from "react";
-import { LoadingFullScreenTemplate } from "../../Components/Templates/LoadingFullScreenTemplate";
 
 export default function Profile() {
   const [loadingIndex, setLoadingIndex] = useState(0);
@@ -81,7 +80,7 @@ export default function Profile() {
             <Text>{user.username}</Text>
             <Text>{user.email}</Text>
           </div>
-          <div className={styles.userManage}>
+          <div title="Usuário administrador" className={styles.userManage}>
             {user.isAdmin && (
               <FontAwesomeIcon color="#268f3ff5" size="sm" icon={faUserCheck} />
             )}

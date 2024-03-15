@@ -93,12 +93,14 @@
   .container {
     width: 320px;
     height: 75px;
+    min-height: 75px;
     padding: 0;
 
     .itemImage {
       border-radius: 0;
       width: 90px;
       min-width: 75px;
+      min-height: 75px;
     }
 
     .itemInfo {

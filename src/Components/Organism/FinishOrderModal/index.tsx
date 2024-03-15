@@ -14,7 +14,6 @@ import { LoadingFullScreenTemplate } from "../../Templates/LoadingFullScreenTemp
 type ModalType = {
   isOpen: boolean;
   onClose: VoidFunction;
-  onClick: (id: string) => void;
   orderData?: Order;
   orders: Order[];
   setOrders?: React.Dispatch<React.SetStateAction<Order[]>>;
@@ -26,7 +25,6 @@ const FINISH_ORDER_MESSAGE = "Pedido finalizado com sucesso";
 export default function FinishOrderModal({
   onClose,
   isOpen,
-  onClick,
   orderData,
   orders,
   setOrders,
@@ -38,6 +36,7 @@ export default function FinishOrderModal({
     credit: "",
     debit: "",
     money: "",
+    discount: "",
   });
 
   const handleCloseModalWith = (event: MouseEvent) => {
@@ -49,6 +48,7 @@ export default function FinishOrderModal({
         credit: "",
         debit: "",
         money: "",
+        discount: "",
       });
     }
   };
@@ -61,7 +61,9 @@ export default function FinishOrderModal({
     const totalDebit = parseFloat(inputValues.debit) || 0;
     const totalCredit = parseFloat(inputValues.credit) || 0;
     const totalMoney = parseFloat(inputValues.money) || 0;
-    return (totalDebit + totalCredit + totalMoney).toFixed(2);
+    const discount = parseFloat(inputValues.discount) || 0;
+    const total = totalDebit + totalCredit + totalMoney - discount;
+    return total.toFixed(2);
   };
 
   const totalValue = parseFloat(String(orderData?.total_value || 0));
@@ -72,13 +74,21 @@ export default function FinishOrderModal({
   const totalToPay = (totalValue + serviceFee).toFixed(2);
 
   const validateForm = () => {
-    return parseFloat(calculateTotalValue()) <= parseFloat(totalToPay);
+    let isValid = true;
+    if (parseFloat(calculateTotalValue()) > parseFloat(totalToPay)) {
+      return false;
+    }
+    if (parseFloat(calculateTotalValue()) < 0) {
+      return false;
+    }
+    return isValid;
   };
 
   const handleSubmit = async () => {
     const totalDebit = parseFloat(inputValues.debit) || 0;
     const totalCredit = parseFloat(inputValues.credit) || 0;
     const totalMoney = parseFloat(inputValues.money) || 0;
+    const discount = parseFloat(inputValues.discount) || 0;
 
     if (!validateForm()) {
       console.log("Formulário Inválido.");
@@ -93,12 +103,14 @@ export default function FinishOrderModal({
         credit_payment: totalCredit,
         debit_payment: totalDebit,
         money_payment: totalMoney,
+        discount: discount,
         service_fee_paid: isChecked,
       });
       setInputValues({
         credit: "",
         debit: "",
         money: "",
+        discount: "",
       });
       const updatedOrders = orders.filter(
         (order) => order._id !== orderData?._id
@@ -108,7 +120,6 @@ export default function FinishOrderModal({
       setIsLoading(false);
       showAlert && showAlert(FINISH_ORDER_MESSAGE, "success");
       onClose();
-      // window.location.reload();
     } catch (error) {
       console.error("Não foi possível finalizar o pedido", error);
       setIsLoading(false);
@@ -165,6 +176,17 @@ export default function FinishOrderModal({
                       })
                     }
                   />
+                  <Input
+                    type="number"
+                    placeholder="🔖 Desconto "
+                    value={inputValues.discount}
+                    onChange={(e) =>
+                      setInputValues({
+                        ...inputValues,
+                        discount: e.target.value,
+                      })
+                    }
+                  />
                   <div className={styles.checkboxContainer}>
                     <Caption
                       fontSize="mediumSmall"
@@ -183,7 +205,9 @@ export default function FinishOrderModal({
                   Total a pagar:{" "}
                   <Text
                     fontColor={
-                      parseFloat(calculateTotalValue()) > parseFloat(totalToPay)
+                      parseFloat(calculateTotalValue()) >
+                        parseFloat(totalToPay) ||
+                      parseFloat(calculateTotalValue()) < 0
                         ? "invalid-color"
                         : parseFloat(calculateTotalValue()) ===
                           parseFloat(totalToPay)
@@ -198,6 +222,13 @@ export default function FinishOrderModal({
                 <Button
                   onClick={() => handleSubmit()}
                   label="Finalizar Pedido"
+                  backGroundColor={
+                    parseFloat(calculateTotalValue()) >
+                      parseFloat(totalToPay) ||
+                    parseFloat(calculateTotalValue()) < 0
+                      ? "invalid-color"
+                      : "primary-color"
+                  }
                 />
               </>
             ) : (

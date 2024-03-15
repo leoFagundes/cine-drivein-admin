@@ -55,6 +55,7 @@ export type Order = {
   service_fee: number;
   total_value: number;
   items: ItemInOrder[];
+  createdAt?: string;
 };
 
 export type ItemInOrder = {
@@ -64,4 +65,12 @@ export type ItemInOrder = {
   additional_sauce?: string;
   additional_drink?: string;
   additional_sweet?: string;
+};
+
+export type Statistics = {
+  _id?: string;
+  canceledOrders: number;
+  finishedOrders: number;
+  invoicing: number;
+  createdAt?: string;
 };

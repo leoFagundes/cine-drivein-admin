@@ -23,9 +23,9 @@ class ScheduleRepositories {
     }
   }
 
-  static async updateSchedule(id: string, bodyJson: {}) {
+  static async updateSchedule(bodyJson: {}) {
     try {
-      const response = await api.put(`/schedule/${id}`, bodyJson);
+      const response = await api.put(`/schedule`, bodyJson);
       console.log(response.data.message);
     } catch (error) {
       console.error("Erro ao localizar schedule:", error);

@@ -46,7 +46,7 @@ export default function UpdateUserModal({
     setUsernameError("");
     setEmailError("");
     setTokenError("");
-  }, [isOpen]);
+  }, [isOpen, user]);
 
   useEffect(() => {
     if (token && token === process.env.REACT_APP_ADMIN_TOKEN) {

@@ -1,17 +1,16 @@
-import { LayoutWithSidebar } from '../../Organism/LayoutWithSidebar'
+import { LayoutWithSidebar } from "../../Organism/LayoutWithSidebar";
 import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../../Context/AuthContext";
 import { ReactNode, useEffect, useState } from "react";
-import styles from './AppTemplate.module.scss'
-import Alert from '../../Molecules/Alert';
+import Alert from "../../Molecules/Alert";
 
-type AppTemplate = {
-  children?: ReactNode
-}
+type AppTemplateType = {
+  children?: ReactNode;
+};
 
-export default function AppTemplate({ children }: AppTemplate) {
-  const storedPage = localStorage.getItem('currentPage');
-  const [currentPage, setCurrentPage] = useState(storedPage || 'home');
+export default function AppTemplate({ children }: AppTemplateType) {
+  const storedPage = localStorage.getItem("currentPage");
+  const [currentPage, setCurrentPage] = useState(storedPage || "home");
   const [showLoginSuccessAlert, setShowLoginSuccessAlert] = useState(false);
 
   const navigate = useNavigate();
@@ -20,7 +19,7 @@ export default function AppTemplate({ children }: AppTemplate) {
   const { from } = location.state || { from: { pathname: "/" } };
 
   useEffect(() => {
-    localStorage.setItem('currentPage', currentPage);
+    localStorage.setItem("currentPage", currentPage);
   }, [currentPage]);
 
   const closeAlert = () => {
@@ -28,9 +27,7 @@ export default function AppTemplate({ children }: AppTemplate) {
   };
 
   useEffect(() => {
-
     const checkAuthentication = async () => {
-
       if (from === "200:LoginSuccess") {
         setShowLoginSuccessAlert(true);
         navigate("/", { replace: true });
@@ -46,7 +43,10 @@ export default function AppTemplate({ children }: AppTemplate) {
   }, [from, navigate, isLoggedIn]);
 
   return (
-    <LayoutWithSidebar currentPage={currentPage} setCurrentPage={setCurrentPage}>
+    <LayoutWithSidebar
+      currentPage={currentPage}
+      setCurrentPage={setCurrentPage}
+    >
       {children}
       <Alert
         isAlertOpen={showLoginSuccessAlert}
@@ -57,5 +57,5 @@ export default function AppTemplate({ children }: AppTemplate) {
         type="success"
       />
     </LayoutWithSidebar>
-  )
+  );
 }

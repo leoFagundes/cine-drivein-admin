@@ -76,7 +76,7 @@ export default function UpdateItemModal({
     console.log(item);
 
     fetchUniqueTypes();
-  }, [isOpen]);
+  }, [isOpen, item, currentItem]);
 
   const handleSelectSuggestion = (selectedValue: string) => {
     setItem({ ...item, type: selectedValue });

@@ -2,6 +2,7 @@
 
 .container {
   display: flex;
+  align-items: center;
   flex-direction: column;
   width: 100%;
   padding: 0 32px;
@@ -106,7 +107,7 @@
       align-items: flex-start;
       justify-content: center;
       gap: 4px;
-      padding: 0 12px;
+      padding: 12px;
       width: 100%;
       flex: 1;
       min-height: 10px;
@@ -132,6 +133,42 @@
       border-radius: 5px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5) inset;
       min-width: 550px;
+      position: relative;
+
+      .resetGraphic {
+        position: absolute;
+        z-index: 2;
+
+        label {
+          transition: color 0.3s ease-in-out;
+        }
+
+        &:hover {
+          cursor: pointer;
+        }
+
+        label:hover {
+          cursor: pointer;
+          color: $invalid-color;
+        }
+      }
+    }
+
+    .resetAllStatistics {
+      z-index: 2;
+
+      label {
+        transition: color 0.3s ease-in-out;
+      }
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      label:hover {
+        cursor: pointer;
+        color: $invalid-color;
+      }
     }
   }
 }

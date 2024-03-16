@@ -11,6 +11,19 @@ import OrdersChart from "../../Atoms/OrdersChart";
 import DeleteModal from "../../Organism/DeleteModal";
 import OrderRepositories from "../../../Services/repositories/OrderRepositories";
 import StatisticsRepositories from "../../../Services/repositories/statisticsRepositories";
+import ItemsChart from "../../Atoms/ItemsChart";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRotateLeft } from "@fortawesome/free-solid-svg-icons";
+import Alert from "../../Molecules/Alert";
+
+const WITHOUT_ENOUGHT_COMMANDS = "Não há comandas para realizar essa ação.";
+const DELETED_COMMANDS =
+  "Comandas deletadas com sucesso e gráficos atualizados. Recarregue a página.";
+const SYSTTEM_OPEN = "Sistema foi aberto com sucesso.";
+const SYSTTEM_CLOSE = "Sistema foi fechado com sucesso.";
+const SCHEDULE_UPDATED = "Horários atualizados.";
+const RESET_STATISTICS = "Estatísticas resetadas. Recarregue a página.";
+const RESET_CHAR_ITEM = "Gráfico de itens zerado. Recarregue a página.";
 
 export default function HomeTemplate() {
   const [schedule, setSchedule] = useState<Schedule>();
@@ -29,9 +42,35 @@ export default function HomeTemplate() {
       serviceFee: 0,
     },
   });
+  const [alertInfo, setAlertInfo] = useState<{
+    isOpen: boolean;
+    message: string;
+    type: string;
+  }>({
+    isOpen: false,
+    message: "",
+    type: "",
+  });
+
   useEffect(() => {
     fetchOrderStatus();
   }, []);
+
+  const showAlert = (message: string, type: string) => {
+    setAlertInfo({
+      isOpen: true,
+      message: message,
+      type: type,
+    });
+  };
+
+  const closeAlert = () => {
+    setAlertInfo({
+      isOpen: false,
+      message: "",
+      type: "",
+    });
+  };
 
   useEffect(() => {
     function handleResize() {
@@ -93,6 +132,7 @@ export default function HomeTemplate() {
           isOpen: !schedule.isOpen,
         });
         setLoading(false);
+        showAlert(schedule.isOpen ? SYSTTEM_CLOSE : SYSTTEM_OPEN, "success");
       } catch (error) {
         console.error("Erro ao alterar o status de abertura do sistema.");
         setLoading(false);
@@ -114,6 +154,7 @@ export default function HomeTemplate() {
           closingTime: schedule.closingTime,
         });
         setLoading(false);
+        showAlert(SCHEDULE_UPDATED, "success");
       } catch (error) {
         console.error("Erro ao alterar o horário de funcionamento do sistema.");
         setLoading(false);
@@ -126,9 +167,17 @@ export default function HomeTemplate() {
     try {
       const orders = await OrderRepositories.getOrders();
 
+      if (orders.length < 1) {
+        setLoading(false);
+        setIsDeleteModalOpen(false);
+        showAlert(WITHOUT_ENOUGHT_COMMANDS, "danger");
+        return;
+      }
+
       let finishedCount = 0;
       let canceledCount = 0;
       let totalValue = 0;
+      const itemQuantitiesMap = new Map<string, number>();
 
       orders.forEach((order: Order) => {
         if (order.status === "finished") {
@@ -138,7 +187,30 @@ export default function HomeTemplate() {
           canceledCount++;
           totalValue += order.total_value;
         }
+
+        order.items.forEach((itemInOrder) => {
+          const itemName = itemInOrder.item.name;
+
+          // Se o item já estiver no mapa, adicione 1 à quantidade existente
+          if (itemQuantitiesMap.has(itemName)) {
+            const existingQuantity = itemQuantitiesMap.get(itemName) || 0;
+            itemQuantitiesMap.set(itemName, existingQuantity + 1);
+          } else {
+            // Caso contrário, inicie a contagem com 1 para o novo item
+            itemQuantitiesMap.set(itemName, 1);
+          }
+        });
       });
+
+      // Converter o mapa para um array de objetos { itemName: string, quantity: number }
+      const itemQuantities = Array.from(itemQuantitiesMap.entries()).map(
+        ([itemName, quantity]) => ({
+          itemName,
+          quantity,
+        })
+      );
+
+      setIsDeleteModalOpen(false);
 
       await deleteAllOrders();
 
@@ -146,10 +218,11 @@ export default function HomeTemplate() {
         canceledOrders: canceledCount,
         finishedOrders: finishedCount,
         invoicing: totalValue,
+        items: itemQuantities,
       });
 
-      setIsDeleteModalOpen(false);
       setLoading(false);
+      showAlert(DELETED_COMMANDS, "success");
     } catch (error) {
       console.error("Erro ao excluir as comandas e gerar estatísticas:", error);
       setLoading(false);
@@ -157,6 +230,7 @@ export default function HomeTemplate() {
   };
 
   const deleteAllOrders = async () => {
+    setLoading(true);
     try {
       const orders = await OrderRepositories.getOrders();
       orders.forEach(async (order: Order) => {
@@ -165,8 +239,10 @@ export default function HomeTemplate() {
         }
       });
       console.log("Todas as comandas excluídas com sucesso!");
+      setLoading(false);
     } catch (error) {
       console.error("Erro ao excluir as comandas:", error);
+      setLoading(false);
     }
   };
 
@@ -201,7 +277,9 @@ export default function HomeTemplate() {
           cashCount += order.money_payment;
           creditCount += order.credit_payment;
           debitCount += order.debit_payment;
-          serviceFeeTotal += order.service_fee;
+          if (order.service_fee_paid) {
+            serviceFeeTotal += order.service_fee;
+          }
         } else if (order.status === "canceled") {
           canceledCount++;
         }
@@ -223,6 +301,45 @@ export default function HomeTemplate() {
       });
     } catch (error) {
       console.error("Erro ao buscar as comandas:", error);
+    }
+  };
+
+  const resetItemChart = async () => {
+    setLoading(true);
+    try {
+      const statistics = await StatisticsRepositories.getStatistics();
+      statistics.forEach(async (statistic: Statistics) => {
+        if (statistic._id) {
+          await StatisticsRepositories.updateStatistic(statistic._id, {
+            ...statistic,
+            items: [],
+          });
+        }
+      });
+      console.log("Gráfico de itens resetado");
+      setLoading(false);
+      showAlert(RESET_CHAR_ITEM, "success");
+    } catch (error) {
+      console.error("Erro ao excluir dados do gráfico de itens:", error);
+      setLoading(false);
+    }
+  };
+
+  const resetAllStatistics = async () => {
+    setLoading(true);
+    try {
+      const statistics = await StatisticsRepositories.getStatistics();
+      statistics.forEach(async (statistic: Order) => {
+        if (statistic._id) {
+          await StatisticsRepositories.deleteStatistic(statistic._id);
+        }
+      });
+      console.log("Gráficos resetados!");
+      setLoading(false);
+      showAlert(RESET_STATISTICS, "success");
+    } catch (error) {
+      console.error("Erro ao resetar gráficos:", error);
+      setLoading(false);
     }
   };
 
@@ -359,9 +476,54 @@ export default function HomeTemplate() {
               <div className={styles.char}>
                 <OrdersChart />
               </div>
+              <div className={styles.char}>
+                <div
+                  className={styles.resetGraphic}
+                  onClick={() => resetItemChart()}
+                >
+                  <Text
+                    fontWeight="semibold"
+                    fontSize="small"
+                    fontColor="background-secondary-color"
+                  >
+                    <FontAwesomeIcon
+                      size="sm"
+                      icon={faRotateLeft}
+                      color="black"
+                    />{" "}
+                    Zerar gráfico
+                  </Text>
+                </div>
+                <ItemsChart />
+              </div>
+              <div
+                className={styles.resetAllStatistics}
+                onClick={() => resetAllStatistics()}
+              >
+                <Text
+                  fontWeight="semibold"
+                  fontSize="small"
+                  fontColor="main-white"
+                >
+                  <FontAwesomeIcon
+                    size="sm"
+                    icon={faRotateLeft}
+                    color="white"
+                  />{" "}
+                  Resetar todas as estatísticas
+                </Text>
+              </div>
             </div>
           )}
         </div>
+        <Alert
+          isAlertOpen={alertInfo.isOpen}
+          setIsAlertOpen={closeAlert}
+          message={alertInfo.message}
+          alertDisplayTime={5000}
+          onClose={closeAlert}
+          type={alertInfo.type}
+        />
       </div>
       <DeleteModal
         onClick={() => deleteOrdersAndGenerateStatistcs()}

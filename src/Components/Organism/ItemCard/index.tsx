@@ -38,8 +38,6 @@ export default function ItemCard({
     };
   }, []);
 
-  console.log(window.innerWidth);
-
   return (
     <div
       className={`${styles.container} ${

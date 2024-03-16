@@ -18,6 +18,11 @@
     align-items: flex-start;
   }
 
+  .icons {
+    display: flex;
+    gap: 12px;
+  }
+
   .deleteIcon {
     transition: color 0.3s ease-in-out;
 
@@ -26,4 +31,8 @@
       color: $invalid-color;
     }
   }
+}
+
+.invisibleItem {
+  opacity: 0.5;
 }

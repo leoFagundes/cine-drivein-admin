@@ -16,18 +16,54 @@ import Alert from "../../Components/Molecules/Alert";
 import UpdateUserModal from "../../Components/Organism/UpdateUserModal";
 import { useAuth } from "../../Context/AuthContext";
 import AccessLimitedToAdmins from "../../Components/Organism/AccessLimitedToAdmins";
+import { useLocation, useNavigate } from "react-router";
+
+const USER_DELETED = "Usuário deletado com sucesso.";
+const USER_UPDATED = "Dados do usuário alterados com sucesso.";
 
 export default function Users() {
   const [users, setUsers] = useState<UserType[]>([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [currentClickedUser, setCurrentClickedUser] = useState<UserType>();
+  const [alertInfo, setAlertInfo] = useState<{
+    isOpen: boolean;
+    message: string;
+    type: string;
+  }>({
+    isOpen: false,
+    message: "",
+    type: "",
+  });
+
   const { user, logout } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const params = new URLSearchParams(location.search);
+  const from = params.get("from");
+
+  useEffect(() => {
+    if (from === "201:UserUpdated") {
+      showAlert(USER_UPDATED, "success");
+      navigate("/", { replace: true });
+    }
+  }, [from, navigate]);
+
+  const showAlert = (message: string, type: string) => {
+    setAlertInfo({
+      isOpen: true,
+      message: message,
+      type: type,
+    });
+  };
 
   const closeAlert = () => {
-    setShowDeleteAlert(false);
+    setAlertInfo({
+      isOpen: false,
+      message: "",
+      type: "",
+    });
   };
 
   useEffect(() => {
@@ -52,7 +88,7 @@ export default function Users() {
       await UserRepositories.deleteUser(userId);
       const updatedUsers = users.filter((user) => user._id !== userId);
       setUsers(updatedUsers);
-      setShowDeleteAlert(true);
+      showAlert(USER_DELETED, "success");
       setIsDeleteModalOpen(false);
       setIsLoading(false);
       if (userId === user?._id) {
@@ -98,7 +134,17 @@ export default function Users() {
                   />
                 )}
                 <FontAwesomeIcon
-                  onClick={() => setIsUpdateModalOpen(true)}
+                  onClick={() => {
+                    setCurrentClickedUser({
+                      _id,
+                      username,
+                      password,
+                      email,
+                      isAdmin,
+                      profileImage,
+                    });
+                    setIsUpdateModalOpen(true);
+                  }}
                   className={styles.userManageEdit}
                   size="sm"
                   icon={faUserPen}
@@ -135,17 +181,18 @@ export default function Users() {
         isOpen={isDeleteModalOpen}
       />
       <UpdateUserModal
-        onClick={() => ""}
+        user={currentClickedUser}
         onClose={() => setIsUpdateModalOpen(false)}
         isOpen={isUpdateModalOpen}
+        setIsLoading={setIsLoading}
       />
       <Alert
-        isAlertOpen={showDeleteAlert}
-        setIsAlertOpen={setShowDeleteAlert}
-        message={`Usuário excluído com sucesso.`}
-        alertDisplayTime={3000}
+        isAlertOpen={alertInfo.isOpen}
+        setIsAlertOpen={closeAlert}
+        message={alertInfo.message}
+        alertDisplayTime={5000}
         onClose={closeAlert}
-        type="success"
+        type={alertInfo.type}
       />
     </section>
   );

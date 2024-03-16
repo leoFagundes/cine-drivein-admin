@@ -36,13 +36,15 @@ export default function OrdersChart() {
 
   const options = {
     chart: {
-      type: "line" as const,
+      type: "area" as const,
       height: 350,
     },
     xaxis: {
-      categories: chartData.dates.map((date) =>
-        new Date(date).toLocaleDateString()
-      ),
+      categories: chartData.dates.map((date) => {
+        const dateObj = new Date(date);
+        // Formatando a data para incluir hora e minuto
+        return `${dateObj.toLocaleDateString()} ${dateObj.getHours()}:${dateObj.getMinutes()}`;
+      }),
       labels: {
         style: {
           colors: "#000000", // Define a cor das legendas do eixo Y
@@ -85,7 +87,7 @@ export default function OrdersChart() {
         { name: "Pedidos Finalizados", data: chartData.finishedOrdersData },
         { name: "Pedidos Cancelados", data: chartData.canceledOrdersData },
       ]}
-      type="line"
+      type="area"
       height={350}
     />
   );

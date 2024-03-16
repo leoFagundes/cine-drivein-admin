@@ -39,7 +39,7 @@ export default function ItemsChart() {
     "#FF6633",
     "#FFB399",
     "#FF33FF",
-    "#FFFF99",
+    "#36dbb2",
     "#00B3E6",
     "#E6B333",
     "#3366E6",

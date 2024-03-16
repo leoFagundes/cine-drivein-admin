@@ -520,7 +520,7 @@ export default function HomeTemplate() {
           isAlertOpen={alertInfo.isOpen}
           setIsAlertOpen={closeAlert}
           message={alertInfo.message}
-          alertDisplayTime={5000}
+          alertDisplayTime={3000}
           onClose={closeAlert}
           type={alertInfo.type}
         />

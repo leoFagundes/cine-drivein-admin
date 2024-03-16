@@ -69,6 +69,18 @@
   }
 }
 
+.textToCopy {
+  transition: 0.1s ease-in-out;
+
+  &:hover {
+    cursor: pointer;
+  }
+  &:active {
+    cursor: default;
+    font-size: 15px;
+  }
+}
+
 @keyframes modalAnimation {
   from {
     transform: translateY(-10px);

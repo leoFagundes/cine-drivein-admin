@@ -193,7 +193,7 @@ export default function UpdateUserModal({
                   errorLabel: emailError,
                 },
               ]}
-              buttonLabel="Criar conta"
+              buttonLabel="Atualizar"
               buttonOnClick={handleSubmit}
               createAccountTokenInfo={{
                 value: token,

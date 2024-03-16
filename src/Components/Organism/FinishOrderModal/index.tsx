@@ -126,6 +126,19 @@ export default function FinishOrderModal({
     }
   };
 
+  const handleCopyClick = (textToCopy: string) => {
+    navigator.clipboard
+      .writeText(textToCopy)
+      .then(() => {
+        showAlert &&
+          showAlert("Texto copiado para a área de transferência", "success");
+        console.log("Texto copiado para a área de transferência: ", textToCopy);
+      })
+      .catch((error) => {
+        console.error("Erro ao copiar o texto: ", error);
+      });
+  };
+
   return (
     <>
       {isOpen && (
@@ -217,7 +230,14 @@ export default function FinishOrderModal({
                   >
                     R$ {calculateTotalValue()}
                   </Text>
-                  /{totalToPay}
+                  /
+                  <span
+                    className={styles.textToCopy}
+                    title="Copiar para área de transferência"
+                    onClick={() => handleCopyClick(totalToPay)}
+                  >
+                    {totalToPay}
+                  </span>
                 </Text>
                 <Button
                   onClick={() => handleSubmit()}

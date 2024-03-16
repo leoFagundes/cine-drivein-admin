@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 export default function Profile() {
   const [loadingIndex, setLoadingIndex] = useState(0);
   const { user, updateUser } = useAuth();
-  const requestInterval = 1;
+  const requestInterval = 15;
 
   useEffect(() => {
     const interval = setInterval(() => {

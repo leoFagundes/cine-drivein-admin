@@ -92,6 +92,7 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 22px;
+    max-height: 350px;
 
     @media screen and (max-width: 950px) {
       flex-wrap: nowrap;
@@ -109,6 +110,7 @@
       gap: 4px;
       padding: 12px;
       width: 100%;
+      max-height: 150px;
       flex: 1;
       min-height: 10px;
       border: 1px solid $placeholder-color;

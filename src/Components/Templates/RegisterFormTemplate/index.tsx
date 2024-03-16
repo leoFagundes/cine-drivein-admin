@@ -8,7 +8,7 @@ import CheckBox from "../../Atoms/CheckBox";
 import { AdditionalItem, Item } from "../../../Types/types";
 import AdditionalItemRepositories from "../../../Services/repositories/AdditionalItemRepositories";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { faClose, faWarning } from "@fortawesome/free-solid-svg-icons";
 
 type CaptionKey = "general" | "sauces" | "drinks" | "sweets";
 
@@ -38,6 +38,7 @@ type RegisterFormTemplateType = {
   buttonLabel: string;
   setItemWithSubitems?: React.Dispatch<React.SetStateAction<Item>>;
   itemWithSubitems?: Item;
+  blockSubitems?: boolean;
 };
 
 export default function RegisterFormTemplate({
@@ -48,6 +49,7 @@ export default function RegisterFormTemplate({
   setItemWithSubitems,
   itemWithSubitems,
   withSubitem = false,
+  blockSubitems = false,
 }: RegisterFormTemplateType) {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [subitemOptions, setSubitemOptions] = useState<AdditionalItem[]>();
@@ -292,6 +294,15 @@ export default function RegisterFormTemplate({
         </div>
         {withSubitem && (
           <div className={styles.subitems}>
+            {blockSubitems && (
+              <div className={styles.blockSubitems}>
+                <FontAwesomeIcon size="2x" icon={faWarning} />
+                <Text fontWeight="semibold" fontSize="mediumLarge">
+                  Funcionalidade Bloqueada para essa ação!
+                </Text>
+              </div>
+            )}
+
             <Text fontWeight="semibold">Adicionar um subitem</Text>
             <div className={styles.captions}>
               <div>

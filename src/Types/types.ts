@@ -24,6 +24,7 @@ export type AdditionalItem = {
   name: string;
   description: string;
   photo: string;
+  isVisible?: boolean;
 };
 
 export type Item = {
@@ -53,6 +54,7 @@ export type Order = {
   credit_payment: number;
   debit_payment: number;
   service_fee: number;
+  service_fee_paid?: boolean;
   total_value: number;
   items: ItemInOrder[];
   createdAt?: string;
@@ -72,5 +74,9 @@ export type Statistics = {
   canceledOrders: number;
   finishedOrders: number;
   invoicing: number;
+  items?: {
+    itemName: string;
+    quantity: number;
+  }[];
   createdAt?: string;
 };

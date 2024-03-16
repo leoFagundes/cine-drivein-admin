@@ -29,6 +29,22 @@
       padding: 22px;
       border-radius: 5px;
       min-width: 350px;
+      position: relative;
+
+      .blockSubitems {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        position: absolute;
+        height: 100%;
+        padding: 22px;
+        width: 100%;
+        margin-top: -22px;
+        gap: 12px;
+        backdrop-filter: blur(3px);
+      }
 
       .captions {
         display: flex;

@@ -45,6 +45,7 @@ export default function InvoicingChart() {
         style: {
           colors: "#000000", // Define a cor das legendas do eixo Y
         },
+        formatter: (value: number) => `R$ ${value.toFixed(2)}`,
       },
     },
     title: {

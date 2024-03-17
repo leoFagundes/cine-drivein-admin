@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import ApexCharts from "react-apexcharts";
 import StatisticsRepositories from "../../../Services/repositories/statisticsRepositories";
+import styles from "./ItemsChart.module.scss";
 
 export default function ItemsChart() {
   const [chartData, setChartData] = useState<{
     itemNames: string[];
     itemCounts: number[];
   }>({ itemNames: [], itemCounts: [] });
+  const [selectedItems, setSelectedItems] = useState(new Set());
 
   useEffect(() => {
     async function fetchChartData() {
@@ -34,6 +36,35 @@ export default function ItemsChart() {
 
     fetchChartData();
   }, []);
+
+  const handleItemClick = (itemName: string) => {
+    setSelectedItems((prevSelectedItems) => {
+      const newSelectedItems = new Set(prevSelectedItems);
+      if (newSelectedItems.has(itemName)) {
+        newSelectedItems.delete(itemName);
+      } else {
+        newSelectedItems.add(itemName);
+      }
+      return newSelectedItems;
+    });
+  };
+
+  const filteredItemNames = chartData.itemNames.filter(
+    (name) => !selectedItems.has(name)
+  );
+  const filteredItemCounts = chartData.itemCounts.filter(
+    (_, index) => !selectedItems.has(chartData.itemNames[index])
+  );
+
+  // Função para marcar todos os itens
+  const selectAllItems = () => {
+    setSelectedItems(new Set(chartData.itemNames));
+  };
+
+  // Função para desmarcar todos os itens
+  const clearAllItems = () => {
+    setSelectedItems(new Set());
+  };
 
   const colors = [
     "#FF6633",
@@ -94,7 +125,7 @@ export default function ItemsChart() {
       height: 350,
     },
     xaxis: {
-      categories: chartData.itemNames,
+      categories: filteredItemNames,
       labels: {
         style: {
           colors: "#000000",
@@ -134,11 +165,34 @@ export default function ItemsChart() {
   };
 
   return (
-    <ApexCharts
-      options={options}
-      series={[{ name: "Quantidade", data: chartData.itemCounts }]}
-      type="bar"
-      height={350}
-    />
+    <>
+      <ApexCharts
+        options={options}
+        series={[{ name: "Quantidade", data: filteredItemCounts }]}
+        type="bar"
+        height={350}
+      />
+      <div className={styles.container}>
+        <div className={styles.defaultButtons}>
+          <button onClick={selectAllItems} className={`${styles.button}`}>
+            Marcar Todos
+          </button>
+          <button onClick={clearAllItems} className={`${styles.button}`}>
+            Desmarcar Todos
+          </button>
+        </div>
+        {chartData.itemNames.map((itemName) => (
+          <button
+            key={itemName}
+            onClick={() => handleItemClick(itemName)}
+            className={`${styles.button} ${
+              selectedItems.has(itemName) ? styles.filteredButton : ""
+            }`}
+          >
+            {itemName}
+          </button>
+        ))}
+      </div>
+    </>
   );
 }

@@ -87,3 +87,12 @@
     column-gap: 12px;
   }
 }
+
+@keyframes modalAnimation {
+  from {
+    transform: translateY(-10px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

@@ -9,6 +9,8 @@ import { LoadingFullScreenTemplate } from "../LoadingFullScreenTemplate";
 import Alert from "../../Molecules/Alert";
 import DeleteModal from "../../Organism/DeleteModal";
 import FinishOrderModal from "../../Organism/FinishOrderModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 type OrdersType = {
   orders: Order[];
@@ -178,7 +180,12 @@ export default function OrdersTemplate({
           ) : (
             <div className={styles.noContent}>
               {isActive.activeOrders && (
-                <Text fontSize="mediumLarge">
+                <Text fontSize="mediumLarge" fontWeight="semibold">
+                  <FontAwesomeIcon
+                    className={styles.closeModalIcon}
+                    size="2xl"
+                    icon={faTriangleExclamation}
+                  />{" "}
                   Não há pedidos ativos no momento.
                 </Text>
               )}
@@ -207,7 +214,12 @@ export default function OrdersTemplate({
           ) : (
             <div className={styles.noContent}>
               {isActive.finishedCanceledOrders && (
-                <Text fontSize="mediumLarge">
+                <Text fontSize="mediumLarge" fontWeight="semibold">
+                  <FontAwesomeIcon
+                    className={styles.closeModalIcon}
+                    size="2xl"
+                    icon={faTriangleExclamation}
+                  />{" "}
                   Não há pedidos finalizados ou cancelados no momento.
                 </Text>
               )}

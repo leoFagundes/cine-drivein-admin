@@ -15,6 +15,7 @@ import Alert from "../../Molecules/Alert";
 import ItemsChart from "../../Organism/ItemsChart";
 import OrdersChart from "../../Organism/OrdersChart";
 import InvoicingChart from "../../Organism/InvoicingChart";
+import ReportModal from "../../Organism/ReportModal";
 
 const WITHOUT_ENOUGHT_COMMANDS = "Não há comandas para realizar essa ação.";
 const DELETED_COMMANDS =
@@ -31,6 +32,7 @@ export default function HomeTemplate() {
   const [isLoading, setLoading] = useState(true);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [orderStatus, setOrderStatus] = useState({
     active: 0,
     finished: 0,
@@ -450,7 +452,10 @@ export default function HomeTemplate() {
                   {orderStatus.finishedByPayment.serviceFee.toFixed(2)}
                 </Text>
               </div>
-              <Button label="Gerar relatório" onClick={() => ""} />
+              <Button
+                label="Gerar relatório"
+                onClick={() => setIsReportModalOpen(true)}
+              />
             </div>
             <div className={`${styles.boxTemplate}`}>
               <Text fontSize="mediumLarge" fontWeight="semibold">
@@ -537,6 +542,10 @@ export default function HomeTemplate() {
           type={alertInfo.type}
         />
       </div>
+      <ReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+      />
       <DeleteModal
         onClick={() => deleteOrdersAndGenerateStatistcs()}
         itemType="conjunto de comandas"

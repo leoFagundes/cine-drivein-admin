@@ -9,6 +9,7 @@ export default function ItemsChart() {
     itemCounts: number[];
   }>({ itemNames: [], itemCounts: [] });
   const [selectedItems, setSelectedItems] = useState(new Set());
+  const [filterText, setFilterText] = useState("");
 
   useEffect(() => {
     async function fetchChartData() {
@@ -50,10 +51,16 @@ export default function ItemsChart() {
   };
 
   const filteredItemNames = chartData.itemNames.filter(
-    (name) => !selectedItems.has(name)
+    (name) =>
+      !selectedItems.has(name) &&
+      name.toLowerCase().includes(filterText.toLowerCase())
   );
   const filteredItemCounts = chartData.itemCounts.filter(
-    (_, index) => !selectedItems.has(chartData.itemNames[index])
+    (_, index) =>
+      !selectedItems.has(chartData.itemNames[index]) &&
+      chartData.itemNames[index]
+        .toLowerCase()
+        .includes(filterText.toLowerCase())
   );
 
   // Função para marcar todos os itens
@@ -66,26 +73,24 @@ export default function ItemsChart() {
     setSelectedItems(new Set());
   };
 
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterText(event.target.value);
+  };
+
   const colors = [
-    "#FF6633",
-    "#FFB399",
-    "#FF33FF",
-    "#36dbb2",
     "#00B3E6",
     "#E6B333",
     "#3366E6",
-    "#999966",
-    "#99FF99",
+    "#f18226",
+    "#48d648",
     "#B34D4D",
     "#80B300",
-    "#809900",
-    "#E6B3B3",
+    "#df4e4e",
     "#6680B3",
     "#66991A",
-    "#FF99E6",
+    "#ec63ca",
     "#CCFF1A",
     "#FF1A66",
-    "#E6331A",
     "#33FFCC",
     "#66994D",
     "#B366CC",
@@ -180,13 +185,23 @@ export default function ItemsChart() {
           <button onClick={clearAllItems} className={`${styles.button}`}>
             Desmarcar Todos
           </button>
+          <input
+            type="text"
+            placeholder="Filtrar itens..."
+            value={filterText}
+            onChange={handleFilterChange}
+            className={styles.filterInput}
+          />
         </div>
         {chartData.itemNames.map((itemName) => (
           <button
             key={itemName}
             onClick={() => handleItemClick(itemName)}
             className={`${styles.button} ${
-              selectedItems.has(itemName) ? styles.filteredButton : ""
+              selectedItems.has(itemName) ||
+              !itemName.toLowerCase().includes(filterText.toLowerCase())
+                ? styles.filteredButton
+                : ""
             }`}
           >
             {itemName}

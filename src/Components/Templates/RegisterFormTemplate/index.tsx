@@ -298,7 +298,7 @@ export default function RegisterFormTemplate({
               <div className={styles.blockSubitems}>
                 <FontAwesomeIcon size="2x" icon={faWarning} />
                 <Text fontWeight="semibold" fontSize="mediumLarge">
-                  Funcionalidade Bloqueada para essa ação!
+                  Funcionalidade Bloqueada para esta ação!
                 </Text>
               </div>
             )}

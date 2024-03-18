@@ -6,15 +6,15 @@ import ScheduleRepositories from "../../../Services/repositories/ScheduleReposit
 import { Order, Schedule, Statistics } from "../../../Types/types";
 import { LoadingFullScreenTemplate } from "../LoadingFullScreenTemplate";
 import AccessLimitedToAdmins from "../../Organism/AccessLimitedToAdmins";
-import InvoicingChart from "../../Atoms/InvoicingChart";
-import OrdersChart from "../../Atoms/OrdersChart";
 import DeleteModal from "../../Organism/DeleteModal";
 import OrderRepositories from "../../../Services/repositories/OrderRepositories";
 import StatisticsRepositories from "../../../Services/repositories/statisticsRepositories";
-import ItemsChart from "../../Atoms/ItemsChart";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import Alert from "../../Molecules/Alert";
+import ItemsChart from "../../Organism/ItemsChart";
+import OrdersChart from "../../Organism/OrdersChart";
+import InvoicingChart from "../../Organism/InvoicingChart";
 
 const WITHOUT_ENOUGHT_COMMANDS = "Não há comandas para realizar essa ação.";
 const DELETED_COMMANDS =
@@ -24,6 +24,7 @@ const SYSTTEM_CLOSE = "Sistema foi fechado com sucesso.";
 const SCHEDULE_UPDATED = "Horários atualizados.";
 const RESET_STATISTICS = "Estatísticas resetadas. Recarregue a página.";
 const RESET_CHAR_ITEM = "Gráfico de itens zerado. Recarregue a página.";
+const THEREARE_ACTIVE_COMMANDS = "Existem comandas ativas.";
 
 export default function HomeTemplate() {
   const [schedule, setSchedule] = useState<Schedule>();
@@ -174,6 +175,13 @@ export default function HomeTemplate() {
         return;
       }
 
+      if (orders.some((order: Order) => order.status === "active")) {
+        setLoading(false);
+        setIsDeleteModalOpen(false);
+        showAlert(THEREARE_ACTIVE_COMMANDS, "danger");
+        return;
+      }
+
       let finishedCount = 0;
       let canceledCount = 0;
       let totalValue = 0;
@@ -182,10 +190,14 @@ export default function HomeTemplate() {
       orders.forEach((order: Order) => {
         if (order.status === "finished") {
           finishedCount++;
-          totalValue += order.total_value;
+          totalValue += order.debit_payment;
+          totalValue += order.credit_payment;
+          totalValue += order.money_payment;
+          if (order.service_fee_paid) {
+            totalValue -= order.service_fee;
+          }
         } else if (order.status === "canceled") {
           canceledCount++;
-          totalValue += order.total_value;
         }
 
         order.items.forEach((itemInOrder) => {
@@ -221,8 +233,8 @@ export default function HomeTemplate() {
         items: itemQuantities,
       });
 
-      setLoading(false);
       showAlert(DELETED_COMMANDS, "success");
+      setLoading(false);
     } catch (error) {
       console.error("Erro ao excluir as comandas e gerar estatísticas:", error);
       setLoading(false);

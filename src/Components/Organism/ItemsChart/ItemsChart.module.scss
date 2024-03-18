@@ -13,6 +13,17 @@
     gap: 8px;
     width: 100%;
 
+    .filterInput {
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid $placeholder-color;
+      outline: transparent;
+
+      &:focus {
+        border: 1px solid $primary-color;
+      }
+    }
+
     .button {
       border: 1px solid $primary-color;
 

@@ -13,10 +13,7 @@ type ModalType = {
 };
 
 type GroupedItems = {
-  serviceFeePaid: {
-    [codItem: string]: { name: string; quantity: number; cod_item: string }[];
-  };
-  serviceFeeNotPaid: {
+  allItems: {
     [codItem: string]: { name: string; quantity: number; cod_item: string }[];
   };
 };
@@ -26,8 +23,7 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
 
   const groupItemsByServiceFee = (orders: Order[]): GroupedItems => {
     const groupedItems: GroupedItems = {
-      serviceFeePaid: {},
-      serviceFeeNotPaid: {},
+      allItems: {},
     };
 
     // Filtra apenas as orders com status "finished"
@@ -38,15 +34,12 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
     finishedOrders.forEach((order) => {
       order.items.forEach((itemInOrder) => {
         const { cod_item, name, quantity } = itemInOrder.item;
-        const group = order.service_fee_paid
-          ? "serviceFeePaid"
-          : "serviceFeeNotPaid";
 
-        if (!groupedItems[group][cod_item]) {
-          groupedItems[group][cod_item] = [];
+        if (!groupedItems.allItems[cod_item]) {
+          groupedItems.allItems[cod_item] = [];
         }
 
-        groupedItems[group][cod_item].push({ name, quantity, cod_item });
+        groupedItems.allItems[cod_item].push({ name, quantity, cod_item });
       });
     });
 
@@ -59,7 +52,7 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
   };
 
   useEffect(() => {
-    const fecthOrders = async () => {
+    const fetchOrders = async () => {
       try {
         const ordersRequest = await OrderRepositories.getOrders();
         setOrders(ordersRequest);
@@ -72,7 +65,7 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
       }
     };
 
-    fecthOrders();
+    fetchOrders();
   }, []);
 
   // Função para calcular as somas
@@ -153,27 +146,9 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
             <div className={styles.infoItemReport}>
               <div>
                 <Text fontSize="mediumLarge" fontWeight="bold">
-                  Itens com taxa de serviço paga
+                  Itens dos pedidos finalizados
                 </Text>
-                {Object.entries(groupedItems.serviceFeePaid).map(
-                  ([codItem, items]) => (
-                    <div key={codItem}>
-                      <Text fontSize="mediumSmall">
-                        {items.length}x {items[0].name} ( {items[0].cod_item} )
-                      </Text>
-                    </div>
-                  )
-                )}
-              </div>
-              <div>
-                <Text
-                  fontAlign="center"
-                  fontSize="mediumLarge"
-                  fontWeight="bold"
-                >
-                  Itens sem taxa de serviço paga
-                </Text>
-                {Object.entries(groupedItems.serviceFeeNotPaid).map(
+                {Object.entries(groupedItems.allItems).map(
                   ([codItem, items]) => (
                     <div key={codItem}>
                       <Text fontSize="mediumSmall">

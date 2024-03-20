@@ -1,0 +1,42 @@
+@import "../../../Global.scss";
+
+.container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .orderContent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 300px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    position: relative;
+    padding: 8px;
+    background-color: $main-white;
+    color: black;
+    border: 1px solid transparent;
+    outline: 1px solid transparent;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+
+    .openModalIcon {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    &.isCanceled {
+      border-color: $invalid-color;
+      outline-color: $invalid-color;
+    }
+    &.isFinished {
+      border-color: $primary-color;
+      outline-color: $primary-color;
+    }
+  }
+}

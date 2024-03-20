@@ -11,6 +11,8 @@ import DeleteModal from "../../Organism/DeleteModal";
 import FinishOrderModal from "../../Organism/FinishOrderModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import OrderMobileCard from "../../Organism/OrderMobileCard";
+import OrderCardModal from "../../Organism/OrderCardModal";
 
 type OrdersType = {
   orders: Order[];
@@ -34,9 +36,11 @@ export default function OrdersTemplate({
   const [curretnClickedItem, setCurrentClickedItem] = useState<Order>();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isFinishModalOpen, setIsFinishModalOpen] = useState(false);
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [searchSpot, setSearchSpot] = useState("");
   const [searchOrderNumber, setSearchOrderNumber] = useState("");
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [alertInfo, setAlertInfo] = useState<{
     isOpen: boolean;
     message: string;
@@ -64,6 +68,18 @@ export default function OrdersTemplate({
   };
 
   useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
     const filtered = orders.filter((order) => {
       const matchSpot = order.spot.toString().includes(searchSpot);
       const matchOrderNumber = order.order_number
@@ -86,6 +102,7 @@ export default function OrdersTemplate({
 
         const updatedOrders = orders.filter((order) => order._id !== id);
         setOrders(updatedOrders);
+        setIsOrderModalOpen(false);
         setIsLoading(false);
         showAlert(DELETE_ORDER_MESSAGE, "success");
         setIsDeleteModalOpen(false);
@@ -104,6 +121,7 @@ export default function OrdersTemplate({
         await OrderRepositories.updateOrder(id, { status: "canceled" });
         const updatedOrders = orders.filter((order) => order._id !== id);
         setOrders(updatedOrders);
+        setIsOrderModalOpen(false);
         setIsLoading(false);
         showAlert(CANCEL_ORDER_MESSAGE, "success");
       } catch (error) {
@@ -156,12 +174,14 @@ export default function OrdersTemplate({
             value={searchSpot}
             onChange={(e) => setSearchSpot(e.target.value)}
           />
-          <Input
-            type="number"
-            placeholder="Filtrar por número do pedido"
-            value={searchOrderNumber}
-            onChange={(e) => setSearchOrderNumber(e.target.value)}
-          />
+          {windowWidth >= 721 && (
+            <Input
+              type="number"
+              placeholder="Filtrar por número do pedido"
+              value={searchOrderNumber}
+              onChange={(e) => setSearchOrderNumber(e.target.value)}
+            />
+          )}
         </div>
         <div className={styles.orderItems}>
           {isActive.activeOrders &&
@@ -170,12 +190,21 @@ export default function OrdersTemplate({
             filteredOrders
               .filter((order) => order.status === "active")
               .map((order, index) => (
-                <OrderCard
-                  order={order}
-                  onClickCancelOrder={onClickCancelOrder}
-                  onClickFinishOrder={onClickFinishOrder}
-                  key={index}
-                />
+                <div key={index}>
+                  {windowWidth >= 721 ? (
+                    <OrderCard
+                      order={order}
+                      onClickCancelOrder={onClickCancelOrder}
+                      onClickFinishOrder={onClickFinishOrder}
+                    />
+                  ) : (
+                    <OrderMobileCard
+                      order={order}
+                      setIsOrderModalOpen={setIsOrderModalOpen}
+                      setCurrentClickedItem={setCurrentClickedItem}
+                    />
+                  )}
+                </div>
               ))
           ) : (
             <div className={styles.noContent}>
@@ -202,14 +231,23 @@ export default function OrdersTemplate({
                   order.status === "finished" || order.status === "canceled"
               )
               .map((order, index) => (
-                <OrderCard
-                  order={order}
-                  onClickDeleteOrder={() => {
-                    setIsDeleteModalOpen(true);
-                    setCurrentClickedItem(order);
-                  }}
-                  key={index}
-                />
+                <div key={index}>
+                  {windowWidth >= 721 ? (
+                    <OrderCard
+                      order={order}
+                      onClickDeleteOrder={() => {
+                        setIsDeleteModalOpen(true);
+                        setCurrentClickedItem(order);
+                      }}
+                    />
+                  ) : (
+                    <OrderMobileCard
+                      order={order}
+                      setIsOrderModalOpen={setIsOrderModalOpen}
+                      setCurrentClickedItem={setCurrentClickedItem}
+                    />
+                  )}
+                </div>
               ))
           ) : (
             <div className={styles.noContent}>
@@ -236,6 +274,16 @@ export default function OrdersTemplate({
         itemType="pedido"
         onClose={() => setIsDeleteModalOpen(false)}
         isOpen={isDeleteModalOpen}
+      />
+      <OrderCardModal
+        isOpen={isOrderModalOpen}
+        order={curretnClickedItem}
+        onClose={() => setIsOrderModalOpen(false)}
+        onClickCancelOrder={onClickCancelOrder}
+        onClickFinishOrder={onClickFinishOrder}
+        onClickDeleteOrder={() => {
+          setIsDeleteModalOpen(true);
+        }}
       />
       <FinishOrderModal
         orderData={curretnClickedItem}

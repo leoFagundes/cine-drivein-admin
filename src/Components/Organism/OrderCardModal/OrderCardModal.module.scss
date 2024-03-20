@@ -1,0 +1,52 @@
+@import "../../../Global.scss";
+
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 100%;
+  position: fixed;
+  height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 40px;
+  background: rgb(33, 37, 41, 60%);
+  backdrop-filter: blur(2px);
+  z-index: 1;
+
+  .closeModalIcon {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    color: $main-white;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.modalContainer {
+  display: flex;
+  position: relative;
+  max-width: 450px;
+  min-width: 300px;
+  animation: modalAnimation 0.5s ease forwards;
+  z-index: 2;
+  cursor: default;
+}
+
+@keyframes modalAnimation {
+  from {
+    transform: translateY(-10px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

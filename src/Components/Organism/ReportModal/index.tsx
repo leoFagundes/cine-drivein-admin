@@ -30,7 +30,12 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
       serviceFeeNotPaid: {},
     };
 
-    orders.forEach((order) => {
+    // Filtra apenas as orders com status "finished"
+    const finishedOrders = orders.filter(
+      (order) => order.status === "finished"
+    );
+
+    finishedOrders.forEach((order) => {
       order.items.forEach((itemInOrder) => {
         const { cod_item, name, quantity } = itemInOrder.item;
         const group = order.service_fee_paid

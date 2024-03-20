@@ -318,6 +318,12 @@ export default function HomeTemplate() {
     }
   };
 
+  function confirmItemChartReset() {
+    if (window.confirm("Tem certeza que deseja zerar o gráfico?")) {
+      resetItemChart();
+    }
+  }
+
   const resetItemChart = async () => {
     setLoading(true);
     try {
@@ -338,6 +344,12 @@ export default function HomeTemplate() {
       setLoading(false);
     }
   };
+
+  function confirmChartsReset() {
+    if (window.confirm("Tem certeza que deseja zerar TODOS os gráficos?")) {
+      resetAllStatistics();
+    }
+  }
 
   const resetAllStatistics = async () => {
     setLoading(true);
@@ -496,7 +508,7 @@ export default function HomeTemplate() {
               <div className={styles.char}>
                 <div
                   className={styles.resetGraphic}
-                  onClick={() => resetItemChart()}
+                  onClick={() => confirmItemChartReset()}
                 >
                   <Text
                     fontWeight="semibold"
@@ -515,7 +527,7 @@ export default function HomeTemplate() {
               </div>
               <div
                 className={styles.resetAllStatistics}
-                onClick={() => resetAllStatistics()}
+                onClick={() => confirmChartsReset()}
               >
                 <Text
                   fontWeight="semibold"

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import ApexCharts from "react-apexcharts";
 import StatisticsRepositories from "../../../Services/repositories/statisticsRepositories";
 import styles from "./ItemsChart.module.scss";
+import Text from "../../Atoms/Text";
 
 export default function ItemsChart() {
   const [chartData, setChartData] = useState<{
@@ -10,12 +11,32 @@ export default function ItemsChart() {
   }>({ itemNames: [], itemCounts: [] });
   const [selectedItems, setSelectedItems] = useState(new Set());
   const [filterText, setFilterText] = useState("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+
+  // Define a data de início como 7 dias atrás e a data de término como o dia de hoje
+  useEffect(() => {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    setStartDate(sevenDaysAgo.toISOString().split("T")[0]);
+    setEndDate(new Date().toISOString().split("T")[0]);
+  }, []);
 
   useEffect(() => {
     async function fetchChartData() {
       try {
         const statistics = await StatisticsRepositories.getStatistics();
-        const itemsData = statistics.flatMap((stat: any) => stat.items || []);
+
+        // Filtrando os dados com base nas datas selecionadas
+        const filteredData = statistics.filter((stat: any) => {
+          const createdAtDate = new Date(stat.createdAt);
+          return (
+            createdAtDate >= new Date(startDate) &&
+            createdAtDate <= new Date(endDate)
+          );
+        });
+
+        const itemsData = filteredData.flatMap((stat: any) => stat.items || []);
         const itemCountsMap = new Map<string, number>();
 
         itemsData.forEach((item: { itemName: string; quantity: number }) => {
@@ -35,8 +56,21 @@ export default function ItemsChart() {
       }
     }
 
-    fetchChartData();
-  }, []);
+    // Verifica se startDate e endDate estão definidos antes de buscar os dados
+    if (startDate && endDate) {
+      fetchChartData();
+    }
+  }, [startDate, endDate]);
+
+  const handleStartDateChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setStartDate(event.target.value);
+  };
+
+  const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEndDate(event.target.value);
+  };
 
   const handleItemClick = (itemName: string) => {
     setSelectedItems((prevSelectedItems) => {
@@ -171,6 +205,24 @@ export default function ItemsChart() {
 
   return (
     <>
+      <div className={styles.scheduleManage}>
+        <div className={styles.date}>
+          <Text fontSize="small" fontColor="background-secondary-color">
+            Data de início:
+          </Text>
+          <input
+            type="date"
+            value={startDate}
+            onChange={handleStartDateChange}
+          />
+        </div>
+        <div className={styles.date}>
+          <Text fontSize="small" fontColor="background-secondary-color">
+            Data de término:
+          </Text>
+          <input type="date" value={endDate} onChange={handleEndDateChange} />
+        </div>
+      </div>
       <ApexCharts
         options={options}
         series={[{ name: "Quantidade", data: filteredItemCounts }]}

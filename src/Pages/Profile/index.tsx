@@ -10,9 +10,12 @@ import {
 import { profileIconData } from "./profileIconData";
 import UserRepositories from "../../Services/repositories/UserRepositories";
 import { useState, useEffect } from "react";
+import { LoadingFullScreenTemplate } from "../../Components/Templates/LoadingFullScreenTemplate";
 
 export default function Profile() {
   const [loadingIndex, setLoadingIndex] = useState(0);
+  const [allIconsLoaded, setAllIconsLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { user, updateUser } = useAuth();
   const requestInterval = 15;
 
@@ -20,10 +23,21 @@ export default function Profile() {
     const interval = setInterval(() => {
       if (loadingIndex < profileIconData.length) {
         setLoadingIndex((prevIndex) => prevIndex + 1);
+      } else {
+        setAllIconsLoaded(true);
+        clearInterval(interval);
       }
     }, requestInterval);
     return () => clearInterval(interval);
   }, [loadingIndex]);
+
+  useEffect(() => {
+    if (allIconsLoaded) {
+      console.log("Todos os ícones do perfil foram carregados!");
+      setIsLoading(false);
+      setAllIconsLoaded(false);
+    }
+  }, [allIconsLoaded]);
 
   const handleClick = async (profileImageUpdate: string) => {
     let updatedProfileImage = profileImageUpdate;
@@ -64,6 +78,11 @@ export default function Profile() {
   if (user) {
     return (
       <section className={styles.profileContainer}>
+        {isLoading && (
+          <div className={styles.isLoading}>
+            <LoadingFullScreenTemplate />
+          </div>
+        )}
         <div className={styles.userCard}>
           {user.profileImage !== "" ? (
             <img

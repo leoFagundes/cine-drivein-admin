@@ -93,7 +93,7 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
       0
     );
     const serviceFee = finishedOrders.reduce(
-      (acc, order) => acc + order.service_fee,
+      (acc, order) => acc + (order.service_fee_paid ? order.service_fee : 0),
       0
     );
     const total = subtotal + serviceFee;

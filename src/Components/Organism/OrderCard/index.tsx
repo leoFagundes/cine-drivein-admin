@@ -234,7 +234,19 @@ export default function OrderCard({
             <strong>Valor:</strong> R$ {order.total_value.toFixed(2)}
           </Text>
           <Text fontSize="mediumSmall" fontColor="background-secondary-color">
-            <strong>Taxa de serviço:</strong> R$ {order.service_fee.toFixed(2)}
+            <strong>Taxa de serviço:</strong>{" "}
+            <Text
+              fontSize="mediumSmall"
+              fontColor={
+                order.status === "finished"
+                  ? order.service_fee_paid
+                    ? "primary-color"
+                    : "invalid-color"
+                  : "background-secondary-color"
+              }
+            >
+              R$ {order.service_fee.toFixed(2)}
+            </Text>
           </Text>
           <Text fontSize="mediumSmall" fontColor="background-secondary-color">
             <strong>Valor total:</strong> R${" "}

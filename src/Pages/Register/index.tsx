@@ -245,24 +245,29 @@ export default function Register() {
     setIsLoading(true);
 
     try {
-      await ItemRepositories.createItem(item);
-      setIsItemActive(false);
-      showAlert(ALERT_MESSAGE_ITEM_CREATED, "success");
+      const formData = new FormData();
+      formData.append("image", item.photo);
+      const res = ItemRepositories.sendImageToBucket(item.photo);
+      console.log(res);
+
+      //await ItemRepositories.createItem(item);
+      // setIsItemActive(false);
+      // showAlert(ALERT_MESSAGE_ITEM_CREATED, "success");
       setIsLoading(false);
-      setItem({
-        cod_item: "",
-        name: "",
-        type: "",
-        description: "",
-        value: 0,
-        quantity: 0,
-        photo: "",
-        isVisible: true,
-        additionals: [],
-        additionals_sauces: [],
-        additionals_drinks: [],
-        additionals_sweets: [],
-      });
+      // setItem({
+      //   cod_item: "",
+      //   name: "",
+      //   type: "",
+      //   description: "",
+      //   value: 0,
+      //   quantity: 0,
+      //   photo: "",
+      //   isVisible: true,
+      //   additionals: [],
+      //   additionals_sauces: [],
+      //   additionals_drinks: [],
+      //   additionals_sweets: [],
+      // });
       console.log("Item criado com sucesso");
     } catch (error) {
       setIsLoading(false);
@@ -324,16 +329,16 @@ export default function Register() {
                 type: "text",
                 errorLabel: subitemError.descriptionError,
               },
-              {
-                value: subitem.photo,
-                placeholder: "Foto",
-                onChange: (e: ChangeEvent<HTMLInputElement>) => {
-                  setSubitem({ ...subitem, photo: e.target.value });
-                  setSubitemError({ ...subitemError, photoError: "" });
-                },
-                type: "text",
-                errorLabel: subitemError.photoError,
-              },
+              // {
+              //   value: subitem.photo,
+              //   placeholder: "Foto",
+              //   onChange: (e: ChangeEvent<HTMLInputElement>) => {
+              //     setSubitem({ ...subitem, photo: e.target.value });
+              //     setSubitemError({ ...subitemError, photoError: "" });
+              //   },
+              //   type: "text",
+              //   errorLabel: subitemError.photoError,
+              // },
             ]}
             buttonOnClick={handleSubmitSubitem}
             buttonLabel="Enviar"
@@ -363,16 +368,16 @@ export default function Register() {
                 type: "text",
                 errorLabel: itemError.descriptionError,
               },
-              {
-                value: item.photo,
-                placeholder: "Foto",
-                onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                  setItem({ ...item, photo: e.target.value });
-                  setItemError({ ...itemError, photoError: "" });
-                },
-                type: "text",
-                errorLabel: itemError.photoError,
-              },
+              // {
+              //   value: item.photo,
+              //   placeholder: "Foto",
+              //   onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+              //     setItem({ ...item, photo: e.target.value });
+              //     setItemError({ ...itemError, photoError: "" });
+              //   },
+              //   type: "text",
+              //   errorLabel: itemError.photoError,
+              // },
               {
                 value: item.cod_item,
                 placeholder: "Código do Item",
@@ -414,6 +419,19 @@ export default function Register() {
                 },
                 type: "number",
                 errorLabel: itemError.quantityError,
+              },
+              {
+                value: "",
+                placeholder: "Foto",
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                  setItem({
+                    ...item,
+                    photo: e?.target?.files?.[0],
+                  });
+                  setItemError({ ...itemError, photoError: "" });
+                },
+                type: "file",
+                errorLabel: itemError.photoError,
               },
             ]}
             withSubitem

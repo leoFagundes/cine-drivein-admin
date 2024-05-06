@@ -35,7 +35,7 @@ export type Item = {
   description: string;
   value: number;
   quantity: number;
-  photo: string;
+  photo: any;
   isVisible: boolean;
   additionals?: { additionalItem: string }[];
   additionals_sauces?: { additionalItem: string }[];

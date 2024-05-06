@@ -1,7 +1,14 @@
 import styles from "./Input.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEyeSlash, faEye, faXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEyeSlash,
+  faEye,
+  faXmark,
+  faFileImage,
+  faPanorama,
+} from "@fortawesome/free-solid-svg-icons";
 import { ChangeEvent, ReactNode, useState, useRef } from "react";
+import Text from "../Text";
 
 type InputType = {
   value: string;
@@ -47,6 +54,7 @@ export const Input = ({
   return (
     <div style={{ marginTop }} className={styles.container}>
       <input
+        id={type === "file" ? "imageInput" : "input"}
         ref={inputRef}
         style={{ border: `2px solid ${border ? "gray" : "transparent"}` }}
         type={IS_PASSWORD_VISIBLE_TYPE}
@@ -54,9 +62,19 @@ export const Input = ({
         onFocus={() => setIsSugeestionOpen(true)}
         placeholder={placeholder}
         onChange={onChange}
-        className={IS_ERROR_INPUT_STYLE}
+        className={
+          type === "file"
+            ? styles.inputContainer__isImage
+            : IS_ERROR_INPUT_STYLE
+        }
         onKeyDown={onKeyDown}
       />
+      {type === "file" && (
+        <label htmlFor="imageInput" className={styles.customFileUpload}>
+          <FontAwesomeIcon color="#1d2022" size="lg" icon={faPanorama} />
+          <span>Escolha uma imagem</span>
+        </label>
+      )}
       {type === "password" && (
         <div
           aria-label="icone de olho"

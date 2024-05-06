@@ -62,6 +62,20 @@ class ItemRepositories {
       return false;
     }
   }
+
+  static async sendImageToBucket(formData: any) {
+    try {
+      const response = await api.post("/items/bucket", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response;
+    } catch (error) {
+      console.error("Erro ao enviar foto:", error);
+      return false;
+    }
+  }
 }
 
 export default ItemRepositories;

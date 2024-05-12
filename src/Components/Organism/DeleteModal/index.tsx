@@ -4,6 +4,7 @@ import Text from "../../Atoms/Text";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import Button from "../../Atoms/Button";
+import AccessLimitedToAdmins from "../AccessLimitedToAdmins";
 
 type DeleteModalType = {
   isOpen: boolean;
@@ -27,6 +28,7 @@ export default function DeleteModal({
     <>
       {isOpen && (
         <div onClick={handleCloseModalWith} className={styles.container}>
+          <AccessLimitedToAdmins />
           <div className={styles.modalContainer}>
             <Text fontWeight="semibold" fontColor="placeholder-color">
               Você realmente deseja <span>excluir</span> esse {itemType}?

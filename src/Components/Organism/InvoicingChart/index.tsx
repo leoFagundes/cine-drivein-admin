@@ -66,8 +66,11 @@ export default function InvoicingChart() {
     xaxis: {
       categories: chartData.dates.map((date) => {
         const dateObj = new Date(date);
-        // Formatando a data para incluir hora e minuto
-        return `${dateObj.toLocaleDateString()} ${dateObj.getHours()}:${dateObj.getMinutes()}`;
+        // Convertendo para hora local
+        const localDate = new Date(
+          dateObj.toLocaleString("en-US", { timeZone: "UTC" })
+        );
+        return `${localDate.toLocaleDateString()} ${localDate.getHours()}:${localDate.getMinutes()}`;
       }),
       labels: {
         style: {

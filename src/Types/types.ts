@@ -23,7 +23,7 @@ export type AdditionalItem = {
   _id?: string;
   name: string;
   description: string;
-  photo: string;
+  photo: string | null | FileList;
   isVisible?: boolean;
 };
 
@@ -35,7 +35,7 @@ export type Item = {
   description: string;
   value: number;
   quantity: number;
-  photo: string;
+  photo?: string | File;
   isVisible: boolean;
   additionals?: { additionalItem: string }[];
   additionals_sauces?: { additionalItem: string }[];

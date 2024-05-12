@@ -31,6 +31,11 @@
     border: 2px solid $primary-color !important;
   }
 
+  &__isImage {
+    width: 260px;
+    height: 48px;
+  }
+
   &__isNegative {
     width: 260px;
     height: 48px;
@@ -49,6 +54,31 @@
       font-weight: 600;
     }
   }
+}
+
+.customFileUpload {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: $main-white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  span {
+    color: $placeholder-color;
+    font-weight: 600;
+    font-size: 14px;
+  }
+}
+
+input[type="file"] {
+  display: none;
 }
 
 .icon {

@@ -62,6 +62,30 @@ class ItemRepositories {
       return false;
     }
   }
+
+  static async deleteItemImage(imageName: string) {
+    try {
+      const response = await api.post("/items/deleteImage", { imageName });
+      return response.data.message;
+    } catch (error) {
+      console.error("Erro ao deletar imagem:", error);
+      throw error;
+    }
+  }
+
+  static async createImageItem(image: FormData) {
+    try {
+      const response = await api.post("/items/image", image, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data.message;
+    } catch (error) {
+      console.error("Erro ao publicar imagem:", error);
+      return false;
+    }
+  }
 }
 
 export default ItemRepositories;

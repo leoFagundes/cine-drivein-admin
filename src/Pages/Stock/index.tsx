@@ -135,6 +135,11 @@ export default function Stock() {
     setIsLoading(true);
     if (type === "item") {
       try {
+        const item = await ItemRepositories.getItemById(id);
+        if (item.photo) {
+          const photoFileName = item.photo.split("/").pop();
+          await ItemRepositories.deleteItemImage(photoFileName);
+        }
         await ItemRepositories.deleteItem(id);
         const updatedItems = items.filter((item) => item._id !== id);
         setItems(updatedItems);

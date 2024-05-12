@@ -1,6 +1,11 @@
 import styles from "./Input.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEyeSlash, faEye, faXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEyeSlash,
+  faEye,
+  faXmark,
+  faPanorama,
+} from "@fortawesome/free-solid-svg-icons";
 import { ChangeEvent, ReactNode, useState, useRef } from "react";
 
 type InputType = {
@@ -8,7 +13,7 @@ type InputType = {
   placeholder: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   errorLabel?: string;
-  type?: string;
+  type?: "file" | "password" | "text" | "number";
   marginTop?: string;
   caption?: ReactNode;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
@@ -32,10 +37,19 @@ export const Input = ({
 }: InputType) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isSugeestionOpen, setIsSugeestionOpen] = useState(false);
+  const [imageName, setImageName] = useState<string>("Escolha uma imagem");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handlePassword = () => {
     setIsPasswordVisible(!isPasswordVisible);
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      setImageName(file.name);
+    }
+    onChange(e);
   };
 
   const IS_ERROR_INPUT_STYLE = errorLabel
@@ -43,6 +57,30 @@ export const Input = ({
     : styles.inputContainer;
   const IS_PASSWORD_VISIBLE_ICON = isPasswordVisible ? faEye : faEyeSlash;
   const IS_PASSWORD_VISIBLE_TYPE = isPasswordVisible ? undefined : type;
+
+  if (type === "file")
+    return (
+      <div style={{ marginTop }} className={styles.container}>
+        <input
+          id={"imageInput"}
+          ref={inputRef}
+          style={{ border: `2px solid ${border ? "gray" : "transparent"}` }}
+          type={type}
+          value={value}
+          onFocus={() => setIsSugeestionOpen(true)}
+          placeholder={placeholder}
+          onChange={handleFileChange}
+          className={styles.inputContainer__isImage}
+          onKeyDown={onKeyDown}
+        />
+        {type === "file" && (
+          <label htmlFor="imageInput" className={styles.customFileUpload}>
+            <FontAwesomeIcon color="#1d2022" size="lg" icon={faPanorama} />
+            <span>{imageName}</span>
+          </label>
+        )}
+      </div>
+    );
 
   return (
     <div style={{ marginTop }} className={styles.container}>

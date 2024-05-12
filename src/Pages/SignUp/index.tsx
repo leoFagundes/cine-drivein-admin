@@ -16,6 +16,14 @@ const ERROR_PASSWORD_MESSAGE = "Senha inválida.";
 const ERROR_TOKEN_MESSAGE = "Token de administrador inválido.";
 const ERROR_USERNAME_TO0_LONG = "Usuário deve ter entre 3-12 caracteres.";
 
+type InputsTypes = {
+  value: string;
+  placeholder: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  type: "file" | "password" | "text" | "number";
+  errorLabel: string;
+};
+
 export default function SignUp() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -130,7 +138,7 @@ export default function SignUp() {
     }
   };
 
-  const INPUTS = [
+  const INPUTS: InputsTypes[] = [
     {
       value: username,
       placeholder: "Nome de usuário",

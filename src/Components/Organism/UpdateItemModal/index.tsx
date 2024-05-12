@@ -73,10 +73,8 @@ export default function UpdateItemModal({
       setItem(currentItem);
     }
 
-    console.log(item);
-
     fetchUniqueTypes();
-  }, [isOpen, item, currentItem]);
+  }, [isOpen, currentItem]);
 
   const handleSelectSuggestion = (selectedValue: string) => {
     setItem({ ...item, type: selectedValue });
@@ -231,16 +229,6 @@ export default function UpdateItemModal({
                   errorLabel: itemError.descriptionError,
                 },
                 {
-                  value: item.photo,
-                  placeholder: "Foto",
-                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                    setItem({ ...item, photo: e.target.value });
-                    setItemError({ ...itemError, photoError: "" });
-                  },
-                  type: "text",
-                  errorLabel: itemError.photoError,
-                },
-                {
                   value: item.cod_item,
                   placeholder: "Código do Item",
                   onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -282,6 +270,16 @@ export default function UpdateItemModal({
                   type: "number",
                   errorLabel: itemError.quantityError,
                 },
+                // {
+                //   value: "",
+                //   placeholder: "Foto",
+                //   onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                //     setItem({ ...item, photo: e?.target?.files?.[0] });
+                //     setItemError({ ...itemError, photoError: "" });
+                //   },
+                //   type: "file",
+                //   errorLabel: itemError.photoError,
+                // },
               ]}
               withSubitem
               itemWithSubitems={item}

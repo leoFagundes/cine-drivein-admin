@@ -27,7 +27,7 @@ type RegisterFormTemplateType = {
     value: string;
     placeholder: string;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-    type?: string;
+    type?: "file" | "password" | "text" | "number";
     errorLabel: string;
     caption?: ReactNode;
     suggestions?: string[];

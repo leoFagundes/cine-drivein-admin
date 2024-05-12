@@ -21,6 +21,10 @@
   .icons {
     display: flex;
     gap: 12px;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .deleteIcon {

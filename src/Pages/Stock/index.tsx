@@ -13,6 +13,8 @@ import AdditionalItemRepositories from "../../Services/repositories/AdditionalIt
 import SubitemCard from "../../Components/Organism/SubitemCard";
 import UpdateItemModal from "../../Components/Organism/UpdateItemModal";
 import { useLocation, useNavigate } from "react-router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faE, faEye } from "@fortawesome/free-solid-svg-icons";
 
 const sort_options = ["Crescente", "Decrescente"];
 const visibility_options = ["Visível", "Invisível"];
@@ -304,6 +306,23 @@ export default function Stock() {
           </>
         ) : (
           ""
+        )}
+        {isActive.subitemActive && (
+          <div className={styles.eyeWarning}>
+            <Text fontColor="gray-color" fontSize="small">
+              <i>
+                <strong>Observação:</strong> A funcionalidade de visibilidade (
+                <FontAwesomeIcon
+                  className={styles.deleteIcon}
+                  size={"sm"}
+                  icon={faEye}
+                  color="white"
+                />
+                ) para os <strong>subitens</strong> não irá retirar a opção do
+                menu, serve apenas como um controle local.
+              </i>
+            </Text>
+          </div>
         )}
       </div>
       <DeleteModal

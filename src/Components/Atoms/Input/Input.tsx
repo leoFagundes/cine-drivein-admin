@@ -6,7 +6,7 @@ import {
   faXmark,
   faPanorama,
 } from "@fortawesome/free-solid-svg-icons";
-import { ChangeEvent, ReactNode, useState, useRef } from "react";
+import { ChangeEvent, ReactNode, useState, useRef, useEffect } from "react";
 
 type InputType = {
   value: string;
@@ -43,6 +43,20 @@ export const Input = ({
   const handlePassword = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
+
+  useEffect(() => {
+    if (isSugeestionOpen === true) {
+      if (
+        suggestions &&
+        suggestions.filter((suggestion) => suggestion.includes(value))
+          .length === 0
+      ) {
+        setIsSugeestionOpen(false);
+      } else {
+        setIsSugeestionOpen(true);
+      }
+    }
+  }, [value, inputRef]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];

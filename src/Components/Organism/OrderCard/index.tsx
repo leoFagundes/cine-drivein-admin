@@ -121,6 +121,7 @@ export default function OrderCard({
                 fontWeight="semibold"
                 fontSize="mediumSmall"
                 fontColor="background-secondary-color"
+                fontAlign="left"
               >
                 {groupedOrderItem.quantity}x {groupedOrderItem.item.name}
               </Text>

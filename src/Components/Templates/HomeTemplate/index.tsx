@@ -474,8 +474,8 @@ export default function HomeTemplate() {
                 Status de comandas
               </Text>
               <Text marginBottom="12px" marginTop="12px" fontSize="small">
-                Status das comandas atuais. Exclua as comandas ao final do
-                expediente e adicione o dia de hoje às estatísticas.
+                Status das comandas atuais. Irá excluir as comandas ao final do
+                expediente e adicionar o dia de hoje às estatísticas.
               </Text>
               <div className={styles.statusContent}>
                 <Text fontSize="small">
@@ -492,7 +492,10 @@ export default function HomeTemplate() {
                 </Text>
               </div>
               <Button
-                label="Excluir comandas"
+                backGroundColor={
+                  orderStatus.active === 0 ? "primary-color" : "invalid-color"
+                }
+                label="Finalizar expediente"
                 onClick={() => setIsDeleteModalOpen(true)}
               />
             </div>

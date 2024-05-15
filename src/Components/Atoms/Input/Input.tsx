@@ -90,7 +90,11 @@ export const Input = ({
         {type === "file" && (
           <label htmlFor="imageInput" className={styles.customFileUpload}>
             <FontAwesomeIcon color="#1d2022" size="lg" icon={faPanorama} />
-            <span>{imageName}</span>
+            <span>
+              {imageName.length > 20
+                ? `${imageName.slice(0, 20)}...`
+                : imageName}
+            </span>
           </label>
         )}
       </div>

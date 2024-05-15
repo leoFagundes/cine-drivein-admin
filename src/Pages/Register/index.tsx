@@ -10,7 +10,9 @@ import AdditionalItemRepositories from "../../Services/repositories/AdditionalIt
 import { LoadingFullScreenTemplate } from "../../Components/Templates/LoadingFullScreenTemplate";
 import ItemRepositories from "../../Services/repositories/ItemRepositories";
 
+const NAME_LIMIT = 27;
 const ERROR_NAME_MESSAGE = "Nome inválido.";
+const ERROR_NAME_LENGHT_MESSAGE = `Nome muito grande. Max de ${NAME_LIMIT} caracteres.`;
 const ERROR_DESCRIPTION_MESSAGE = "Descrição inválida.";
 // const ERROR_PHOTO_MESSAGE = "Foto inválida.";
 const ERROR_COD_ITEM_MESSAGE = "Código do item inválido.";
@@ -149,6 +151,9 @@ export default function Register() {
     if (!item.name.trim()) {
       newItemError.nameError = ERROR_NAME_MESSAGE;
       isValid = false;
+    } else if (item.name.length > NAME_LIMIT) {
+      newItemError.nameError = ERROR_NAME_LENGHT_MESSAGE;
+      isValid = false;
     } else {
       newItemError.nameError = "";
     }
@@ -246,9 +251,12 @@ export default function Register() {
 
     try {
       const formData = new FormData();
-      formData.append("image", item.photo as Blob);
-
-      const imageName = await ItemRepositories.createImageItem(formData);
+      if (item.photo) {
+        formData.append("image", item.photo as Blob);
+      }
+      const imageName = item.photo
+        ? await ItemRepositories.createImageItem(formData)
+        : "";
 
       const newItem = { ...item, photo: imageName };
       await ItemRepositories.createItem(newItem);

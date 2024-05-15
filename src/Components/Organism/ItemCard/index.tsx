@@ -92,7 +92,7 @@ export default function ItemCard({
                 Valor:
               </Text>
               <Text fontWeight="regular" fontSize="mediumSmall">
-                R$ {item.value}
+                R$ {item.value.toFixed(2)}
               </Text>
             </span>
           </div>

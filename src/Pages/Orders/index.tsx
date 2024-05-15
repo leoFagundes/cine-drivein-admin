@@ -47,6 +47,8 @@ export default function Orders() {
     return storedList ? JSON.parse(storedList) : [];
   });
 
+  console.log(alreadyPrinted);
+
   useEffect(() => {
     setIsLoading(true);
   }, []);

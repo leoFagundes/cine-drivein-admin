@@ -235,6 +235,8 @@ export default function HomeTemplate() {
         items: itemQuantities,
       });
 
+      localStorage.setItem("listAlreadyPrinted", JSON.stringify([]));
+
       showAlert(DELETED_COMMANDS, "success");
       setLoading(false);
     } catch (error) {

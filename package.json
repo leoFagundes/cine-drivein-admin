@@ -1,5 +1,6 @@
 {
   "name": "cine-drivein-admin",
+  "homepage": "https://admin.cinedrivein.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

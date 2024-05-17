@@ -39,18 +39,15 @@ export default function FinishOrderModal({
     discount: "",
   });
 
-  const handleCloseModalWith = (event: MouseEvent) => {
-    event.preventDefault();
-    if (event.target === event.currentTarget) {
-      onClose();
-      setChecked(true);
-      setInputValues({
-        credit: "",
-        debit: "",
-        money: "",
-        discount: "",
-      });
-    }
+  const handleCloseModalWith = () => {
+    onClose();
+    setChecked(true);
+    setInputValues({
+      credit: "",
+      debit: "",
+      money: "",
+      discount: "",
+    });
   };
 
   const handleCheckboxChange = () => {
@@ -142,7 +139,7 @@ export default function FinishOrderModal({
   return (
     <>
       {isOpen && (
-        <div onClick={handleCloseModalWith} className={styles.container}>
+        <div className={styles.container}>
           <div className={styles.modalContainer}>
             {!isLoading ? (
               <>

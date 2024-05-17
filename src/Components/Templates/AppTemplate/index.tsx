@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../../Context/AuthContext";
 import { ReactNode, useEffect, useState } from "react";
 import Alert from "../../Molecules/Alert";
+import ItemRepositories from "../../../Services/repositories/ItemRepositories";
+import { Item } from "../../../Types/types";
 
 type AppTemplateType = {
   children?: ReactNode;
@@ -17,6 +19,27 @@ export default function AppTemplate({ children }: AppTemplateType) {
   const location = useLocation();
   const { isLoggedIn, user } = useAuth();
   const { from } = location.state || { from: { pathname: "/" } };
+
+  function preloadImages(urls: string[]) {
+    urls.forEach((url) => {
+      const img = new Image();
+      img.src = url;
+    });
+  }
+
+  useEffect(() => {
+    const preloadItemImages = async () => {
+      try {
+        const items = await ItemRepositories.getItems();
+        const imagePhotos = items.map((item: Item) => item.photo);
+        preloadImages(imagePhotos);
+      } catch (error) {
+        console.error("Não foi possível pré-carregar as imagens!");
+      }
+    };
+
+    preloadItemImages();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("currentPage", currentPage);

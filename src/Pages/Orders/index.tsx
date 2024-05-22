@@ -5,6 +5,7 @@ import { LoadingFullScreenTemplate } from "../../Components/Templates/LoadingFul
 import OrdersTemplate from "../../Components/Templates/OrdersTemplate";
 import OrderRepositories from "../../Services/repositories/OrderRepositories";
 import { Order } from "../../Types/types";
+import AccessLimitedToAdmins from "../../Components/Organism/AccessLimitedToAdmins";
 
 const UPDATE_TIME = 15;
 
@@ -105,6 +106,7 @@ export default function Orders() {
 
   return (
     <section className={styles.orderContainer}>
+      <AccessLimitedToAdmins />
       <OrdersTemplate
         orders={orders}
         setOrders={setOrders}

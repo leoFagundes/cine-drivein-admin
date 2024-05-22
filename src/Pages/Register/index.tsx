@@ -9,6 +9,7 @@ import Alert from "../../Components/Molecules/Alert";
 import AdditionalItemRepositories from "../../Services/repositories/AdditionalItemRepositories";
 import { LoadingFullScreenTemplate } from "../../Components/Templates/LoadingFullScreenTemplate";
 import ItemRepositories from "../../Services/repositories/ItemRepositories";
+import AccessLimitedToAdmins from "../../Components/Organism/AccessLimitedToAdmins";
 
 const NAME_LIMIT = 27;
 const ERROR_NAME_MESSAGE = "Nome inválido.";
@@ -292,6 +293,7 @@ export default function Register() {
 
   return (
     <section className={styles.registerContainer}>
+      <AccessLimitedToAdmins />
       <div className={styles.registerContent}>
         <div className={styles.cards}>
           <RegisterCard

@@ -403,7 +403,7 @@ export default function OrdersTemplate({
           onClickDeleteAllCanceledOrders();
           setIsDeleteAllCanceledOrdersModalOpen(false);
         }}
-        itemType="conjunto de pedidos ativos"
+        itemType="conjunto de pedidos cancelados"
         onClose={() => setIsDeleteAllCanceledOrdersModalOpen(false)}
         isOpen={isDeleteAllCanceledOrdersModalOpen}
       />

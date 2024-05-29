@@ -36,7 +36,7 @@ export const Input = ({
   onSelectSuggestion,
 }: InputType) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isSugeestionOpen, setIsSugeestionOpen] = useState(false);
+  const [isSugeestionOpen, setIsSuggestionOpen] = useState(false);
   const [imageName, setImageName] = useState<string>("Escolha uma imagem");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -51,9 +51,9 @@ export const Input = ({
         suggestions.filter((suggestion) => suggestion.includes(value))
           .length === 0
       ) {
-        setIsSugeestionOpen(false);
+        setIsSuggestionOpen(false);
       } else {
-        setIsSugeestionOpen(true);
+        setIsSuggestionOpen(true);
       }
     }
   }, [value, inputRef]);
@@ -81,7 +81,7 @@ export const Input = ({
           style={{ border: `2px solid ${border ? "gray" : "transparent"}` }}
           type={type}
           value={value}
-          onFocus={() => setIsSugeestionOpen(true)}
+          onFocus={() => setIsSuggestionOpen(true)}
           placeholder={placeholder}
           onChange={handleFileChange}
           className={styles.inputContainer__isImage}
@@ -107,7 +107,7 @@ export const Input = ({
         style={{ border: `2px solid ${border ? "gray" : "transparent"}` }}
         type={IS_PASSWORD_VISIBLE_TYPE}
         value={value}
-        onFocus={() => setIsSugeestionOpen(true)}
+        onFocus={() => setIsSuggestionOpen(true)}
         placeholder={placeholder}
         onChange={onChange}
         className={IS_ERROR_INPUT_STYLE}
@@ -142,7 +142,7 @@ export const Input = ({
                   } ${styles.suggestion}`}
                   onClick={() => {
                     onSelectSuggestion?.(suggestion);
-                    setIsSugeestionOpen(false);
+                    setIsSuggestionOpen(false);
                   }}
                 >
                   {suggestion}
@@ -154,7 +154,7 @@ export const Input = ({
               color="#4a4a4a"
               size="sm"
               icon={faXmark}
-              onClick={() => setIsSugeestionOpen(false)}
+              onClick={() => setIsSuggestionOpen(false)}
             />
           </div>
         </div>

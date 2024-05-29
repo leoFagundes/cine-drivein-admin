@@ -11,11 +11,12 @@
   .manageVisibilyState {
     display: flex;
     justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
     margin-bottom: 22px;
     column-gap: 16px;
 
-    div {
+    .manageViewCard {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -54,11 +55,36 @@
   border-radius: 10px;
   padding: 32px;
   background-color: $background-secondary-color;
+  position: relative;
+
+  .cancelDeleteOrdersLink {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    position: absolute;
+    right: 22px;
+    top: -22px;
+
+    label,
+    svg {
+      transition: 0.5s;
+    }
+
+    &:hover {
+      cursor: pointer;
+
+      label,
+      svg {
+        color: $invalid-color;
+      }
+    }
+  }
 
   .orderItems {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: center;
     position: relative;
     margin-top: 22px;
     gap: 22px;

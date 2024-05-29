@@ -11,6 +11,8 @@ type DeleteModalType = {
   onClose: VoidFunction;
   itemType: string;
   onClick: VoidFunction;
+  impactLabel?: string;
+  buttonLabel?: string;
 };
 
 export default function DeleteModal({
@@ -18,6 +20,8 @@ export default function DeleteModal({
   onClose,
   isOpen,
   onClick,
+  impactLabel = "excluir",
+  buttonLabel = "Excluir",
 }: DeleteModalType) {
   const handleCloseModalWith = (event: MouseEvent) => {
     event.preventDefault();
@@ -31,7 +35,7 @@ export default function DeleteModal({
           <AccessLimitedToAdmins />
           <div className={styles.modalContainer}>
             <Text fontWeight="semibold" fontColor="placeholder-color">
-              Você realmente deseja <span>excluir</span> esse {itemType}?
+              Você realmente deseja <span>{impactLabel}</span> esse {itemType}?
             </Text>
             <Text fontColor="placeholder-color">
               Essa ação não poderá ser revertida
@@ -41,7 +45,7 @@ export default function DeleteModal({
               <Button
                 onClick={onClick}
                 backGroundColor="invalid-color"
-                label="Excluir"
+                label={buttonLabel}
               />
             </div>
             <FontAwesomeIcon

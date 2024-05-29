@@ -10,9 +10,14 @@ import Alert from "../../Molecules/Alert";
 import DeleteModal from "../../Organism/DeleteModal";
 import FinishOrderModal from "../../Organism/FinishOrderModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTriangleExclamation,
+  faTrash,
+  faBan,
+} from "@fortawesome/free-solid-svg-icons";
 import OrderMobileCard from "../../Organism/OrderMobileCard";
 import OrderCardModal from "../../Organism/OrderCardModal";
+import Button from "../../Atoms/Button";
 
 type OrdersType = {
   orders: Order[];
@@ -22,6 +27,9 @@ type OrdersType = {
 
 const CANCEL_ORDER_MESSAGE = "Pedido cancelado com sucesso.";
 const DELETE_ORDER_MESSAGE = "Pedido deletado com sucesso.";
+const CANCEL_ALL_ORDERS_MESSAGE = "Pedidos cancelados com sucesso.";
+const DELETE_ALL_CANCELED_ORDERS_MESSAGE =
+  "Pedidos cancelados excluídos com sucesso.";
 
 export default function OrdersTemplate({
   orders,
@@ -36,6 +44,14 @@ export default function OrdersTemplate({
   const [curretnClickedItem, setCurrentClickedItem] = useState<Order>();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isFinishModalOpen, setIsFinishModalOpen] = useState(false);
+
+  const [isCancelAllOrdensModalOpen, setIsCancelAllOrdensModalOpen] =
+    useState(false);
+  const [
+    isDeleteAllCanceledOrdersModalOpen,
+    setIsDeleteAllCanceledOrdersModalOpen,
+  ] = useState(false);
+
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [searchSpot, setSearchSpot] = useState("");
   const [searchOrderNumber, setSearchOrderNumber] = useState("");
@@ -90,6 +106,47 @@ export default function OrdersTemplate({
     setFilteredOrders(filtered);
   }, [orders, searchSpot, searchOrderNumber, isActive]);
 
+  const onClickDeleteAllCanceledOrders = async () => {
+    setIsLoading(true);
+    try {
+      // Filtra todas as ordens canceladas
+      const canceledOrders = orders.filter(
+        (order) => order.status === "canceled"
+      );
+
+      // Deleta cada ordem cancelada
+      for (let i = 0; i < canceledOrders.length; i++) {
+        const id = canceledOrders[i]._id;
+        if (id) {
+          await OrderRepositories.deleteOrder(id);
+        }
+      }
+
+      // Atualiza o estado das ordens removendo as ordens canceladas
+      const updatedOrders = orders.filter(
+        (order) => order.status !== "canceled"
+      );
+      setOrders(updatedOrders);
+
+      // Remove IDs das ordens deletadas de alreadyPrinted
+      setAlreadyPrinted((prevList: string[]) =>
+        prevList.filter(
+          (id) => !canceledOrders.some((order) => order._id === id)
+        )
+      );
+
+      setIsOrderModalOpen(false);
+      setIsDeleteModalOpen(false);
+      setIsLoading(false);
+
+      showAlert(DELETE_ALL_CANCELED_ORDERS_MESSAGE, "success");
+    } catch (error) {
+      console.error("Erro ao deletar os pedidos cancelados:", error);
+      setIsLoading(false);
+      setIsDeleteModalOpen(false);
+    }
+  };
+
   const onClickDeleteOrder = async (id: string | undefined) => {
     if (id) {
       setIsLoading(true);
@@ -114,6 +171,36 @@ export default function OrdersTemplate({
     }
   };
 
+  const onClickCancelAllOrders = async () => {
+    setIsLoading(true);
+    try {
+      const cancelOrders = orders.filter((order) => order.status === "active");
+
+      // Cancelar todas as ordens ativas
+      for (let i = 0; i < cancelOrders.length; i++) {
+        const id = cancelOrders[i]._id;
+        if (id) {
+          await OrderRepositories.updateOrder(id, {
+            status: "canceled",
+          });
+        }
+      }
+
+      // Atualizar o estado das ordens
+      const updatedOrders = orders.map((order) =>
+        order.status === "active" ? { ...order, status: "canceled" } : order
+      ) as Order[]; // Certifique-se de que o tipo é Order[]
+
+      setOrders(updatedOrders);
+      setIsOrderModalOpen(false);
+      setIsLoading(false);
+      showAlert(CANCEL_ALL_ORDERS_MESSAGE, "success");
+    } catch (error) {
+      console.error("Erro ao cancelar os pedidos:", error);
+      setIsLoading(false);
+    }
+  };
+
   const onClickCancelOrder = async (id: string | undefined) => {
     if (id) {
       setIsLoading(true);
@@ -125,7 +212,7 @@ export default function OrdersTemplate({
         setIsLoading(false);
         showAlert(CANCEL_ORDER_MESSAGE, "success");
       } catch (error) {
-        console.error("Erro ao modificar o pedido:", error);
+        console.error("Erro ao cancelar o pedido:", error);
         setIsLoading(false);
       }
     }
@@ -150,7 +237,9 @@ export default function OrdersTemplate({
               finishedCanceledOrders: false,
             });
           }}
-          className={isActive.activeOrders ? styles.isActive : ""}
+          className={`${isActive.activeOrders ? styles.isActive : ""} ${
+            styles.manageViewCard
+          }`}
         >
           <Text fontWeight="semibold">Pedidos Ativos</Text>
         </div>
@@ -161,12 +250,35 @@ export default function OrdersTemplate({
               finishedCanceledOrders: true,
             });
           }}
-          className={isActive.finishedCanceledOrders ? styles.isActive : ""}
+          className={`${
+            isActive.finishedCanceledOrders ? styles.isActive : ""
+          } ${styles.manageViewCard}`}
         >
           <Text fontWeight="semibold">Pedidos Finalizados</Text>
         </div>
       </div>
       <div className={styles.ordersContent}>
+        {isActive.activeOrders ? (
+          <div
+            onClick={() => setIsCancelAllOrdensModalOpen(true)}
+            className={styles.cancelDeleteOrdersLink}
+          >
+            <FontAwesomeIcon size="sm" icon={faBan} />
+            <Text fontColor="gray-color" isLink>
+              Cancelar todos os pedidos{" "}
+            </Text>
+          </div>
+        ) : (
+          <div
+            onClick={() => setIsDeleteAllCanceledOrdersModalOpen(true)}
+            className={styles.cancelDeleteOrdersLink}
+          >
+            <FontAwesomeIcon size="sm" icon={faTrash} />
+            <Text fontColor="gray-color" isLink>
+              Excluir pedidos cancelados
+            </Text>
+          </div>
+        )}
         <div className={styles.filterInputs}>
           <Input
             type="number"
@@ -274,6 +386,26 @@ export default function OrdersTemplate({
         itemType="pedido"
         onClose={() => setIsDeleteModalOpen(false)}
         isOpen={isDeleteModalOpen}
+      />
+      <DeleteModal
+        onClick={() => {
+          onClickCancelAllOrders();
+          setIsCancelAllOrdensModalOpen(false);
+        }}
+        itemType="conjunto de pedidos ativos"
+        onClose={() => setIsCancelAllOrdensModalOpen(false)}
+        isOpen={isCancelAllOrdensModalOpen}
+        impactLabel="cancelar"
+        buttonLabel="Cancelar Pedidos"
+      />
+      <DeleteModal
+        onClick={() => {
+          onClickDeleteAllCanceledOrders();
+          setIsDeleteAllCanceledOrdersModalOpen(false);
+        }}
+        itemType="conjunto de pedidos ativos"
+        onClose={() => setIsDeleteAllCanceledOrdersModalOpen(false)}
+        isOpen={isDeleteAllCanceledOrdersModalOpen}
       />
       <OrderCardModal
         isOpen={isOrderModalOpen}

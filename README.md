@@ -50,8 +50,9 @@
 <h2 align="center" id="pre-requisitos">Pré-requisitos</h2>
 
 Antes de começar, você vai precisar ter instalado em sua máquina as seguintes ferramentas:
-[Git](https://git-scm.com), [Node.js](https://nodejs.org/en/). 
-Além disto irá precisar um editor para trabalhar com o código como [VSCode](https://code.visualstudio.com/)
+[Git](https://git-scm.com), [Node.js](https://nodejs.org/en/) e um editor de código como [VSCode](https://code.visualstudio.com/)
+
+Além disto é necessário ter o back-end rodando: [Link Back-end](https://github.com/leoFagundes/cine-drivein-backend) e alterar o link de requisição da api no caminho `src/services/api.ts`
 
 <h2 align="center" id="rodando-a-aplicacao">🚀 Rodando a aplicação</h2>
 

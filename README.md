@@ -28,6 +28,8 @@
 - [x] Editção de usuários
 - [x] Visualização de perfil
 - [x] Visualização de estatísticas por data
+- [X] Geração de relatório
+- [ ] Impressão de recibo
 
 <h2 align="center" id="demonstracao-da-aplicacao">Demonstração da Aplicação</h2>
 

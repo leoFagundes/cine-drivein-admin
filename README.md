@@ -113,7 +113,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
 
 Além das tecnologias mencionadas anteriormente, este projeto também fez uso das seguintes ferramentas:
 
-- [Figma](https://www.figma.com/)
+- [Figma](https://www.figma.com/) - [cinedrivein-figma-project](https://www.figma.com/design/Ncvt08SckbhsoT7WICYOqT/Cine-Drive-in-Design?t=LlVivFnYAzPjv1KN-1)
 - [Trello](https://trello.com/) 
 
 ---

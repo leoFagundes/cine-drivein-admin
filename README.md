@@ -76,6 +76,13 @@ $ npm start
 # O servidor inciará na porta:3000 - acesse <http://localhost:3000>
 ```
 
+Crie um arquivo .env e adicione a seguinte variável de ambiente:
+
+```bash
+.env.example
+REACT_APP_ADMIN_TOKEN=<token>
+```
+
 <h2 align="center" id="metodologia">Metodologia</h2>
 
 Este projeto utiliza a metodologia Atomic Design para organizar e estruturar os componentes da interface. O Atomic Design é uma metodologia que divide os componentes em cinco níveis distintos, que são átomos, moléculas, organismos, templates e páginas. Cada nível representa uma abstração diferente e ajuda na construção de componentes reutilizáveis e escaláveis.

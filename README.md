@@ -63,6 +63,10 @@ $ git clone https://github.com/leoFagundes/cine-drivein-admin.git
 # Acesse a pasta do projeto no terminal/cmd
 $ cd cine-drivein-admin
 
+# Esse projeto utiliza a versão 18.18.0 do Node.js. Garanta que você tenha o NVM instalado e utilize o comando abaixo para usar a versão correta:
+$ nvm install 18.18.0
+$ nvm use 18.18.0
+
 # Instale as dependências
 $ npm install
 

@@ -95,6 +95,8 @@ Este projeto utiliza a metodologia Atomic Design para organizar e estruturar os 
 
 O uso do Atomic Design neste projeto proporciona uma melhor organização e manutenção do código, facilitando a criação de novos componentes e a reutilização de código já existente.
 
+[Mais sobre atomic design](https://medium.com/pretux/atomic-design-o-que-%C3%A9-como-surgiu-e-sua-import%C3%A2ncia-para-a-cria%C3%A7%C3%A3o-do-design-system-e3ac7b5aca2c)
+
 <h2 align="center" id="tecnologias">🛠 Tecnologias</h2>
 
 As seguintes ferramentas foram usadas na construção do projeto:

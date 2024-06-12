@@ -1,5 +1,5 @@
-import styles from './Loading.module.scss';
+import styles from "./Loading.module.scss";
 
 export const Loading = () => (
-  <div className={styles.loader}></div>
-)
+  <div data-testid="loading-element" className={styles.loader}></div>
+);

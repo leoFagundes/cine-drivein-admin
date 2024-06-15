@@ -112,6 +112,7 @@ export const Input = ({
         onChange={onChange}
         className={IS_ERROR_INPUT_STYLE}
         onKeyDown={onKeyDown}
+        title={placeholder}
       />
       {type === "password" && (
         <div

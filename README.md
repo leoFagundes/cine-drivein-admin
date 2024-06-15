@@ -24,8 +24,8 @@
 - [x] Abrir e Fechar o sistema
 - [x] Visualização de pedidos
 - [x] Cancelar e Finalizar pedidos
-- [x] Criação usuários comuns e usuáros administradores
-- [x] Editção de usuários
+- [x] Criação usuários comuns e usuários administradores
+- [x] Edição de usuários
 - [x] Visualização de perfil
 - [x] Visualização de estatísticas por data
 - [X] Geração de relatório

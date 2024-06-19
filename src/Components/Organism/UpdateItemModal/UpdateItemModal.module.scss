@@ -13,6 +13,7 @@
   padding-top: 40px;
   background: rgb(33, 37, 41, 60%);
   backdrop-filter: blur(2px);
+  z-index: 3;
 
   &:hover {
     cursor: pointer;

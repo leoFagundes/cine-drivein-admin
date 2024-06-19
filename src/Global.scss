@@ -9,6 +9,7 @@ $placeholder-color: #4a4a4a;
 $background-color: #212528;
 $background-secondary-color: #1d2022;
 
+$font-size-extra-small: 10px;
 $font-size-small: 12px;
 $font-size-medium-small: 14px;
 $font-size-medium: 16px;
@@ -46,6 +47,10 @@ body {
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
   -webkit-tap-highlight-color: transparent;
+}
+
+.fontSizeExtraSmall {
+  font-size: $font-size-extra-small;
 }
 
 .fontSizeSmall {

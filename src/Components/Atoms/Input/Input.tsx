@@ -7,6 +7,7 @@ import {
   faPanorama,
 } from "@fortawesome/free-solid-svg-icons";
 import { ChangeEvent, ReactNode, useState, useRef, useEffect } from "react";
+import Text from "../Text";
 
 type InputType = {
   value: string;
@@ -36,8 +37,9 @@ export const Input = ({
   onSelectSuggestion,
 }: InputType) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isSugeestionOpen, setIsSuggestionOpen] = useState(false);
+  const [isSuggestionOpen, setIsSuggestionOpen] = useState(false);
   const [imageName, setImageName] = useState<string>("Escolha uma imagem");
+  const [isPlaceholderUp, setIsPlaceholderUp] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handlePassword = () => {
@@ -45,7 +47,7 @@ export const Input = ({
   };
 
   useEffect(() => {
-    if (isSugeestionOpen === true) {
+    if (isSuggestionOpen === true) {
       if (
         suggestions &&
         suggestions.filter((suggestion) => suggestion.includes(value))
@@ -56,7 +58,11 @@ export const Input = ({
         setIsSuggestionOpen(true);
       }
     }
-  }, [value, inputRef]);
+
+    if (value) {
+      setIsPlaceholderUp(true);
+    }
+  }, [value, suggestions, inputRef, isSuggestionOpen]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
@@ -81,7 +87,6 @@ export const Input = ({
           style={{ border: `2px solid ${border ? "gray" : "transparent"}` }}
           type={type}
           value={value}
-          onFocus={() => setIsSuggestionOpen(true)}
           placeholder={placeholder}
           onChange={handleFileChange}
           className={styles.inputContainer__isImage}
@@ -102,17 +107,37 @@ export const Input = ({
 
   return (
     <div style={{ marginTop }} className={styles.container}>
+      {!errorLabel && (
+        <div
+          onClick={() => inputRef.current?.focus()}
+          className={`${styles.placeHolderAux} ${
+            isPlaceholderUp ? styles.up : styles.down
+          }`}
+        >
+          <Text
+            fontWeight="semibold"
+            fontSize="mediumSmall"
+            fontColor="placeholder-color"
+          >
+            {placeholder}
+          </Text>
+        </div>
+      )}
+
       <input
         ref={inputRef}
         style={{ border: `2px solid ${border ? "gray" : "transparent"}` }}
         type={IS_PASSWORD_VISIBLE_TYPE}
         value={value}
-        onFocus={() => setIsSuggestionOpen(true)}
-        placeholder={placeholder}
+        onFocus={() => {
+          setIsSuggestionOpen(true);
+          setIsPlaceholderUp(true);
+        }}
+        onBlur={() => (!value ? setIsPlaceholderUp(false) : {})}
+        placeholder={errorLabel ? placeholder : ""}
         onChange={onChange}
         className={IS_ERROR_INPUT_STYLE}
         onKeyDown={onKeyDown}
-        title={placeholder}
       />
       {type === "password" && (
         <div
@@ -130,7 +155,7 @@ export const Input = ({
       {errorLabel && <label className={styles.labelError}>{errorLabel}</label>}
       {caption && <label className={styles.caption}>{caption}</label>}
 
-      {isSugeestionOpen && suggestions && (
+      {isSuggestionOpen && suggestions && (
         <div className={styles.dropdownSuggestions}>
           <div className={styles.suggestionCard}>
             {suggestions

@@ -8,6 +8,84 @@
   height: fit-content;
 }
 
+.placeHolderAux {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  z-index: 2;
+  height: 48px;
+  margin: 0 14px;
+
+  label {
+    &:hover {
+      cursor: text;
+    }
+  }
+
+  &:hover {
+    cursor: text;
+  }
+
+  &.up {
+    animation: placeholderUp 0.3s ease-in-out forwards;
+
+    label {
+      animation: changeLabelColorUp 0.3s forwards;
+    }
+  }
+
+  &.down {
+    animation: placeholderDown 0.3s ease-in-out forwards;
+
+    label {
+      animation: changeLabelColorDown 0.3s forwards;
+    }
+  }
+}
+
+@keyframes placeholderUp {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-6px, -34px);
+    color: $main-white;
+  }
+}
+
+@keyframes placeholderDown {
+  0% {
+    transform: translate(-6px, -34px);
+    color: $main-white;
+  }
+  100% {
+    transform: translate(0, 0);
+    color: $placeholder-color;
+  }
+}
+
+@keyframes changeLabelColorUp {
+  0% {
+    color: $placeholder-color;
+    font-size: $font-size-medium-small;
+  }
+  100% {
+    color: $main-white;
+    font-size: $font-size-extra-small;
+  }
+}
+
+@keyframes changeLabelColorDown {
+  0% {
+    color: $main-white;
+    font-size: $font-size-extra-small;
+  }
+  100% {
+    color: $placeholder-color;
+    font-size: $font-size-medium-small;
+  }
+}
+
 .inputContainer {
   width: 260px;
   height: 48px;
@@ -121,7 +199,7 @@ input[type="file"] {
   padding: 8px;
   position: absolute;
   transform: translateY(50px);
-  z-index: 2;
+  z-index: 3;
   min-width: 200px;
   box-shadow: 0 0 5px black;
   border-radius: 5px 5px 5px 5px;

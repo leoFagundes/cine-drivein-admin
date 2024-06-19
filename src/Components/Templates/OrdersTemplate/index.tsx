@@ -17,7 +17,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import OrderMobileCard from "../../Organism/OrderMobileCard";
 import OrderCardModal from "../../Organism/OrderCardModal";
-import Button from "../../Atoms/Button";
 
 type OrdersType = {
   orders: Order[];

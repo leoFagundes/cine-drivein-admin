@@ -133,8 +133,10 @@ export const Input = ({
           setIsSuggestionOpen(true);
           setIsPlaceholderUp(true);
         }}
-        onBlur={() => (!value ? setIsPlaceholderUp(false) : {})}
-        placeholder={errorLabel ? placeholder : ""}
+        onBlur={() =>
+          !value || isNaN(Number(value)) ? setIsPlaceholderUp(false) : {}
+        }
+        placeholder={errorLabel && placeholder}
         onChange={onChange}
         className={IS_ERROR_INPUT_STYLE}
         onKeyDown={onKeyDown}

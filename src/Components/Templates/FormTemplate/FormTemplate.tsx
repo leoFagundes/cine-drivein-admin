@@ -90,6 +90,7 @@ export const FormTemplate = ({
               marginTop="4px"
               label={"Dar permissões de admin para este usuário?"}
               isLink
+              onClickCheckBox={handleCheckboxChange}
               checkboxRight={
                 <CheckBox
                   id="admin-checkbox"

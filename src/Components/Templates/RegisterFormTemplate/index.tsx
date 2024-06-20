@@ -416,6 +416,7 @@ export default function RegisterFormTemplate({
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         border
+                        placeHolderAnimation={false}
                       />
                       <select
                         className={styles.optionsSelect}

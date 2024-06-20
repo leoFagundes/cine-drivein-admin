@@ -21,6 +21,7 @@ type InputType = {
   border?: boolean;
   suggestions?: string[];
   onSelectSuggestion?: (value: string) => void;
+  placeHolderAnimation?: boolean;
 };
 
 export const Input = ({
@@ -35,6 +36,7 @@ export const Input = ({
   border = false,
   suggestions,
   onSelectSuggestion,
+  placeHolderAnimation = true,
 }: InputType) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isSuggestionOpen, setIsSuggestionOpen] = useState(false);
@@ -107,7 +109,7 @@ export const Input = ({
 
   return (
     <div style={{ marginTop }} className={styles.container}>
-      {!errorLabel && (
+      {!errorLabel && placeHolderAnimation && (
         <div
           onClick={() => inputRef.current?.focus()}
           className={`${styles.placeHolderAux} ${
@@ -133,10 +135,16 @@ export const Input = ({
           setIsSuggestionOpen(true);
           setIsPlaceholderUp(true);
         }}
-        onBlur={() =>
-          !value || isNaN(Number(value)) ? setIsPlaceholderUp(false) : {}
-        }
-        placeholder={errorLabel && placeholder}
+        onBlur={() => {
+          if (!value.trim() || (type === "number" && isNaN(Number(value)))) {
+            setIsPlaceholderUp(false);
+          }
+
+          setTimeout(() => {
+            setIsSuggestionOpen(false);
+          }, 100);
+        }}
+        placeholder={errorLabel || !placeHolderAnimation ? placeholder : ""}
         onChange={onChange}
         className={IS_ERROR_INPUT_STYLE}
         onKeyDown={onKeyDown}

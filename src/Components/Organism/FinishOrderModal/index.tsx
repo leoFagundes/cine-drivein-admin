@@ -201,6 +201,8 @@ export default function FinishOrderModal({
                     <Caption
                       fontSize="mediumSmall"
                       label="Taxa de serviço foi paga? "
+                      onClick={handleCheckboxChange}
+                      onClickCheckBox={handleCheckboxChange}
                       checkboxRight={
                         <CheckBox
                           id="serviceFeeCheckbox"

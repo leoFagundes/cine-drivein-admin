@@ -41,7 +41,7 @@ export const Input = ({
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isSuggestionOpen, setIsSuggestionOpen] = useState(false);
   const [imageName, setImageName] = useState<string>("Escolha uma imagem");
-  const [isPlaceholderUp, setIsPlaceholderUp] = useState(false);
+  const [isPlaceholderUp, setIsPlaceholderUp] = useState(true);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handlePassword = () => {
@@ -65,6 +65,12 @@ export const Input = ({
       setIsPlaceholderUp(true);
     }
   }, [value, suggestions, inputRef, isSuggestionOpen]);
+
+  useEffect(() => {
+    if (!value) {
+      setIsPlaceholderUp(false);
+    }
+  }, []);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];

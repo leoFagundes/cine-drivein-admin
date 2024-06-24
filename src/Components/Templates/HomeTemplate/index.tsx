@@ -205,18 +205,15 @@ export default function HomeTemplate() {
         order.items.forEach((itemInOrder) => {
           const itemName = itemInOrder.item.name;
 
-          // Se o item já estiver no mapa, adicione 1 à quantidade existente
           if (itemQuantitiesMap.has(itemName)) {
             const existingQuantity = itemQuantitiesMap.get(itemName) || 0;
             itemQuantitiesMap.set(itemName, existingQuantity + 1);
           } else {
-            // Caso contrário, inicie a contagem com 1 para o novo item
             itemQuantitiesMap.set(itemName, 1);
           }
         });
       });
 
-      // Converter o mapa para um array de objetos { itemName: string, quantity: number }
       const itemQuantities = Array.from(itemQuantitiesMap.entries()).map(
         ([itemName, quantity]) => ({
           itemName,
@@ -275,7 +272,6 @@ export default function HomeTemplate() {
     try {
       const orders = await OrderRepositories.getOrders();
 
-      // Inicialize as variáveis de contagem
       let activeCount = 0;
       let finishedCount = 0;
       let canceledCount = 0;

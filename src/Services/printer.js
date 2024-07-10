@@ -1,30 +1,54 @@
 import qz from "qz-tray";
 
-export const connectWithPrinter = (setConnectedPrinter) => {
-  if (!qz.websocket.isActive()) {
-    qz.websocket
-      .connect()
-      .then(() => {
-        console.log("Connected to QZ Tray!");
-        qz.printers
-          .getDefault()
-          .then((printer) => {
-            if (printer) {
-              console.log("Found default printer:", printer);
-              setConnectedPrinter(printer);
-            } else {
-              console.error("No default printer found.");
-            }
-          })
-          .catch((error) =>
-            console.error("Error finding default printer:", error)
-          );
-      })
-      .catch((error) => console.error("WebSocket connection error:", error));
-  } else {
-    console.log("WebSocket connection:", qz.websocket.getConnectionInfo());
+export const connectWithPrinter = async (setConnectedPrinter) => {
+  try {
+    if (!qz.websocket.isActive()) {
+      await qz.websocket.connect();
+      console.log("Conectado ao QZ Tray!");
+    } else {
+      console.log(
+        "Conexão WebSocket já está ativa:",
+        qz.websocket.getConnectionInfo()
+      );
+    }
+
+    const printer = await qz.printers.getDefault();
+    if (printer) {
+      console.log("Impressora padrão encontrada:", printer);
+      setConnectedPrinter(printer);
+    } else {
+      console.error("Nenhuma impressora padrão encontrada.");
+    }
+  } catch (error) {
+    console.error("Erro ao conectar e obter impressora padrão:", error);
   }
 };
+
+// export const connectWithPrinter = (setConnectedPrinter) => {
+//   if (!qz.websocket.isActive()) {
+//     qz.websocket
+//       .connect()
+//       .then(() => {
+//         console.log("Connected to QZ Tray!");
+//         qz.printers
+//           .getDefault()
+//           .then((printer) => {
+//             if (printer) {
+//               console.log("Found default printer:", printer);
+//               setConnectedPrinter(printer);
+//             } else {
+//               console.error("No default printer found.");
+//             }
+//           })
+//           .catch((error) =>
+//             console.error("Error finding default printer:", error)
+//           );
+//       })
+//       .catch((error) => console.error("WebSocket connection error:", error));
+//   } else {
+//     console.log("WebSocket connection:", qz.websocket.getConnectionInfo());
+//   }
+// };
 
 export const printOrder = (connectedPrinter, order) => {
   if (connectedPrinter) {
@@ -84,37 +108,76 @@ export const printOrder = (connectedPrinter, order) => {
       "\x1B" + "\x61" + "\x31", // center align
       "\x1B" + "\x21" + "\x30", // double height + width
       `Mesa: ${order.spot}` + "\x0A",
+      "\x0A",
       "\x1B" + "\x21" + "\x00", // normal text
       "\x1B" + "\x61" + "\x30", // left align
       `Número da Comanda: ${order.order_number}` + "\x0A",
       `Telefone: ${order.phone}` + "\x0A",
       `Nome: ${order.username}` + "\x0A",
+      `Criado em ${order.createdAt}` + "\x0A",
+      "\x0A",
+      "\x1B" + "\x61" + "\x31",
       "------------------------------------------" + "\x0A",
-      "PRODUTO                   VALOR UN.   VALOR" + "\x0A",
-      "------------------------------------------" + "\x0A",
+      "\x1B" + "\x61" + "\x30",
+      `PRODUTO`,
+      `                     `,
+      `VALOR`,
+      "\x0A",
+      "\x0A",
     ];
+
+    // Constante para o comprimento máximo da linha
+    const LINE_LENGTH = 46;
+
+    // Encontrar o comprimento máximo dos nomes dos itens
+    const maxNameLength = Math.max(
+      ...order.items.map((item) => item.item.name.length)
+    );
 
     // Adicionar itens da ordem
     order.items.forEach((itemInOrder) => {
       const item = itemInOrder.item;
-      const totalItemPrice = item.value * item.quantity;
+
+      // Preenche o nome do item com espaços até atingir maxNameLength
+      const itemName = item.name.padEnd(maxNameLength, " ");
+
+      // Calcula quantos espaços são necessários para alinhar o valor à direita
+      const spacesNeeded =
+        LINE_LENGTH - itemName.length - item.value.toFixed(2).length;
+
+      // Preenche o valor com espaços no começo para alinhar à direita
+      const formattedValue = " ".repeat(spacesNeeded) + item.value.toFixed(2);
+
       data.push(
-        `${item.name}       ${item.value.toFixed(
-          2
-        )}      ${totalItemPrice.toFixed(2)}` + "\x0A"
+        `1x` + itemName + formattedValue,
+        "\x0A" // Quebra de linha
       );
     });
 
+    // Função para formatar linha com alinhamento à direita
+    function formatLine(description, value) {
+      const spacesNeeded = LINE_LENGTH - description.length - value.length;
+      const formattedValue = " ".repeat(spacesNeeded) + value;
+      return `${description}${formattedValue}`;
+    }
+
+    // Adicionar linhas para Valor, Taxa de serviço e Valor total
     data.push(
+      "\x1B" + "\x61" + "\x31", // Centraliza o texto
       "------------------------------------------" + "\x0A",
-      `Valor:                         ${order.total_value.toFixed(2)}` + "\x0A",
-      `Taxa de serviço:               ${order.service_fee.toFixed(2)}` + "\x0A",
+      "\x1B" + "\x61" + "\x32", // Alinha à direita
+      formatLine("Valor:", order.total_value.toFixed(2)) + "\x0A",
+      formatLine("Taxa de serviço:", order.service_fee.toFixed(2)) + "\x0A",
       "\x1B" + "\x45" + "\x0D", // bold on
-      `Valor total:                  ${(
-        order.total_value + order.service_fee
-      ).toFixed(2)}` + "\x0A",
+      formatLine(
+        "Valor total:",
+        (order.total_value + order.service_fee).toFixed(2)
+      ) + "\x0A",
       "\x1B" + "\x45" + "\x0A", // bold off
-      "\x0A" + "\x0A" + "\x0A" + "\x0A" + "\x0A" + "\x0A" + "\x0A",
+      "\x0A" + "\x0A" + "\x0A",
+      "\x1B" + "\x61" + "\x31", // Centraliza o texto
+      "Cine Drive-in",
+      "\x0A" + "\x0A" + "\x0A" + "\x0A" + "\x0A" + "\x0A",
       "\x1B" + "\x69" // cut paper (old syntax)
     );
 

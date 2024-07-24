@@ -51,9 +51,9 @@ export default function OrderCard({
   const segundo = createdAtDate.getSeconds().toString().padStart(2, "0");
   const horaFormatada = `${hora}:${minuto}:${segundo}`;
 
-  useEffect(() => {
-    connectWithPrinter(setConnectedPrinter);
-  }, []);
+  // useEffect(() => {
+  //   connectWithPrinter(setConnectedPrinter);
+  // }, []);
 
   const groupOrderItems = (orderItems: ItemInOrder[]): GroupedOrderItem[] => {
     const groupedItems: GroupedItems = {};

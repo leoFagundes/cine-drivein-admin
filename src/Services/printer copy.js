@@ -3,7 +3,11 @@ import qz from "qz-tray";
 export const connectWithPrinter = (setConnectedPrinter) => {
   if (!qz.websocket.isActive()) {
     qz.websocket
-      .connect()
+      .connect({
+        host: "localhost", // Substitua pelo endereço do seu servidor QZ Tray se não for local
+        port: 8182, // Substitua pela porta que o QZ Tray está configurado para HTTPS
+        secure: true, // Habilita a conexão segura HTTPS
+      })
       .then(() => {
         console.log("Connected to QZ Tray!");
         qz.printers

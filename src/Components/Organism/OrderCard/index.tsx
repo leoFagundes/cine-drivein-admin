@@ -43,7 +43,6 @@ export default function OrderCard({
   onClickDeleteOrder,
   onClickFinishOrder,
 }: OrderCardType) {
-  const [connectedPrinter, setConnectedPrinter] = useState(null);
   const createdAtDate = new Date(order.createdAt ? order.createdAt : "");
 
   const hora = createdAtDate.getHours().toString().padStart(2, "0");
@@ -51,9 +50,11 @@ export default function OrderCard({
   const segundo = createdAtDate.getSeconds().toString().padStart(2, "0");
   const horaFormatada = `${hora}:${minuto}:${segundo}`;
 
-  // useEffect(() => {
-  //   connectWithPrinter(setConnectedPrinter);
-  // }, []);
+  const [connectedPrinter, setConnectedPrinter] = useState(null);
+
+  useEffect(() => {
+    connectWithPrinter(setConnectedPrinter);
+  }, []);
 
   const groupOrderItems = (orderItems: ItemInOrder[]): GroupedOrderItem[] => {
     const groupedItems: GroupedItems = {};
@@ -196,6 +197,12 @@ export default function OrderCard({
     );
   };
 
+  const handlePrinter = () => {
+    connectWithPrinter(setConnectedPrinter);
+    console.log("imprimir aqui", order.spot);
+    printOrder(connectedPrinter, order, groupOrderItems(order.items));
+  };
+
   return (
     <div className={styles.container}>
       <Text
@@ -304,10 +311,7 @@ export default function OrderCard({
         {order.status === "active" && (
           <FontAwesomeIcon
             className={styles.printIcon}
-            onClick={() => {
-              console.log("imprimir aqui", order.spot);
-              printOrder(connectedPrinter, order);
-            }}
+            onClick={handlePrinter}
             size="lg"
             icon={faPrint}
             color="black"

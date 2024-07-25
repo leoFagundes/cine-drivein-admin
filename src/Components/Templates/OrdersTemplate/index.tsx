@@ -17,6 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import OrderMobileCard from "../../Organism/OrderMobileCard";
 import OrderCardModal from "../../Organism/OrderCardModal";
+import { connectWithPrinter, printOrder } from "../../../Services/printer";
 
 type OrdersType = {
   orders: Order[];

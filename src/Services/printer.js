@@ -124,7 +124,7 @@ export const printOrder = (connectedPrinter, order, groupedItems) => {
       "\x1B" + "\x40", // init
       "\x1B" + "\x61" + "\x31", // center align
       "\x1B" + "\x21" + "\x30", // double height + width
-      `Mesa: ${order.spot}` + "\x0A",
+      `Vaga: ${order.spot}` + "\x0A",
       "\x0A",
       "\x1B" + "\x21" + "\x00", // normal text
       "\x1B" + "\x61" + "\x30", // left align

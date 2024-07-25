@@ -56,11 +56,6 @@ export default function OrderCard({
     connectWithPrinter(setConnectedPrinter);
   }, []);
 
-  const handlePrinter = () => {
-    console.log("imprimir aqui", order.spot);
-    printOrder(connectedPrinter, order);
-  };
-
   const groupOrderItems = (orderItems: ItemInOrder[]): GroupedOrderItem[] => {
     const groupedItems: GroupedItems = {};
 
@@ -200,6 +195,12 @@ export default function OrderCard({
         ))}
       </div>
     );
+  };
+
+  const handlePrinter = () => {
+    connectWithPrinter(setConnectedPrinter);
+    console.log("imprimir aqui", order.spot);
+    printOrder(connectedPrinter, order, groupOrderItems(order.items));
   };
 
   return (

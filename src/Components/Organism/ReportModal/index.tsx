@@ -6,6 +6,10 @@ import { Order } from "../../../Types/types";
 import OrderRepositories from "../../../Services/repositories/OrderRepositories";
 import Button from "../../Atoms/Button";
 import Text from "../../Atoms/Text";
+import {
+  connectWithPrinter,
+  printDailyReport,
+} from "../../../Services/printer";
 
 type ModalType = {
   isOpen: boolean;
@@ -20,6 +24,11 @@ type GroupedItems = {
 
 export default function ReportModal({ onClose, isOpen }: ModalType) {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [connectedPrinter, setConnectedPrinter] = useState(null);
+
+  useEffect(() => {
+    connectWithPrinter(setConnectedPrinter);
+  }, []);
 
   const groupItemsByServiceFee = (orders: Order[]): GroupedItems => {
     const groupedItems: GroupedItems = {
@@ -102,6 +111,10 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
     return { totalMoney, totalCredit, totalDebit, subtotal, serviceFee, total };
   };
 
+  const handlePrintReport = () => {
+    printDailyReport(connectedPrinter, calculateSums());
+  };
+
   // Chamar a função para calcular as somas
   const { totalMoney, totalCredit, totalDebit, subtotal, serviceFee, total } =
     calculateSums();
@@ -165,10 +178,9 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
                 label="Fechar"
                 backGroundColor="invalid-color"
               />
-              <Button
-                onClick={() => console.log("Imprimir aqui")}
-                label="Imprimir"
-              />
+              {connectedPrinter && (
+                <Button onClick={handlePrintReport} label="Imprimir" />
+              )}
             </div>
           </div>
         </div>

@@ -2,7 +2,12 @@ import { ItemInOrder, Order } from "../../../Types/types";
 import Text from "../../Atoms/Text";
 import styles from "./OrderCard.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faImages, faTrash, faPrint } from "@fortawesome/free-solid-svg-icons";
+import {
+  faImages,
+  faTrash,
+  faPrint,
+  faClose,
+} from "@fortawesome/free-solid-svg-icons";
 import Button from "../../Atoms/Button";
 import { useEffect, useState } from "react";
 import { connectWithPrinter, printOrder } from "../../../Services/printer";
@@ -199,7 +204,7 @@ export default function OrderCard({
 
   const handlePrinter = () => {
     connectWithPrinter(setConnectedPrinter);
-    console.log("imprimir aqui", order.spot);
+    // console.log("imprimir aqui", order.spot);
     printOrder(connectedPrinter, order, groupOrderItems(order.items));
   };
 
@@ -308,7 +313,7 @@ export default function OrderCard({
             color="black"
           />
         )}
-        {order.status === "active" && (
+        {order.status === "active" && connectedPrinter && (
           <FontAwesomeIcon
             className={styles.printIcon}
             onClick={handlePrinter}

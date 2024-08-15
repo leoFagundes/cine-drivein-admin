@@ -4,10 +4,41 @@ import styles from "./Orders.module.scss";
 import { LoadingFullScreenTemplate } from "../../Components/Templates/LoadingFullScreenTemplate";
 import OrdersTemplate from "../../Components/Templates/OrdersTemplate";
 import OrderRepositories from "../../Services/repositories/OrderRepositories";
-import { Order } from "../../Types/types";
+import { Order, ItemInOrder } from "../../Types/types";
 import AccessLimitedToAdmins from "../../Components/Organism/AccessLimitedToAdmins";
+import { connectWithPrinter, printOrder } from "../../Services/printer";
 
 const UPDATE_TIME = 15;
+
+type OrderCardType = {
+  order: Order;
+  onClickCancelOrder?: (id: string | undefined) => void;
+  onClickDeleteOrder?: (id: string | undefined) => void;
+  onClickFinishOrder?: (order: Order | undefined) => void;
+};
+
+type GroupedOrderItem = {
+  item: ItemInOrder["item"];
+  quantity: number;
+  totalValue: number;
+  observations: string[];
+  additional: string;
+  additional_sauce: string;
+  additional_drink: string;
+  additional_sweet: string;
+};
+
+type GroupedItems = {
+  [key: string]: {
+    quantity: number;
+    totalValue: number;
+    observations: string[];
+    additional: string;
+    additional_sauce: string;
+    additional_drink: string;
+    additional_sweet: string;
+  };
+};
 
 function Timer({ seconds, reset }: { seconds: number; reset: boolean }) {
   const [timeLeft, setTimeLeft] = useState(seconds);
@@ -47,11 +78,14 @@ export default function Orders() {
     const storedList = localStorage.getItem("listAlreadyPrinted");
     return storedList ? JSON.parse(storedList) : [];
   });
-
-  console.log(alreadyPrinted);
+  const [connectedPrinter, setConnectedPrinter] = useState(null);
 
   useEffect(() => {
     setIsLoading(true);
+  }, []);
+
+  useEffect(() => {
+    connectWithPrinter(setConnectedPrinter);
   }, []);
 
   useEffect(() => {
@@ -75,7 +109,13 @@ export default function Orders() {
               if (!alreadyPrinted.includes(newOrder._id)) {
                 console.log("Novos pedidos recebidos:");
                 console.log(newOrder);
-                console.log("imprimrir aqui", newOrder.spot);
+                // console.log("imprimir aqui", newOrder.spot);
+                printOrder(
+                  connectedPrinter,
+                  newOrder,
+                  groupOrderItems(newOrder.items)
+                );
+                console.log(groupOrderItems(newOrder.items));
                 setAlreadyPrinted((prevAlreadyPrinted: string[]) => [
                   ...prevAlreadyPrinted,
                   newOrder._id,
@@ -101,6 +141,58 @@ export default function Orders() {
     // Retorna uma função de limpeza para cancelar o setInterval quando o componente for desmontado
     return () => clearInterval(intervalId);
   }, [orders, alreadyPrinted]);
+
+  const groupOrderItems = (orderItems: ItemInOrder[]): GroupedOrderItem[] => {
+    const groupedItems: GroupedItems = {};
+
+    orderItems.forEach((orderItem) => {
+      const key = JSON.stringify({
+        ...orderItem.item,
+        observation: orderItem.observation,
+        additional: orderItem.additional,
+        additional_sauce: orderItem.additional_sauce,
+        additional_drink: orderItem.additional_drink,
+        additional_sweet: orderItem.additional_sweet,
+      });
+      if (groupedItems[key]) {
+        groupedItems[key].quantity++;
+        groupedItems[key].totalValue += orderItem.item.value;
+        if (
+          orderItem.observation &&
+          !groupedItems[key].observations.includes(orderItem.observation)
+        ) {
+          groupedItems[key].observations.push(orderItem.observation);
+        }
+      } else {
+        groupedItems[key] = {
+          quantity: 1,
+          totalValue: orderItem.item.value,
+          observations: orderItem.observation ? [orderItem.observation] : [],
+          additional: orderItem.additional ? orderItem.additional : "",
+          additional_sauce: orderItem.additional_sauce
+            ? orderItem.additional_sauce
+            : "",
+          additional_drink: orderItem.additional_drink
+            ? orderItem.additional_drink
+            : "",
+          additional_sweet: orderItem.additional_sweet
+            ? orderItem.additional_sweet
+            : "",
+        };
+      }
+    });
+
+    return Object.entries(groupedItems).map(([key, value]) => ({
+      item: JSON.parse(key),
+      quantity: value.quantity,
+      totalValue: value.totalValue,
+      observations: value.observations,
+      additional: value.additional,
+      additional_sauce: value.additional_sauce,
+      additional_drink: value.additional_drink,
+      additional_sweet: value.additional_sweet,
+    }));
+  };
 
   if (isLoading) return <LoadingFullScreenTemplate />;
 

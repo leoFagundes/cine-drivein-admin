@@ -68,6 +68,7 @@ qz.security.setSignaturePromise((toSign) => {
 
 export const connectWithPrinter = async (setConnectedPrinter) => {
   try {
+    console.log("Tentando conectar a impressora...");
     if (!qz.websocket.isActive()) {
       await qz.websocket.connect();
       console.log("Conectado ao QZ Tray!");
@@ -116,9 +117,60 @@ export const connectWithPrinter = async (setConnectedPrinter) => {
 //   }
 // };
 
+export const printDailyReport = (connectedPrinter, reportData) => {
+  if (connectedPrinter) {
+    const config = qz.configs.create(connectedPrinter);
+
+    const { totalMoney, totalCredit, totalDebit, subtotal, serviceFee, total } =
+      reportData;
+
+    const today = new Date();
+    const date = today.toLocaleDateString("pt-BR");
+
+    let data = [
+      "\x1B" + "\x40", // init
+      "\x1B" + "\x61" + "\x31", // center align
+      "\x1B" + "\x21" + "\x30", // double height + width
+      `Relatório diário | ${date}` + "\x0A",
+      "\x0A",
+      "\x1B" + "\x21" + "\x00", // normal text
+      "\x1B" + "\x61" + "\x30", // left align
+      `Total em dinheiro: R$ ${totalMoney.toFixed(2)}` + "\x0A",
+      `Total em crédito: R$ ${totalCredit.toFixed(2)}` + "\x0A",
+      `Total em débito: R$ ${totalDebit.toFixed(2)}` + "\x0A",
+      `Subtotal: R$ ${subtotal.toFixed(2)}` + "\x0A",
+      `Taxa de serviço: R$ ${serviceFee.toFixed(2)}` + "\x0A",
+      `Total: R$ ${total.toFixed(2)}` + "\x0A",
+      "\x0A",
+      "\x1B" + "\x61" + "\x31", // center align
+      "------------------------------------------" + "\x0A" + "\x0A",
+      "Cine Drive-in",
+      "\x1B" + "\x61" + "\x30",
+      "\x0A" + "\x0A" + "\x0A" + "\x0A" + "\x0A" + "\x0A",
+      "\x1B" + "\x69", // cut paper (old syntax)
+    ];
+
+    qz.print(config, data)
+      .then(() => {
+        console.log("Print job submitted!");
+      })
+      .catch((error) => {
+        console.error("Failed to submit print job:", error);
+      });
+  } else {
+    console.error("No printer connected. Cannot print.");
+  }
+};
+
 export const printOrder = (connectedPrinter, order, groupedItems) => {
   if (connectedPrinter) {
     const config = qz.configs.create(connectedPrinter);
+    const createdAtDate = new Date(order.createdAt ? order.createdAt : "");
+
+    const hora = createdAtDate.getHours().toString().padStart(2, "0");
+    const minuto = createdAtDate.getMinutes().toString().padStart(2, "0");
+    const segundo = createdAtDate.getSeconds().toString().padStart(2, "0");
+    const horaFormatada = `${hora}:${minuto}:${segundo}`;
 
     let data = [
       "\x1B" + "\x40", // init
@@ -131,7 +183,7 @@ export const printOrder = (connectedPrinter, order, groupedItems) => {
       `Número da Comanda: ${order.order_number}` + "\x0A",
       `Telefone: ${order.phone}` + "\x0A",
       `Nome: ${order.username}` + "\x0A",
-      `Criado em ${order.createdAt}` + "\x0A",
+      `Criado em ${horaFormatada}` + "\x0A",
       "\x0A",
       "\x1B" + "\x61" + "\x31",
       "------------------------------------------" + "\x0A",

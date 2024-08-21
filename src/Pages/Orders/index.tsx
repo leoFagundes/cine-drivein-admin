@@ -8,7 +8,7 @@ import { Order, ItemInOrder } from "../../Types/types";
 import AccessLimitedToAdmins from "../../Components/Organism/AccessLimitedToAdmins";
 import { connectWithPrinter, printOrder } from "../../Services/printer";
 
-const UPDATE_TIME = 15;
+const UPDATE_TIME = 10;
 
 type OrderCardType = {
   order: Order;
@@ -99,44 +99,40 @@ export default function Orders() {
         const fetchedOrders = await OrderRepositories.getOrders();
         setIsLoading(false);
         setFetchCompleted((prev) => !prev);
-        if (fetchedOrders.length > orders.length) {
-          // Verifica se há novos pedidos
-          const newOrders = fetchedOrders.filter(
-            (order: Order) => !orders.some((o) => o._id === order._id)
-          );
-          if (newOrders.length > 0) {
-            newOrders.forEach((newOrder: Order) => {
-              if (!alreadyPrinted.includes(newOrder._id)) {
-                console.log("Novos pedidos recebidos:");
-                console.log(newOrder);
-                // console.log("imprimir aqui", newOrder.spot);
-                printOrder(
-                  connectedPrinter,
-                  newOrder,
-                  groupOrderItems(newOrder.items)
-                );
-                console.log(groupOrderItems(newOrder.items));
-                setAlreadyPrinted((prevAlreadyPrinted: string[]) => [
-                  ...prevAlreadyPrinted,
-                  newOrder._id,
-                ]);
-              }
-            });
-            setIsLoading(true);
-            setOrders(fetchedOrders);
-          }
+
+        const newOrders = fetchedOrders.filter(
+          (order: Order) => !alreadyPrinted.includes(order._id)
+        );
+
+        if (newOrders.length > 0) {
+          console.log("Novos pedidos recebidos:");
+          newOrders.forEach((newOrder: Order) => {
+            if (connectedPrinter) {
+              printOrder(
+                connectedPrinter,
+                newOrder,
+                groupOrderItems(newOrder.items)
+              );
+              console.log(groupOrderItems(newOrder.items));
+              setAlreadyPrinted((prevAlreadyPrinted: string[]) => [
+                ...prevAlreadyPrinted,
+                newOrder._id,
+              ]);
+            }
+          });
         }
+        setOrders(fetchedOrders);
       } catch (error) {
         console.error("Erro ao obter itens:", error);
         setIsLoading(false);
       }
     };
 
-    // Define a função para buscar novos pedidos a cada 15 segundos
-    const intervalId = setInterval(fetchItems, UPDATE_TIME * 1000);
-
     // Executa a função uma vez para verificar se há novos pedidos imediatamente após o componente montar
     fetchItems();
+
+    // Define a função para buscar novos pedidos a cada 15 segundos
+    const intervalId = setInterval(fetchItems, UPDATE_TIME * 1000);
 
     // Retorna uma função de limpeza para cancelar o setInterval quando o componente for desmontado
     return () => clearInterval(intervalId);

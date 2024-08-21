@@ -131,7 +131,8 @@ export const printDailyReport = (connectedPrinter, reportData) => {
       "\x1B" + "\x40", // init
       "\x1B" + "\x61" + "\x31", // center align
       "\x1B" + "\x21" + "\x30", // double height + width
-      `Relatório diário | ${date}` + "\x0A",
+      `Relatorio diario` + "\x0A",
+      `${date}` + "\x0A",
       "\x0A",
       "\x1B" + "\x21" + "\x00", // normal text
       "\x1B" + "\x61" + "\x30", // left align
@@ -235,27 +236,23 @@ export const printOrder = (connectedPrinter, order, groupedItems) => {
         `x${item.quantity} ` + itemName + formattedValue,
         `${
           item.observations.length > 0
-            ? "Observacao: " + item.observations[0] + "\x0A" + "\x0A"
+            ? "Observacao: " + item.observations[0] + "\x0A"
             : ""
         }`,
-        `${
-          item.additional
-            ? "Complemento: " + item.additional + "\x0A" + "\x0A"
-            : ""
-        }`,
+        `${item.additional ? "Complemento: " + item.additional + "\x0A" : ""}`,
         `${
           item.additional_sauce
-            ? "Molho: " + item.additional_sauce + "\x0A" + "\x0A"
+            ? "Molho: " + item.additional_sauce + "\x0A"
             : ""
         }`,
         `${
           item.additional_drink
-            ? "Bebida: " + item.additional_drink + "\x0A" + "\x0A"
+            ? "Bebida: " + item.additional_drink + "\x0A"
             : ""
         }`,
         `${
           item.additional_sweet
-            ? "Bomboniere: " + item.additional_sweet + "\x0A" + "\x0A"
+            ? "Bomboniere: " + item.additional_sweet + "\x0A"
             : ""
         }`,
         `${
@@ -265,7 +262,7 @@ export const printOrder = (connectedPrinter, order, groupedItems) => {
           !item.additional_drink &&
           !item.additional_sweet
             ? "\x0A" + "\x0A"
-            : ""
+            : "\x0A"
         }`
       );
     });

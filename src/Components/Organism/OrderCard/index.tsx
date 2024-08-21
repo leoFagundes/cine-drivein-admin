@@ -234,7 +234,7 @@ export default function OrderCard({
             fontWeight="semibold"
             fontColor="background-secondary-color"
           >
-            Vaga {order.spot}
+            Vaga {order.spot}{" "}
           </Text>
           <Text fontSize="mediumSmall" fontColor="background-secondary-color">
             <strong>Nome:</strong> {order.username}

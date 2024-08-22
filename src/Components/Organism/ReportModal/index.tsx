@@ -111,15 +111,15 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
     return { totalMoney, totalCredit, totalDebit, subtotal, serviceFee, total };
   };
 
-  const handlePrintReport = () => {
-    printDailyReport(connectedPrinter, calculateSums());
-  };
-
   // Chamar a função para calcular as somas
   const { totalMoney, totalCredit, totalDebit, subtotal, serviceFee, total } =
     calculateSums();
 
   const groupedItems = groupItemsByServiceFee(orders);
+
+  const handlePrintReport = () => {
+    printDailyReport(connectedPrinter, calculateSums(), groupedItems);
+  };
 
   return (
     <>

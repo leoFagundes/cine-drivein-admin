@@ -117,7 +117,11 @@ export const connectWithPrinter = async (setConnectedPrinter) => {
 //   }
 // };
 
-export const printDailyReport = (connectedPrinter, reportData) => {
+export const printDailyReport = (
+  connectedPrinter,
+  reportData,
+  groupedItems
+) => {
   if (connectedPrinter) {
     const config = qz.configs.create(connectedPrinter);
 
@@ -145,11 +149,24 @@ export const printDailyReport = (connectedPrinter, reportData) => {
       "\x0A",
       "\x1B" + "\x61" + "\x31", // center align
       "------------------------------------------" + "\x0A" + "\x0A",
+    ];
+
+    Object.entries(groupedItems.allItems).forEach(([codItem, items]) => {
+      data.push(
+        "\x1B" + "\x61" + "\x30", // left align
+        `${items.length}x ${items[0].name} (${items[0].cod_item})` + "\x0A"
+      );
+    });
+
+    data.push(
+      "\x0A",
+      "\x1B" + "\x61" + "\x31", // center align
+      "------------------------------------------" + "\x0A" + "\x0A",
       "Cine Drive-in",
       "\x1B" + "\x61" + "\x30",
       "\x0A" + "\x0A" + "\x0A" + "\x0A" + "\x0A" + "\x0A",
-      "\x1B" + "\x69", // cut paper (old syntax)
-    ];
+      "\x1B" + "\x69" // cut paper (old syntax)
+    );
 
     qz.print(config, data)
       .then(() => {

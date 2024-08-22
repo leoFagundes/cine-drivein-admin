@@ -128,8 +128,8 @@ export default function Orders() {
       }
     };
 
-    // Executa a função uma vez para verificar se há novos pedidos imediatamente após o componente montar
-    fetchItems();
+    // Condição if (connectedPrinter) adicionada momentaneamente
+    if (connectedPrinter) fetchItems();
 
     // Define a função para buscar novos pedidos a cada 15 segundos
     const intervalId = setInterval(fetchItems, UPDATE_TIME * 1000);

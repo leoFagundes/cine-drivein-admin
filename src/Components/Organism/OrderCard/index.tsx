@@ -57,6 +57,11 @@ export default function OrderCard({
 
   const [connectedPrinter, setConnectedPrinter] = useState(null);
 
+  const [alreadyPrinted, setAlreadyPrinted] = useState(() => {
+    const storedList = localStorage.getItem("listAlreadyPrinted");
+    return storedList ? JSON.parse(storedList) : [];
+  });
+
   useEffect(() => {
     connectWithPrinter(setConnectedPrinter);
   }, []);
@@ -206,6 +211,14 @@ export default function OrderCard({
     connectWithPrinter(setConnectedPrinter);
     // console.log("imprimir aqui", order.spot);
     printOrder(connectedPrinter, order, groupOrderItems(order.items));
+
+    if (!alreadyPrinted.includes(order._id)) {
+      setAlreadyPrinted([...alreadyPrinted, order._id]);
+      localStorage.setItem(
+        "listAlreadyPrinted",
+        JSON.stringify([...alreadyPrinted, order._id])
+      );
+    }
   };
 
   return (
@@ -226,7 +239,9 @@ export default function OrderCard({
       <div
         className={`${styles.orderContent} ${
           order.status === "canceled" && styles.isCanceled
-        } ${order.status === "finished" && styles.isFinished}`}
+        } ${order.status === "finished" && styles.isFinished} ${
+          alreadyPrinted.includes(order._id) && styles.alreadyPrinted
+        }`}
       >
         <div className={styles.orderInfo}>
           <Text

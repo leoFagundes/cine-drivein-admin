@@ -247,22 +247,44 @@ export default function RegisterFormTemplate({
 
   const renderAdditionals = (additionals: any, key: string) => {
     return additionals.map((item: any, index: number) => {
-      const additionalItem = additionalItems?.find(
-        (additional) => additional._id === item.additionalItem
-      );
-      if (additionalItem) {
-        return (
-          <div key={index} className={styles.item}>
-            <Text fontSize="mediumSmall">{additionalItem.name}</Text>
-            <FontAwesomeIcon
-              onMouseOver={() => handleMouseOver(index)}
-              onMouseOut={() => handleMouseOut(index)}
-              onClick={() => handleItemRemove(key, item.additionalItem)}
-              icon={faClose}
-            />
-          </div>
+      if (item.additionalItem._id === undefined) {
+        const additionalItem = additionalItems?.find(
+          (additional) => additional._id === item.additionalItem
         );
+
+        if (additionalItem) {
+          return (
+            <div key={index} className={styles.item}>
+              <Text fontSize="mediumSmall">{additionalItem.name}</Text>
+              <FontAwesomeIcon
+                onMouseOver={() => handleMouseOver(index)}
+                onMouseOut={() => handleMouseOut(index)}
+                onClick={() => handleItemRemove(key, item.additionalItem)}
+                icon={faClose}
+              />
+            </div>
+          );
+        }
+      } else {
+        const additionalItem = additionalItems?.find(
+          (additional) => additional._id === item.additionalItem._id
+        );
+
+        if (additionalItem) {
+          return (
+            <div key={index} className={styles.item}>
+              <Text fontSize="mediumSmall">{additionalItem.name}</Text>
+              <FontAwesomeIcon
+                onMouseOver={() => handleMouseOver(index)}
+                onMouseOut={() => handleMouseOut(index)}
+                onClick={() => handleItemRemove(key, item.additionalItem)}
+                icon={faClose}
+              />
+            </div>
+          );
+        }
       }
+
       return null;
     });
   };
@@ -294,14 +316,14 @@ export default function RegisterFormTemplate({
         </div>
         {withSubitem && (
           <div className={styles.subitems}>
-            {blockSubitems && (
+            {/* {blockSubitems && (
               <div className={styles.blockSubitems}>
                 <FontAwesomeIcon size="2x" icon={faWarning} />
                 <Text fontWeight="semibold" fontSize="mediumLarge">
                   Funcionalidade Bloqueada para esta ação!
                 </Text>
               </div>
-            )}
+            )} */}
 
             <Text fontWeight="semibold">Adicionar um subitem</Text>
             <div className={styles.captions}>

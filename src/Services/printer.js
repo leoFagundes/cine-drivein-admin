@@ -194,6 +194,7 @@ export const printOrder = (connectedPrinter, order, groupedItems) => {
       "\x1B" + "\x40", // init
       "\x1B" + "\x61" + "\x31", // center align
       "\x1B" + "\x21" + "\x30", // double height + width
+      "\x1B" + "\x45" + "\x0D", // bold
       `Vaga: ${order.spot}` + "\x0A",
       "\x0A",
       "\x1B" + "\x21" + "\x00", // normal text
@@ -203,6 +204,7 @@ export const printOrder = (connectedPrinter, order, groupedItems) => {
       `Nome: ${order.username}` + "\x0A",
       `Criado em ${horaFormatada}` + "\x0A",
       "\x0A",
+      "\x1B" + "\x45" + "\x0A", // bold off
       "\x1B" + "\x61" + "\x31",
       "------------------------------------------" + "\x0A",
       "\x1B" + "\x61" + "\x30",
@@ -250,6 +252,7 @@ export const printOrder = (connectedPrinter, order, groupedItems) => {
         " ".repeat(spacesNeeded) + item.totalValue.toFixed(2);
 
       data.push(
+        "\x1B" + "\x45" + "\x0D", // bold
         `x${item.quantity} ` + itemName + formattedValue,
         `${
           item.observations.length > 0
@@ -280,7 +283,8 @@ export const printOrder = (connectedPrinter, order, groupedItems) => {
           !item.additional_sweet
             ? "\x0A" + "\x0A"
             : "\x0A"
-        }`
+        }`,
+        "\x1B" + "\x45" + "\x0A" // bold off
       );
     });
 
@@ -296,9 +300,9 @@ export const printOrder = (connectedPrinter, order, groupedItems) => {
       "\x1B" + "\x61" + "\x31", // Centraliza o texto
       "------------------------------------------" + "\x0A",
       "\x1B" + "\x61" + "\x32", // Alinha à direita
+      "\x1B" + "\x45" + "\x0D", // bold
       formatLine("Valor:", order.total_value.toFixed(2)) + "\x0A",
       formatLine("Taxa de serviço:", order.service_fee.toFixed(2)) + "\x0A",
-      "\x1B" + "\x45" + "\x0D", // bold on
       formatLine(
         "Valor total:",
         (order.total_value + order.service_fee).toFixed(2)

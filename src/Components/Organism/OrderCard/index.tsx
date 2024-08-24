@@ -240,7 +240,9 @@ export default function OrderCard({
         className={`${styles.orderContent} ${
           order.status === "canceled" && styles.isCanceled
         } ${order.status === "finished" && styles.isFinished} ${
-          alreadyPrinted.includes(order._id) && styles.alreadyPrinted
+          alreadyPrinted.includes(order._id) &&
+          order.status === "active" &&
+          styles.alreadyPrinted
         }`}
       >
         <div className={styles.orderInfo}>

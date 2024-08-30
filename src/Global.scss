@@ -22,6 +22,11 @@ $font-weight-medium: 500;
 $font-weight-semibold: 600;
 $font-weight-bold: 700;
 
+::selection {
+  background-color: #0088c2;
+  color: white;
+}
+
 body {
   background-color: $background-color;
 

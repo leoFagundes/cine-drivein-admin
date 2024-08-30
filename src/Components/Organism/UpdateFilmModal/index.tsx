@@ -32,23 +32,6 @@ export default function UpdateFilmModal({
     setFilm(data);
   }, [data]);
 
-  // const initalState: Partial<FilmProps> = {
-  //   title: "",
-  //   showtime: "",
-  //   image: "",
-  //   classification: "",
-  //   synopsis: "",
-  //   director: "",
-  //   writer: [],
-  //   cast: [],
-  //   genres: [],
-  //   duration: "",
-  //   language: "",
-  //   displayDate: "",
-  //   trailer: "",
-  //   screening: data?.screening,
-  // };
-
   const handleClose = () => {
     setFilm(data);
     onClose();
@@ -104,7 +87,9 @@ export default function UpdateFilmModal({
                 <Input
                   value={film.title}
                   placeholder="Título"
-                  onChange={(e) => setFilm({ ...film, title: e.target.value })}
+                  onChange={(e) =>
+                    setFilm({ ...film, title: e.target.value.toUpperCase() })
+                  }
                 />
                 <Input
                   value={film.showtime}
@@ -120,13 +105,24 @@ export default function UpdateFilmModal({
                     setFilm({ ...film, duration: e.target.value })
                   }
                 />
-                <Input
+                <Dropdown
+                  value={film.language}
+                  placeholder="Idioma"
+                  onChange={(e) =>
+                    setFilm({
+                      ...film,
+                      language: e,
+                    })
+                  }
+                  options={["Dublado", "Legendado"]}
+                />
+                {/* <Input
                   value={film.language}
                   placeholder="Idioma"
                   onChange={(e) =>
                     setFilm({ ...film, language: e.target.value })
                   }
-                />
+                /> */}
                 <Input
                   value={film.director}
                   placeholder="Direção"

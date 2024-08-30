@@ -34,6 +34,8 @@
 
     .filmForm {
       display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
       gap: 24px;
 
       .formSide {
@@ -49,7 +51,7 @@
       width: 100%;
 
       img {
-        height: 64px;
+        height: 48px;
 
         &.currentClassification {
           border: 3px solid $main-white;

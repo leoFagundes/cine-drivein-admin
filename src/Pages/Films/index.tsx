@@ -7,12 +7,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import UpdateFilmModal from "../../Components/Organism/UpdateFilmModal";
 import { LoadingFullScreenTemplate } from "../../Components/Templates/LoadingFullScreenTemplate";
+import DeleteModal from "../../Components/Organism/DeleteModal";
 
 export default function Films() {
   const [data, setData] = useState<FilmProps[] | undefined>();
   const [currentFilm, setCurrentFilm] = useState<FilmProps | undefined>();
   const [isModalOPen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchFilms() {
@@ -45,6 +47,32 @@ export default function Films() {
     setIsModalOpen(true);
   };
 
+  const handleResetFilm = async (film: FilmProps) => {
+    setIsLoading(true);
+    try {
+      await FilmRepositories.updateFilm(film._id, {
+        title: "",
+        showtime: "",
+        image: "",
+        classification: "L",
+        synopsis: "",
+        director: "",
+        writer: [],
+        cast: [],
+        genres: [],
+        duration: "",
+        language: "",
+        displayDate: "",
+        trailer: "",
+      });
+    } catch (error) {
+      console.error("Não foi possível 'excluir' filme: ", error);
+    } finally {
+      setIsLoading(false);
+      window.location.reload();
+    }
+  };
+
   if (isLoading) return <LoadingFullScreenTemplate />;
 
   return (
@@ -66,6 +94,10 @@ export default function Films() {
                       icon={faEdit}
                     />
                     <FontAwesomeIcon
+                      onClick={() => {
+                        setCurrentFilm(film);
+                        setIsDeleteModalOpen(true);
+                      }}
                       className={styles.icon}
                       size="lg"
                       icon={faTrash}
@@ -90,6 +122,16 @@ export default function Films() {
           </Fragment>
         ))}
       </div>
+      <DeleteModal
+        itemType={`filme (${currentFilm?.title})`}
+        onClick={() =>
+          currentFilm
+            ? handleResetFilm(currentFilm)
+            : console.warn("Erro ao selecionar filme.")
+        }
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+      />
       <UpdateFilmModal
         isLoading={isLoading}
         setIsLoading={setIsLoading}

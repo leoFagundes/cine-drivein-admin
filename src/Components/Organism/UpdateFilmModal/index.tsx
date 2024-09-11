@@ -44,12 +44,12 @@ export default function UpdateFilmModal({
     setIsLoading(true);
     try {
       await FilmRepositories.updateFilm(data?._id, film);
+      onClose();
+      window.location.reload();
     } catch (error) {
       console.error("Não possível atualizar o filme: ", error);
     } finally {
       setIsLoading(false);
-      onClose();
-      window.location.reload();
     }
   };
 
@@ -218,7 +218,7 @@ export default function UpdateFilmModal({
                 />
               ))}
             </div>
-            <Button marginTop="-12px" label={"Evniar"} onClick={handleSubmit} />
+            <Button marginTop="-12px" label={"Enviar"} onClick={handleSubmit} />
             <FontAwesomeIcon
               onClick={handleClose}
               className={styles.closeModalIcon}

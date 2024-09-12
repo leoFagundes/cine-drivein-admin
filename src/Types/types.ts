@@ -96,5 +96,5 @@ export interface FilmProps {
   language: string;
   displayDate: string;
   trailer: string;
-  screening: "Sessão 1" | "Sessão 2" | "Sessão 3" | "";
+  screening: "Sessão 1" | "Sessão 2" | "Sessão 3" | "Sessão 4" | "";
 }

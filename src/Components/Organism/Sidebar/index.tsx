@@ -75,10 +75,10 @@ export const Sidebar = ({ page, setPage }: SideBarType) => {
       onClick: () => setPage("users"),
     },
     {
-      key: "films",
-      label: "Filmes",
+      key: "site",
+      label: "Site",
       icon: faPhotoFilm,
-      onClick: () => setPage("films"),
+      onClick: () => setPage("site"),
     },
     {
       key: "exit",

@@ -7,7 +7,7 @@ import Profile from "../../../Pages/Profile";
 import Stock from "../../../Pages/Stock";
 import Register from "../../../Pages/Register";
 import Orders from "../../../Pages/Orders";
-import Films from "../../../Pages/Films";
+import Site from "../../../Pages/Site";
 
 type LayoutWithSidebarType = {
   children?: ReactNode;
@@ -39,8 +39,8 @@ export const LayoutWithSidebar = ({
     if (currentPage === "users") {
       return <Users />;
     }
-    if (currentPage === "films") {
-      return <Films />;
+    if (currentPage === "site") {
+      return <Site />;
     }
 
     return <Home />;

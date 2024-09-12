@@ -59,7 +59,7 @@ export default function UpdateFilmModal({
       });
       setData(updatedData);
       setIsAlertOpen(true);
-      onClose();
+      handleClose();
     } catch (error) {
       console.error("Não foi possível atualizar o filme: ", error);
     } finally {
@@ -128,7 +128,7 @@ export default function UpdateFilmModal({
                       language: e,
                     })
                   }
-                  options={["Dublado", "Legendado"]}
+                  options={["Dublado", "Legendado", "Nacional"]}
                 />
                 {/* <Input
                   value={film.language}

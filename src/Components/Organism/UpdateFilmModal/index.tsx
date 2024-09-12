@@ -3,7 +3,7 @@ import { FilmProps } from "../../../Types/types";
 import styles from "./UpdateFIlmModal.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Input } from "../../Atoms/Input/Input";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown } from "../../Atoms/Dropdown";
 import Button from "../../Atoms/Button";
 import FilmRepositories from "../../../Services/repositories/FilmRepositorie";
@@ -12,42 +12,56 @@ import { LoadingFullScreenTemplate } from "../../Templates/LoadingFullScreenTemp
 interface UpdateFilmModalProps {
   isOpen: boolean;
   onClose: VoidFunction;
-  data: FilmProps | undefined;
-  setData: React.Dispatch<React.SetStateAction<FilmProps | undefined>>;
+  currentFilm: FilmProps | undefined;
+  setCurrentFilm: React.Dispatch<React.SetStateAction<FilmProps | undefined>>;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setData: React.Dispatch<React.SetStateAction<FilmProps[] | undefined>>;
+  data: FilmProps[] | undefined;
+  setIsAlertOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function UpdateFilmModal({
   isOpen,
-  data,
-  setData,
+  currentFilm,
+  setCurrentFilm,
   onClose,
   isLoading,
   setIsLoading,
+  data,
+  setData,
+  setIsAlertOpen,
 }: UpdateFilmModalProps) {
   const [film, setFilm] = useState<FilmProps | undefined>();
 
   useEffect(() => {
-    setFilm(data);
-  }, [data]);
+    setFilm(currentFilm);
+  }, [currentFilm]);
 
   const handleClose = () => {
-    setFilm(data);
+    setFilm(currentFilm);
     onClose();
   };
 
   const handleSubmit = async () => {
-    if (!data?._id) return;
+    if (!currentFilm?._id) return;
     if (!film) return;
+    if (!data) return;
 
     setIsLoading(true);
     try {
-      await FilmRepositories.updateFilm(data?._id, film);
+      await FilmRepositories.updateFilm(currentFilm?._id, film);
+      const updatedData = data.map((item) => {
+        if (item._id === currentFilm._id) {
+          return { ...item, ...film };
+        }
+        return item;
+      });
+      setData(updatedData);
+      setIsAlertOpen(true);
       onClose();
-      window.location.reload();
     } catch (error) {
-      console.error("Não possível atualizar o filme: ", error);
+      console.error("Não foi possível atualizar o filme: ", error);
     } finally {
       setIsLoading(false);
     }

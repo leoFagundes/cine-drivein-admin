@@ -8,6 +8,7 @@ import { faPlus, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import UpdateFilmModal from "../../Components/Organism/UpdateFilmModal";
 import { LoadingFullScreenTemplate } from "../../Components/Templates/LoadingFullScreenTemplate";
 import DeleteModal from "../../Components/Organism/DeleteModal";
+import Alert from "../../Components/Molecules/Alert";
 
 export default function Films() {
   const [data, setData] = useState<FilmProps[] | undefined>();
@@ -15,6 +16,7 @@ export default function Films() {
   const [isModalOPen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   useEffect(() => {
     async function fetchFilms() {
@@ -40,7 +42,7 @@ export default function Films() {
     }
 
     fetchFilms();
-  }, [setData]);
+  }, []);
 
   const handleUpdate = (film: FilmProps) => {
     setCurrentFilm(film);
@@ -78,7 +80,7 @@ export default function Films() {
   return (
     <section className={styles.filmsContainer}>
       <AccessLimitedToAdmins />
-      <h2>FILMES</h2>
+      <h2>Administração de Sessões</h2>
       <div className={styles.filmsContent}>
         {data?.map((film) => (
           <Fragment key={film._id}>
@@ -135,10 +137,21 @@ export default function Films() {
       <UpdateFilmModal
         isLoading={isLoading}
         setIsLoading={setIsLoading}
-        data={currentFilm}
-        setData={setCurrentFilm}
+        currentFilm={currentFilm}
+        setCurrentFilm={setCurrentFilm}
         isOpen={isModalOPen}
         onClose={() => setIsModalOpen(false)}
+        data={data}
+        setData={setData}
+        setIsAlertOpen={setIsAlertOpen}
+      />
+      <Alert
+        type="success"
+        isAlertOpen={isAlertOpen}
+        setIsAlertOpen={setIsAlertOpen}
+        onClose={() => setIsAlertOpen(false)}
+        message={`${currentFilm?.screening} atualizada com sucesso!`}
+        alertDisplayTime={3000}
       />
     </section>
   );

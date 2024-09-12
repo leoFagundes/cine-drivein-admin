@@ -107,17 +107,27 @@ export default function Orders() {
         if (newOrders.length > 0) {
           console.log("Novos pedidos recebidos:");
           newOrders.forEach((newOrder: Order) => {
-            if (connectedPrinter) {
-              printOrder(
-                connectedPrinter,
-                newOrder,
-                groupOrderItems(newOrder.items)
-              );
-              console.log(groupOrderItems(newOrder.items));
-              setAlreadyPrinted((prevAlreadyPrinted: string[]) => [
-                ...prevAlreadyPrinted,
-                newOrder._id,
-              ]);
+            // Verificação adicional para garantir que o pedido ainda não foi impresso
+            if (!alreadyPrinted.includes(newOrder._id!)) {
+              if (!connectedPrinter) {
+                // Função de impressão do pedido
+                printOrder(
+                  connectedPrinter,
+                  newOrder,
+                  groupOrderItems(newOrder.items)
+                );
+
+                // Após imprimir, adicionar o pedido à lista de impressos
+                setAlreadyPrinted((prevAlreadyPrinted: string[]) => {
+                  const uniqueSet = new Set(prevAlreadyPrinted);
+                  uniqueSet.add(newOrder._id!); // Adiciona o ID do pedido após a impressão
+                  return Array.from(uniqueSet);
+                });
+              } else {
+                console.warn(
+                  "Impressora não conectada. Tentativa de impressão abortada."
+                );
+              }
             }
           });
         }
@@ -128,15 +138,12 @@ export default function Orders() {
       }
     };
 
-    // Condição if (connectedPrinter) adicionada momentaneamente
     if (connectedPrinter) fetchItems();
 
-    // Define a função para buscar novos pedidos a cada 15 segundos
     const intervalId = setInterval(fetchItems, UPDATE_TIME * 1000);
 
-    // Retorna uma função de limpeza para cancelar o setInterval quando o componente for desmontado
     return () => clearInterval(intervalId);
-  }, [orders, alreadyPrinted]);
+  }, [orders, alreadyPrinted, connectedPrinter]);
 
   const groupOrderItems = (orderItems: ItemInOrder[]): GroupedOrderItem[] => {
     const groupedItems: GroupedItems = {};

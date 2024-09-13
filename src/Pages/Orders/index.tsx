@@ -109,7 +109,7 @@ export default function Orders() {
           newOrders.forEach((newOrder: Order) => {
             // Verificação adicional para garantir que o pedido ainda não foi impresso
             if (!alreadyPrinted.includes(newOrder._id!)) {
-              if (!connectedPrinter) {
+              if (connectedPrinter) {
                 // Função de impressão do pedido
                 printOrder(
                   connectedPrinter,
@@ -138,7 +138,7 @@ export default function Orders() {
       }
     };
 
-    if (connectedPrinter) fetchItems();
+    fetchItems();
 
     const intervalId = setInterval(fetchItems, UPDATE_TIME * 1000);
 

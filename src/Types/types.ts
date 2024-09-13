@@ -81,6 +81,17 @@ export type Statistics = {
   createdAt?: string;
 };
 
+export interface SiteConfig {
+  _id: string;
+  isClosed: boolean;
+  isEvent: string;
+  popUpImage: undefined | File;
+  popUpText: {
+    title: string;
+    description: string[];
+  };
+}
+
 export interface FilmProps {
   _id: string;
   title: string;

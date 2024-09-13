@@ -1,16 +1,24 @@
 import { Fragment, useEffect, useState } from "react";
 import AccessLimitedToAdmins from "../../Components/Organism/AccessLimitedToAdmins";
 import styles from "./Site.module.scss";
-import { FilmProps } from "../../Types/types";
+import { FilmProps, SiteConfig } from "../../Types/types";
 import FilmRepositories from "../../Services/repositories/FilmRepositorie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faTrash,
+  faEdit,
+  faPaperPlane,
+} from "@fortawesome/free-solid-svg-icons";
 import UpdateFilmModal from "../../Components/Organism/UpdateFilmModal";
 import { LoadingFullScreenTemplate } from "../../Components/Templates/LoadingFullScreenTemplate";
 import DeleteModal from "../../Components/Organism/DeleteModal";
 import Alert from "../../Components/Molecules/Alert";
 import Caption from "../../Components/Molecules/Caption";
 import CheckBox from "../../Components/Atoms/CheckBox";
+import SiteConfigsRepository from "../../Services/repositories/SiteConfigsRepositorie";
+import { Input } from "../../Components/Atoms/Input/Input";
+import Button from "../../Components/Atoms/Button";
 
 export default function Site() {
   const [data, setData] = useState<FilmProps[] | undefined>();
@@ -19,7 +27,10 @@ export default function Site() {
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const [siteConfigsData, setSiteConfigsData] = useState({
+  const [siteConfigsData, setSiteConfigsData] = useState<
+    SiteConfig | undefined
+  >();
+  const [siteConfigsChecks, setSiteConfigsChecks] = useState({
     isClosed: false,
     isChristmas: false,
     isHalloween: false,
@@ -27,40 +38,109 @@ export default function Site() {
     popUpText: false,
   });
 
-  console.log(siteConfigsData);
+  const handleClosedConfigClicked = async () => {
+    setIsLoading(true);
+    try {
+      if (!siteConfigsData) return;
 
-  const handleClosedConfigClicked = () => {
-    setSiteConfigsData({
-      ...siteConfigsData,
-      isClosed: !siteConfigsData.isClosed,
-    });
+      await SiteConfigsRepository.updateConfig("66e399ad3b867fd49fe79d0b", {
+        isClosed: !siteConfigsChecks.isClosed,
+      });
+
+      setSiteConfigsData({
+        ...siteConfigsData,
+        isClosed: !siteConfigsChecks.isClosed,
+      });
+
+      setSiteConfigsChecks((prevState) => ({
+        ...siteConfigsChecks,
+        isClosed: !siteConfigsChecks.isClosed,
+      }));
+    } catch (error) {
+      console.error(
+        "Não foi possível alterar o status de abertura do site: ",
+        error
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleChristmasConfigClicked = () => {
-    setSiteConfigsData({
-      ...siteConfigsData,
-      isChristmas: !siteConfigsData.isChristmas,
-    });
+  const handleChristmasConfigClicked = async () => {
+    setIsLoading(true);
+    try {
+      if (!siteConfigsData) return;
+
+      await SiteConfigsRepository.updateConfig("66e399ad3b867fd49fe79d0b", {
+        isEvent: siteConfigsChecks.isChristmas ? "default" : "christmas",
+      });
+      setSiteConfigsChecks({
+        ...siteConfigsChecks,
+        isChristmas: !siteConfigsChecks.isChristmas,
+        isHalloween: false,
+      });
+    } catch (error) {
+      console.error(
+        "Não foi possível alterar o status de evento do site: ",
+        error
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleHalloweenConfigClicked = () => {
-    setSiteConfigsData({
-      ...siteConfigsData,
-      isHalloween: !siteConfigsData.isHalloween,
-    });
+  const handleHalloweenConfigClicked = async () => {
+    setIsLoading(true);
+    try {
+      if (!siteConfigsData) return;
+
+      await SiteConfigsRepository.updateConfig("66e399ad3b867fd49fe79d0b", {
+        isEvent: siteConfigsChecks.isHalloween ? "default" : "halloween",
+      });
+      setSiteConfigsChecks({
+        ...siteConfigsChecks,
+        isHalloween: !siteConfigsChecks.isHalloween,
+        isChristmas: false,
+      });
+    } catch (error) {
+      console.error(
+        "Não foi possível alterar o status de evento do site: ",
+        error
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handlePopUpImageConfigClicked = () => {
-    setSiteConfigsData({
-      ...siteConfigsData,
-      popUpImage: !siteConfigsData.popUpImage,
-    });
+  const handlePopUpImageConfigClicked = async () => {
+    try {
+      setSiteConfigsChecks({
+        ...siteConfigsChecks,
+        popUpImage: !siteConfigsChecks.popUpImage,
+      });
+    } catch (error) {}
+  };
+
+  const handleUpdateImage = async () => {
+    try {
+      const formData = new FormData();
+      if (siteConfigsData?.popUpImage) {
+        formData.append("image", siteConfigsData.popUpImage as Blob);
+      }
+      const imageName = siteConfigsData?.popUpImage
+        ? await SiteConfigsRepository.createImageItem(formData)
+        : "";
+
+      await SiteConfigsRepository.updateConfig("66e399ad3b867fd49fe79d0b", {
+        popUpImage: imageName,
+      });
+    } catch (error) {}
   };
 
   const handlePopUpTextConfigClicked = () => {
-    setSiteConfigsData({
-      ...siteConfigsData,
-      popUpText: !siteConfigsData.popUpText,
+    setSiteConfigsChecks({
+      ...siteConfigsChecks,
+      popUpText: !siteConfigsChecks.popUpText,
     });
   };
 
@@ -69,6 +149,8 @@ export default function Site() {
       setIsLoading(true);
       try {
         const films = await FilmRepositories.getFilms();
+        const currentConfig: SiteConfig =
+          await SiteConfigsRepository.getConfigById("66e399ad3b867fd49fe79d0b");
 
         // Ordena os filmes pela ordem das sessões
         const sortedFilms = films.sort((a: any, b: any) => {
@@ -80,6 +162,18 @@ export default function Site() {
         });
 
         setData(sortedFilms);
+        setSiteConfigsData(currentConfig);
+        setSiteConfigsChecks({
+          isClosed: currentConfig.isClosed,
+          isChristmas: currentConfig.isEvent === "christmas" ? true : false,
+          isHalloween: currentConfig.isEvent === "halloween" ? true : false,
+          popUpImage: currentConfig.popUpImage ? true : false,
+          popUpText:
+            currentConfig.popUpText.title &&
+            currentConfig.popUpText.description.length > 0
+              ? true
+              : false,
+        });
       } catch (error) {
         console.error("Não foi possível carregar os filmes: ", error);
       } finally {
@@ -180,8 +274,8 @@ export default function Site() {
               checkboxLeft={
                 <CheckBox
                   id="site"
-                  checked={siteConfigsData.isClosed}
-                  onChange={handleClosedConfigClicked}
+                  checked={siteConfigsChecks.isClosed}
+                  onChange={() => {}}
                 />
               }
             />
@@ -193,8 +287,8 @@ export default function Site() {
               checkboxLeft={
                 <CheckBox
                   id="christmas"
-                  checked={siteConfigsData.isChristmas}
-                  onChange={handleChristmasConfigClicked}
+                  checked={siteConfigsChecks.isChristmas}
+                  onChange={() => {}}
                 />
               }
             />
@@ -206,24 +300,44 @@ export default function Site() {
               checkboxLeft={
                 <CheckBox
                   id="halloween"
-                  checked={siteConfigsData.isHalloween}
-                  onChange={handleHalloweenConfigClicked}
+                  checked={siteConfigsChecks.isHalloween}
+                  onChange={() => {}}
                 />
               }
             />
           </div>
           <div onClick={handlePopUpImageConfigClicked}>
             <Caption
+              marginBottom={siteConfigsChecks.popUpImage ? "16px" : "0"}
               label="Adicionar pop-up de imagem"
               onClickCheckBox={handlePopUpImageConfigClicked}
               checkboxLeft={
                 <CheckBox
                   id="popupImage"
-                  checked={siteConfigsData.popUpImage}
-                  onChange={handlePopUpImageConfigClicked}
+                  checked={siteConfigsChecks.popUpImage}
+                  onChange={() => {}}
                 />
               }
             />
+            {siteConfigsChecks.popUpImage && (
+              <div onClick={(e) => e.stopPropagation()}>
+                <Input
+                  value=""
+                  placeholder="Foto"
+                  type="file"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setSiteConfigsData({
+                      ...siteConfigsData!,
+                      popUpImage: e?.target?.files?.[0],
+                    });
+                  }}
+                />
+                <FontAwesomeIcon
+                  onClick={handleUpdateImage}
+                  icon={faPaperPlane}
+                />
+              </div>
+            )}
           </div>
           <div onClick={handlePopUpTextConfigClicked}>
             <Caption
@@ -232,8 +346,8 @@ export default function Site() {
               checkboxLeft={
                 <CheckBox
                   id="popupText"
-                  checked={siteConfigsData.popUpText}
-                  onChange={handlePopUpTextConfigClicked}
+                  checked={siteConfigsChecks.popUpText}
+                  onChange={() => {}}
                 />
               }
             />

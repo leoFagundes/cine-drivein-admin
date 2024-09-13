@@ -326,32 +326,6 @@ export default function Site() {
               }
             />
           </div>
-          <div onClick={handleChristmasConfigClicked}>
-            <Caption
-              label="É Natal"
-              onClickCheckBox={handleChristmasConfigClicked}
-              checkboxLeft={
-                <CheckBox
-                  id="christmas"
-                  checked={siteConfigsChecks.isChristmas}
-                  onChange={() => {}}
-                />
-              }
-            />
-          </div>
-          <div onClick={handleHalloweenConfigClicked}>
-            <Caption
-              label="É Halloween"
-              onClickCheckBox={handleHalloweenConfigClicked}
-              checkboxLeft={
-                <CheckBox
-                  id="halloween"
-                  checked={siteConfigsChecks.isHalloween}
-                  onChange={() => {}}
-                />
-              }
-            />
-          </div>
           <div
             className={styles.popupImageContent}
             onClick={handlePopUpImageConfigClicked}
@@ -400,6 +374,32 @@ export default function Site() {
                 )}
               </>
             )}
+          </div>
+          <div onClick={handleChristmasConfigClicked}>
+            <Caption
+              label="É Natal"
+              onClickCheckBox={handleChristmasConfigClicked}
+              checkboxLeft={
+                <CheckBox
+                  id="christmas"
+                  checked={siteConfigsChecks.isChristmas}
+                  onChange={() => {}}
+                />
+              }
+            />
+          </div>
+          <div onClick={handleHalloweenConfigClicked}>
+            <Caption
+              label="É Halloween"
+              onClickCheckBox={handleHalloweenConfigClicked}
+              checkboxLeft={
+                <CheckBox
+                  id="halloween"
+                  checked={siteConfigsChecks.isHalloween}
+                  onChange={() => {}}
+                />
+              }
+            />
           </div>
           {/* <div onClick={handlePopUpTextConfigClicked}>
             <Caption

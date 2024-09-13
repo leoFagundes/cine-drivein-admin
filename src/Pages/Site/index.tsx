@@ -27,6 +27,7 @@ export default function Site() {
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [imageFile, setImageFile] = useState<File | undefined>();
   const [siteConfigsData, setSiteConfigsData] = useState<
     SiteConfig | undefined
   >();
@@ -122,19 +123,64 @@ export default function Site() {
   };
 
   const handleUpdateImage = async () => {
+    setIsLoading(true);
     try {
       const formData = new FormData();
-      if (siteConfigsData?.popUpImage) {
-        formData.append("image", siteConfigsData.popUpImage as Blob);
+      if (imageFile) {
+        formData.append("image", imageFile as Blob);
       }
-      const imageName = siteConfigsData?.popUpImage
+      const imageName = imageFile
         ? await SiteConfigsRepository.createImageItem(formData)
         : "";
 
       await SiteConfigsRepository.updateConfig("66e399ad3b867fd49fe79d0b", {
         popUpImage: imageName,
       });
-    } catch (error) {}
+
+      if (siteConfigsData)
+        setSiteConfigsData({
+          ...siteConfigsData,
+          popUpImage: imageName,
+        });
+    } catch (error) {
+      console.error("Não foi possível cirar a imagem: ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteImage = async (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+
+    setIsLoading(true);
+    try {
+      const image = siteConfigsData?.popUpImage;
+
+      if (image) {
+        const photoFileName = (image as string).split("/").pop();
+        if (photoFileName)
+          await SiteConfigsRepository.deleteItemImage(photoFileName);
+        await SiteConfigsRepository.updateConfig("66e399ad3b867fd49fe79d0b", {
+          popUpImage: "",
+        });
+
+        setSiteConfigsData({
+          ...siteConfigsData,
+          popUpImage: "",
+        });
+
+        setSiteConfigsChecks({
+          ...siteConfigsChecks,
+          popUpImage: false,
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao deletar imagem: ", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handlePopUpTextConfigClicked = () => {
@@ -265,7 +311,7 @@ export default function Site() {
         ))}
       </section>
       <section className={styles.configs}>
-        <h2>Configurações</h2>
+        <h2>Configurações extras</h2>
         <div className={styles.captions}>
           <div onClick={handleClosedConfigClicked}>
             <Caption
@@ -306,7 +352,10 @@ export default function Site() {
               }
             />
           </div>
-          <div onClick={handlePopUpImageConfigClicked}>
+          <div
+            className={styles.popupImageContent}
+            onClick={handlePopUpImageConfigClicked}
+          >
             <Caption
               marginBottom={siteConfigsChecks.popUpImage ? "16px" : "0"}
               label="Adicionar pop-up de imagem"
@@ -320,26 +369,39 @@ export default function Site() {
               }
             />
             {siteConfigsChecks.popUpImage && (
-              <div onClick={(e) => e.stopPropagation()}>
-                <Input
-                  value=""
-                  placeholder="Foto"
-                  type="file"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setSiteConfigsData({
-                      ...siteConfigsData!,
-                      popUpImage: e?.target?.files?.[0],
-                    });
-                  }}
-                />
-                <FontAwesomeIcon
-                  onClick={handleUpdateImage}
-                  icon={faPaperPlane}
-                />
-              </div>
+              <>
+                {siteConfigsData?.popUpImage ? (
+                  <div
+                    className={styles.imageExist}
+                    onClick={(e) => handleDeleteImage(e)}
+                  >
+                    <FontAwesomeIcon size="lg" icon={faTrash} />
+                    <p>{siteConfigsData.popUpImage as string}</p>
+                  </div>
+                ) : (
+                  <div
+                    className={styles.imageDoesNotExist}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Input
+                      value=""
+                      placeholder="Foto"
+                      type="file"
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setImageFile(e?.target?.files?.[0] as File);
+                      }}
+                    />
+                    <Button
+                      marginTop="6px"
+                      label="Enviar"
+                      onClick={handleUpdateImage}
+                    />
+                  </div>
+                )}
+              </>
             )}
           </div>
-          <div onClick={handlePopUpTextConfigClicked}>
+          {/* <div onClick={handlePopUpTextConfigClicked}>
             <Caption
               label="Adicionar pop-up de texto"
               onClickCheckBox={handlePopUpTextConfigClicked}
@@ -351,7 +413,7 @@ export default function Site() {
                 />
               }
             />
-          </div>
+          </div> */}
         </div>
       </section>
       <DeleteModal

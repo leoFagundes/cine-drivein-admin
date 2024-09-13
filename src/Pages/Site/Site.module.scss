@@ -84,6 +84,26 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
+
+      .popupImageContent {
+        .imageExist {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          transition: 0.3s ease-in-out;
+          margin-bottom: 8px;
+
+          &:hover {
+            cursor: pointer;
+            color: $invalid-color;
+          }
+        }
+
+        .imageDoesNotExist {
+          display: flex;
+          flex-direction: column;
+        }
+      }
     }
   }
 }

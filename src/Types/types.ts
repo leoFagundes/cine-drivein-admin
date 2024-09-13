@@ -85,7 +85,7 @@ export interface SiteConfig {
   _id: string;
   isClosed: boolean;
   isEvent: string;
-  popUpImage: undefined | File;
+  popUpImage: File | undefined | string;
   popUpText: {
     title: string;
     description: string[];

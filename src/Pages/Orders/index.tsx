@@ -92,96 +92,37 @@ export default function Orders() {
     localStorage.setItem("listAlreadyPrinted", JSON.stringify(alreadyPrinted));
   }, [alreadyPrinted]);
 
-  // useEffect(() => {
-  //   const fetchItems = async () => {
-  //     try {
-  //       console.log("Procurando novos pedidos...");
-  //       const fetchedOrders = await OrderRepositories.getOrders();
-  //       setIsLoading(false);
-  //       setFetchCompleted((prev) => !prev);
-
-  //       const newOrders = fetchedOrders.filter(
-  //         (order: Order) => !alreadyPrinted.includes(order._id)
-  //       );
-
-  //       if (newOrders.length > 0) {
-  //         console.log("Novos pedidos recebidos:");
-  //         newOrders.forEach((newOrder: Order) => {
-  //           // Verificação adicional para garantir que o pedido ainda não foi impresso
-  //           if (!alreadyPrinted.includes(newOrder._id!)) {
-  //             if (connectedPrinter) {
-  //               // Função de impressão do pedido
-  //               printOrder(
-  //                 connectedPrinter,
-  //                 newOrder,
-  //                 groupOrderItems(newOrder.items)
-  //               );
-
-  //               // Após imprimir, adicionar o pedido à lista de impressos
-  //               setAlreadyPrinted((prevAlreadyPrinted: string[]) => {
-  //                 const uniqueSet = new Set(prevAlreadyPrinted);
-  //                 uniqueSet.add(newOrder._id!); // Adiciona o ID do pedido após a impressão
-  //                 return Array.from(uniqueSet);
-  //               });
-  //             } else {
-  //               console.warn(
-  //                 "Impressora não conectada. Tentativa de impressão abortada."
-  //               );
-  //             }
-  //           }
-  //         });
-  //       }
-  //       setOrders(fetchedOrders);
-  //     } catch (error) {
-  //       console.error("Erro ao obter itens:", error);
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchItems();
-
-  //   const intervalId = setInterval(fetchItems, UPDATE_TIME * 1000);
-
-  //   return () => clearInterval(intervalId);
-  // }, [alreadyPrinted, connectedPrinter]);
-
   useEffect(() => {
     const fetchItems = async () => {
       try {
         console.log("Procurando novos pedidos...");
         const fetchedOrders = await OrderRepositories.getOrders();
         setIsLoading(false);
+        setFetchCompleted((prev) => !prev);
 
-        // Pega a lista de pedidos já impressos do localStorage
-        const printedOrders = JSON.parse(
-          localStorage.getItem("listAlreadyPrinted") || "[]"
-        );
-
-        // Filtra pedidos que ainda não foram impressos
         const newOrders = fetchedOrders.filter(
-          (order: Order) => !printedOrders.includes(order._id)
+          (order: Order) => !alreadyPrinted.includes(order._id)
         );
 
         if (newOrders.length > 0) {
           console.log("Novos pedidos recebidos:");
           newOrders.forEach((newOrder: Order) => {
-            if (connectedPrinter) {
-              // Imprimir o pedido
-              printOrder(
-                connectedPrinter,
-                newOrder,
-                groupOrderItems(newOrder.items)
-              );
+            // Verificação adicional para garantir que o pedido ainda não foi impresso
 
-              // Atualizar a lista de impressos no localStorage
-              const updatedPrintedOrders = [...printedOrders, newOrder._id!];
-              localStorage.setItem(
-                "listAlreadyPrinted",
-                JSON.stringify(updatedPrintedOrders)
-              );
+            if (!connectedPrinter) {
+              // Função de impressão do pedido
+              // printOrder(
+              //   connectedPrinter,
+              //   newOrder,
+              //   groupOrderItems(newOrder.items)
+              // );
 
-              // Atualizar o estado para refletir a impressão do pedido
-              setAlreadyPrinted(updatedPrintedOrders);
+              // Após imprimir, adicionar o pedido à lista de impressos
+              setAlreadyPrinted((prevAlreadyPrinted: string[]) => {
+                const uniqueSet = new Set(prevAlreadyPrinted);
+                uniqueSet.add(newOrder._id!); // Adiciona o ID do pedido após a impressão
+                return Array.from(uniqueSet);
+              });
             } else {
               console.warn(
                 "Impressora não conectada. Tentativa de impressão abortada."
@@ -189,7 +130,6 @@ export default function Orders() {
             }
           });
         }
-
         setOrders(fetchedOrders);
       } catch (error) {
         console.error("Erro ao obter itens:", error);
@@ -202,7 +142,7 @@ export default function Orders() {
     const intervalId = setInterval(fetchItems, UPDATE_TIME * 1000);
 
     return () => clearInterval(intervalId);
-  }, [connectedPrinter]); // Dependência de `connectedPrinter`
+  }, [alreadyPrinted, connectedPrinter]);
 
   const groupOrderItems = (orderItems: ItemInOrder[]): GroupedOrderItem[] => {
     const groupedItems: GroupedItems = {};

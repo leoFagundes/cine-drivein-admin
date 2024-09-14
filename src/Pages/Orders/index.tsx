@@ -194,7 +194,14 @@ export default function Orders() {
         setAlreadyPrinted={setAlreadyPrinted}
       />
       <div
-        onClick={() => setSoundEnabled(!soundEnabled)}
+        onClick={() => {
+          setSoundEnabled(!soundEnabled);
+          if (!soundEnabled) {
+            newOrderSound
+              .play()
+              .catch((error) => console.error("Erro ao tocar o som:", error));
+          }
+        }}
         className={styles.toggleButtons}
       >
         {soundEnabled ? (

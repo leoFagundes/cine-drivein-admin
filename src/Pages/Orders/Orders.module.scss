@@ -8,15 +8,39 @@
   width: 100%;
 }
 
-.timer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: $background-secondary-color;
-  padding: 8px;
-  border-radius: 5px 0 0 5px;
-  box-shadow: 0 1px 5px rgba(184, 184, 184, 0.3);
-  top: 8px;
-  right: 0;
+.toggleButtons {
   position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: $main-white;
+  backdrop-filter: blur(8px);
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+
+  .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    svg {
+      color: $background-secondary-color;
+    }
+
+    hr {
+      position: absolute;
+      width: 100%;
+      transform: rotate(25deg) scale(1.5);
+      background-color: $background-secondary-color;
+      border: 1px solid $background-secondary-color;
+      border-radius: 20px;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }

@@ -7,8 +7,10 @@ import OrderRepositories from "../../Services/repositories/OrderRepositories";
 import { Order, ItemInOrder } from "../../Types/types";
 import AccessLimitedToAdmins from "../../Components/Organism/AccessLimitedToAdmins";
 import { connectWithPrinter, printOrder } from "../../Services/printer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMusic } from "@fortawesome/free-solid-svg-icons";
 
-const UPDATE_TIME = 10;
+const UPDATE_TIME = 3;
 
 type OrderCardType = {
   order: Order;
@@ -40,45 +42,21 @@ type GroupedItems = {
   };
 };
 
-function Timer({ seconds, reset }: { seconds: number; reset: boolean }) {
-  const [timeLeft, setTimeLeft] = useState(seconds);
-
-  useEffect(() => {
-    setTimeLeft(seconds);
-  }, [reset, seconds]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : seconds));
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [seconds]);
-
-  return (
-    <div className={styles.timer}>
-      <Text fontSize="small" fontWeight="semibold">
-        Próxima atualização:
-      </Text>
-      <Text
-        fontSize="small"
-        fontColor={timeLeft <= 5 ? "invalid-color" : "main-white"}
-      >
-        {timeLeft} segundos
-      </Text>
-    </div>
-  );
-}
-
 export default function Orders() {
   const [isLoading, setIsLoading] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [fetchCompleted, setFetchCompleted] = useState(false);
+  // const [fetchCompleted, setFetchCompleted] = useState(false);
   const [alreadyPrinted, setAlreadyPrinted] = useState(() => {
     const storedList = localStorage.getItem("listAlreadyPrinted");
     return storedList ? JSON.parse(storedList) : [];
   });
   const [connectedPrinter, setConnectedPrinter] = useState(null);
+  const [soundEnabled, setSoundEnabled] = useState(() => {
+    const savedSoundSetting = localStorage.getItem("soundEnabled");
+    return savedSoundSetting ? JSON.parse(savedSoundSetting) : true;
+  });
+
+  const newOrderSound = new Audio("/assets/audio/neworder.mp3");
 
   useEffect(() => {
     setIsLoading(true);
@@ -89,8 +67,8 @@ export default function Orders() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("listAlreadyPrinted", JSON.stringify(alreadyPrinted));
-  }, [alreadyPrinted]);
+    localStorage.setItem("soundEnabled", JSON.stringify(soundEnabled));
+  }, [soundEnabled]);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -98,31 +76,42 @@ export default function Orders() {
         console.log("Procurando novos pedidos...");
         const fetchedOrders = await OrderRepositories.getOrders();
         setIsLoading(false);
-        setFetchCompleted((prev) => !prev);
 
         const newOrders = fetchedOrders.filter(
-          (order: Order) => !alreadyPrinted.includes(order._id)
+          (order: Order) =>
+            !alreadyPrinted.includes(order._id) && order.status === "active"
         );
 
         if (newOrders.length > 0) {
-          console.log("Novos pedidos recebidos:");
-          newOrders.forEach((newOrder: Order) => {
-            // Verificação adicional para garantir que o pedido ainda não foi impresso
+          console.log("Novos pedidos recebidos: ", newOrders);
 
+          if (soundEnabled) {
+            newOrderSound
+              .play()
+              .catch((error) => console.error("Erro ao tocar o som:", error));
+          }
+          newOrders.forEach((newOrder: Order) => {
             if (!connectedPrinter) {
               // Função de impressão do pedido
-              // printOrder(
-              //   connectedPrinter,
-              //   newOrder,
-              //   groupOrderItems(newOrder.items)
-              // );
+              printOrder(
+                connectedPrinter,
+                newOrder,
+                groupOrderItems(newOrder.items)
+              );
+
+              const existingPrinted = JSON.parse(
+                localStorage.getItem("listAlreadyPrinted") || "[]"
+              );
+
+              const updatedPrintedList = [...existingPrinted, newOrder._id];
+
+              localStorage.setItem(
+                "listAlreadyPrinted",
+                JSON.stringify(updatedPrintedList)
+              );
 
               // Após imprimir, adicionar o pedido à lista de impressos
-              setAlreadyPrinted((prevAlreadyPrinted: string[]) => {
-                const uniqueSet = new Set(prevAlreadyPrinted);
-                uniqueSet.add(newOrder._id!); // Adiciona o ID do pedido após a impressão
-                return Array.from(uniqueSet);
-              });
+              setAlreadyPrinted((prev: string[]) => [...prev, newOrder._id]);
             } else {
               console.warn(
                 "Impressora não conectada. Tentativa de impressão abortada."
@@ -137,12 +126,10 @@ export default function Orders() {
       }
     };
 
-    fetchItems();
-
     const intervalId = setInterval(fetchItems, UPDATE_TIME * 1000);
 
     return () => clearInterval(intervalId);
-  }, [alreadyPrinted, connectedPrinter]);
+  }, [alreadyPrinted, connectedPrinter, soundEnabled]);
 
   const groupOrderItems = (orderItems: ItemInOrder[]): GroupedOrderItem[] => {
     const groupedItems: GroupedItems = {};
@@ -206,7 +193,21 @@ export default function Orders() {
         setOrders={setOrders}
         setAlreadyPrinted={setAlreadyPrinted}
       />
-      <Timer seconds={UPDATE_TIME} reset={fetchCompleted} />{" "}
+      <div
+        onClick={() => setSoundEnabled(!soundEnabled)}
+        className={styles.toggleButtons}
+      >
+        {soundEnabled ? (
+          <div className={styles.icon}>
+            <FontAwesomeIcon icon={faMusic} />
+          </div>
+        ) : (
+          <div className={styles.icon}>
+            <hr />
+            <FontAwesomeIcon icon={faMusic} />
+          </div>
+        )}
+      </div>
     </section>
   );
 }

@@ -91,7 +91,7 @@ export default function Orders() {
               .catch((error) => console.error("Erro ao tocar o som:", error));
           }
           newOrders.forEach((newOrder: Order) => {
-            if (!connectedPrinter) {
+            if (connectedPrinter) {
               // Função de impressão do pedido
               printOrder(
                 connectedPrinter,

@@ -82,6 +82,7 @@ Crie um arquivo .env e adicione a seguinte variável de ambiente:
 ```bash
 .env.example
 REACT_APP_ADMIN_TOKEN=<token>
+BACK_END_CONNECTION=<token>
 ```
 
 <h2 align="center" id="metodologia">Metodologia</h2>

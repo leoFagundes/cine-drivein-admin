@@ -30,7 +30,7 @@
 - [x] Visualização de estatísticas por data
 - [X] Geração de relatório
 - [X] Responsividade
-- [ ] Impressão de recibo
+- [X] Impressão de recibo
 
 <h2 align="center" id="demonstracao-da-aplicacao">Demonstração da Aplicação</h2>
 

@@ -8,9 +8,9 @@ import { Order, ItemInOrder } from "../../Types/types";
 import AccessLimitedToAdmins from "../../Components/Organism/AccessLimitedToAdmins";
 import { connectWithPrinter, printOrder } from "../../Services/printer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMusic } from "@fortawesome/free-solid-svg-icons";
+import { faMusic, faPrint } from "@fortawesome/free-solid-svg-icons";
 
-const UPDATE_TIME = 3;
+const UPDATE_TIME = 5;
 
 type OrderCardType = {
   order: Order;
@@ -55,6 +55,10 @@ export default function Orders() {
     const savedSoundSetting = localStorage.getItem("soundEnabled");
     return savedSoundSetting ? JSON.parse(savedSoundSetting) : true;
   });
+  const [autoPrintEnabled, setAutoPrintEnabled] = useState(() => {
+    const savedPrintStatus = localStorage.getItem("autoPrintEnabled");
+    return savedPrintStatus ? JSON.parse(savedPrintStatus) : true;
+  });
 
   const newOrderSound = new Audio("/assets/audio/neworder.mp3");
 
@@ -68,7 +72,8 @@ export default function Orders() {
 
   useEffect(() => {
     localStorage.setItem("soundEnabled", JSON.stringify(soundEnabled));
-  }, [soundEnabled]);
+    localStorage.setItem("autoPrintEnabled", JSON.stringify(autoPrintEnabled));
+  }, [soundEnabled, autoPrintEnabled]);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -85,19 +90,20 @@ export default function Orders() {
         if (newOrders.length > 0) {
           console.log("Novos pedidos recebidos: ", newOrders);
 
-          // if (soundEnabled) {
-          //   newOrderSound
-          //     .play()
-          //     .catch((error) => console.error("Erro ao tocar o som:", error));
-          // }
+          if (soundEnabled) {
+            newOrderSound
+              .play()
+              .catch((error) => console.error("Erro ao tocar o som:", error));
+          }
           newOrders.forEach((newOrder: Order) => {
-            if (!connectedPrinter) {
-              // Função de impressão do pedido
-              printOrder(
-                connectedPrinter,
-                newOrder,
-                groupOrderItems(newOrder.items)
-              );
+            if (connectedPrinter) {
+              if (autoPrintEnabled) {
+                printOrder(
+                  connectedPrinter,
+                  newOrder,
+                  groupOrderItems(newOrder.items)
+                );
+              }
 
               const existingPrinted = JSON.parse(
                 localStorage.getItem("listAlreadyPrinted") || "[]"
@@ -202,7 +208,7 @@ export default function Orders() {
               .catch((error) => console.error("Erro ao tocar o som:", error));
           }
         }}
-        className={styles.toggleButtons}
+        className={styles.toggleSoundButton}
       >
         {soundEnabled ? (
           <div className={styles.icon}>
@@ -212,6 +218,23 @@ export default function Orders() {
           <div className={styles.icon}>
             <hr />
             <FontAwesomeIcon icon={faMusic} />
+          </div>
+        )}
+      </div>
+      <div
+        onClick={() => {
+          setAutoPrintEnabled(!autoPrintEnabled);
+        }}
+        className={styles.toggleAutoPrintButton}
+      >
+        {autoPrintEnabled ? (
+          <div className={styles.icon}>
+            <FontAwesomeIcon icon={faPrint} />
+          </div>
+        ) : (
+          <div className={styles.icon}>
+            <hr />
+            <FontAwesomeIcon icon={faPrint} />
           </div>
         )}
       </div>

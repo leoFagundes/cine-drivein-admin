@@ -85,13 +85,13 @@ export default function Orders() {
         if (newOrders.length > 0) {
           console.log("Novos pedidos recebidos: ", newOrders);
 
-          if (soundEnabled) {
-            newOrderSound
-              .play()
-              .catch((error) => console.error("Erro ao tocar o som:", error));
-          }
+          // if (soundEnabled) {
+          //   newOrderSound
+          //     .play()
+          //     .catch((error) => console.error("Erro ao tocar o som:", error));
+          // }
           newOrders.forEach((newOrder: Order) => {
-            if (connectedPrinter) {
+            if (!connectedPrinter) {
               // Função de impressão do pedido
               printOrder(
                 connectedPrinter,

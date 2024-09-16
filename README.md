@@ -30,7 +30,7 @@
 - [x] Visualização de estatísticas por data
 - [X] Geração de relatório
 - [X] Responsividade
-- [ ] Impressão de recibo
+- [X] Impressão de recibo
 
 <h2 align="center" id="demonstracao-da-aplicacao">Demonstração da Aplicação</h2>
 
@@ -82,6 +82,7 @@ Crie um arquivo .env e adicione a seguinte variável de ambiente:
 ```bash
 .env.example
 REACT_APP_ADMIN_TOKEN=<token>
+BACK_END_CONNECTION=<token>
 ```
 
 <h2 align="center" id="metodologia">Metodologia</h2>

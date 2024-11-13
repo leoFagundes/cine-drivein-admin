@@ -97,6 +97,10 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
       (acc, order) => acc + order.debit_payment,
       0
     );
+    const totalDiscount = finishedOrders.reduce(
+      (acc, order) => acc + order.discount,
+      0
+    );
     const subtotal = finishedOrders.reduce(
       (acc, order) => acc + order.total_value,
       0
@@ -108,12 +112,27 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
     const total = subtotal + serviceFee;
 
     // Retornar as somas calculadas
-    return { totalMoney, totalCredit, totalDebit, subtotal, serviceFee, total };
+    return {
+      totalMoney,
+      totalCredit,
+      totalDebit,
+      subtotal,
+      serviceFee,
+      total,
+      totalDiscount,
+    };
   };
 
   // Chamar a função para calcular as somas
-  const { totalMoney, totalCredit, totalDebit, subtotal, serviceFee, total } =
-    calculateSums();
+  const {
+    totalMoney,
+    totalCredit,
+    totalDebit,
+    subtotal,
+    serviceFee,
+    total,
+    totalDiscount,
+  } = calculateSums();
 
   const groupedItems = groupItemsByServiceFee(orders);
 
@@ -145,6 +164,10 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
               <Text>
                 <strong>Total em débito:</strong> R$ {totalDebit.toFixed(2)}
               </Text>
+              {/* <Text>
+                <strong>Total em descontos:</strong> R${" "}
+                {totalDiscount.toFixed(2)}
+              </Text> */}
               <Text>
                 <strong>Subtotal:</strong> R$ {subtotal.toFixed(2)}
               </Text>

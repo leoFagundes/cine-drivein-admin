@@ -58,17 +58,20 @@ export default function FinishOrderModal({
     const totalDebit = parseFloat(inputValues.debit) || 0;
     const totalCredit = parseFloat(inputValues.credit) || 0;
     const totalMoney = parseFloat(inputValues.money) || 0;
-    const discount = parseFloat(inputValues.discount) || 0;
-    const total = totalDebit + totalCredit + totalMoney - discount;
+
+    const subtotal = totalDebit + totalCredit + totalMoney;
+
+    const total = subtotal;
     return total.toFixed(2);
   };
 
+  const discount = parseFloat(inputValues.discount) || 0;
   const totalValue = parseFloat(String(orderData?.total_value || 0));
   const serviceFee = isChecked
-    ? parseFloat(String(orderData?.service_fee || 0))
+    ? parseFloat(String((totalValue - discount) * 0.1 || 0))
     : 0;
 
-  const totalToPay = (totalValue + serviceFee).toFixed(2);
+  const totalToPay = (totalValue + serviceFee - discount).toFixed(2);
 
   const validateForm = () => {
     let isValid = true;
@@ -101,6 +104,8 @@ export default function FinishOrderModal({
         debit_payment: totalDebit,
         money_payment: totalMoney,
         discount: discount,
+        total_value: totalValue - discount,
+        service_fee: serviceFee,
         service_fee_paid: isChecked,
       });
       setInputValues({

@@ -56,6 +56,7 @@ export type Order = {
   service_fee: number;
   service_fee_paid?: boolean;
   total_value: number;
+  discount: number;
   items: ItemInOrder[];
   createdAt?: string;
 };

@@ -67,9 +67,7 @@ export default function FinishOrderModal({
 
   const discount = parseFloat(inputValues.discount) || 0;
   const totalValue = parseFloat(String(orderData?.total_value || 0));
-  const serviceFee = isChecked
-    ? parseFloat(String((totalValue - discount) * 0.1 || 0))
-    : 0;
+  const serviceFee = isChecked ? parseFloat(String(totalValue * 0.1 || 0)) : 0;
 
   const totalToPay = (totalValue + serviceFee - discount).toFixed(2);
 

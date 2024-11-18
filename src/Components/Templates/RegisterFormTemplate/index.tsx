@@ -8,7 +8,7 @@ import CheckBox from "../../Atoms/CheckBox";
 import { AdditionalItem, Item } from "../../../Types/types";
 import AdditionalItemRepositories from "../../../Services/repositories/AdditionalItemRepositories";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose, faWarning } from "@fortawesome/free-solid-svg-icons";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
 
 type CaptionKey = "general" | "sauces" | "drinks" | "sweets";
 

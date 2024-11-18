@@ -184,7 +184,7 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
                 <Text fontSize="mediumLarge" fontWeight="bold">
                   Itens dos pedidos finalizados
                 </Text>
-                {Object.entries(groupedItems.allItems).map(
+                {/* {Object.entries(groupedItems.allItems).map(
                   ([codItem, items]) => (
                     <div key={codItem}>
                       <Text fontSize="mediumSmall">
@@ -192,7 +192,18 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
                       </Text>
                     </div>
                   )
-                )}
+                )} */}
+                {Object.entries(groupedItems.allItems)
+                  .sort(
+                    ([, itemsA], [, itemsB]) => itemsB.length - itemsA.length
+                  )
+                  .map(([codItem, items]) => (
+                    <div key={codItem}>
+                      <Text fontSize="mediumSmall">
+                        {items.length}x {items[0].name} ( {items[0].cod_item} )
+                      </Text>
+                    </div>
+                  ))}
               </div>
             </div>
             <div className={styles.buttons}>

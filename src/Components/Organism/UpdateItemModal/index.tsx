@@ -274,8 +274,11 @@ export default function UpdateItemModal({
                 //   value: "",
                 //   placeholder: "Foto",
                 //   onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                //     setItem({ ...item, photo: e?.target?.files?.[0] });
-                //     setItemError({ ...itemError, photoError: "" });
+                //     const file = e.target.files?.[0];
+                //     if (file) {
+                //       setItem({ ...item, photo: file });
+                //       setItemError({ ...itemError, photoError: "" });
+                //     }
                 //   },
                 //   type: "file",
                 //   errorLabel: itemError.photoError,

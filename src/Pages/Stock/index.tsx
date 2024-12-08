@@ -309,7 +309,7 @@ export default function Stock() {
         ) : (
           ""
         )}
-        {isActive.subitemActive && (
+        {/* {isActive.subitemActive && (
           <div className={styles.eyeWarning}>
             <Text fontColor="gray-color" fontSize="small">
               <i>
@@ -325,7 +325,7 @@ export default function Stock() {
               </i>
             </Text>
           </div>
-        )}
+        )} */}
       </div>
       <DeleteModal
         onClick={() =>

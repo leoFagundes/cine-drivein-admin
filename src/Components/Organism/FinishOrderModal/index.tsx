@@ -10,6 +10,7 @@ import Caption from "../../Molecules/Caption";
 import CheckBox from "../../Atoms/CheckBox";
 import OrderRepositories from "../../../Services/repositories/OrderRepositories";
 import { LoadingFullScreenTemplate } from "../../Templates/LoadingFullScreenTemplate";
+import ItemRepositories from "../../../Services/repositories/ItemRepositories";
 
 type ModalType = {
   isOpen: boolean;
@@ -82,6 +83,55 @@ export default function FinishOrderModal({
     return isValid;
   };
 
+  const changeQuantityStock = async () => {
+    // Mapear os itens para agrupar por ID e calcular a quantidade a ser reduzida
+    const quantityToReduce: Record<string, number> = {};
+
+    for (const item of orderData?.items || []) {
+      if (!item.item._id) return;
+      const itemId = item.item._id;
+      quantityToReduce[itemId] = (quantityToReduce[itemId] || 0) + 1;
+    }
+
+    // Processar cada item único e reduzir a quantidade acumulada
+    for (const [itemId, reduceBy] of Object.entries(quantityToReduce)) {
+      try {
+        // Obter o item do banco de dados
+        const existingItem = await ItemRepositories.getItemById(itemId);
+
+        if (!existingItem) {
+          console.error(`Item com ID ${itemId} não encontrado.`);
+          continue;
+        }
+
+        // Ignorar se o tipo do item for "bebida" ou "teste"
+        if (
+          existingItem.type === "Porções" ||
+          existingItem.type === "Lanches" ||
+          existingItem.type === "Vegetarianos" ||
+          existingItem.type === "Molhos" ||
+          existingItem.type === "Combos"
+        ) {
+          console.log(
+            `Item ${existingItem.name} do tipo '${existingItem.type}' não será alterado.`
+          );
+          continue;
+        }
+
+        // Atualizar a quantidade e visibilidade
+        await ItemRepositories.updateItem(itemId, {
+          quantity: existingItem.quantity - reduceBy,
+          isVisible: existingItem.quantity - reduceBy <= 2 ? false : true,
+        });
+        console.log(
+          `Quantidade atualizada para o item ${existingItem.name}. Reduzido em ${reduceBy}.`
+        );
+      } catch (error) {
+        console.error(`Erro ao processar o item ${itemId}:`, error);
+      }
+    }
+  };
+
   const handleSubmit = async () => {
     const totalDebit = parseFloat(inputValues.debit) || 0;
     const totalCredit = parseFloat(inputValues.credit) || 0;
@@ -95,6 +145,7 @@ export default function FinishOrderModal({
 
     setIsLoading(true);
     try {
+      changeQuantityStock();
       await OrderRepositories.updateOrder(orderData?._id || "", {
         ...orderData,
         status: "finished",
@@ -115,10 +166,10 @@ export default function FinishOrderModal({
       const updatedOrders = orders.filter(
         (order) => order._id !== orderData?._id
       );
-      setOrders && setOrders(updatedOrders);
+      // setOrders && setOrders(updatedOrders);
       setChecked(true);
       setIsLoading(false);
-      showAlert && showAlert(FINISH_ORDER_MESSAGE, "success");
+      // showAlert && showAlert(FINISH_ORDER_MESSAGE, "success");
       onClose();
     } catch (error) {
       console.error("Não foi possível finalizar o pedido", error);

@@ -11,6 +11,7 @@ import {
 import Button from "../../Atoms/Button";
 import { useEffect, useState } from "react";
 import { connectWithPrinter, printOrder } from "../../../Services/printer";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
 type OrderCardType = {
   order: Order;
@@ -221,6 +222,14 @@ export default function OrderCard({
     }
   };
 
+  const handleGoToWhatsappChat = () => {
+    const phoneClean = order.phone.replace(/\D/g, "");
+    window.open(
+      `http://api.whatsapp.com/send?1=pt_BR&phone=+55${phoneClean}`,
+      "_blank"
+    );
+  };
+
   return (
     <div className={styles.container}>
       <Text
@@ -315,27 +324,38 @@ export default function OrderCard({
             PEDIDO CANCELADO
           </Text>
         )}
-        {(order.status === "canceled" || order.status === "finished") && (
+
+        <div className={styles.orderIcons}>
+          {order.status === "active" && connectedPrinter && (
+            <FontAwesomeIcon
+              className={styles.printIcon}
+              onClick={handlePrinter}
+              size="lg"
+              icon={faPrint}
+              color="black"
+              title="Imprimir comanda"
+            />
+          )}
+          {(order.status === "canceled" || order.status === "finished") && (
+            <FontAwesomeIcon
+              className={styles.deleteIcon}
+              onClick={() =>
+                onClickDeleteOrder ? onClickDeleteOrder(order._id) : ""
+              }
+              size="lg"
+              icon={faTrash}
+              color="black"
+            />
+          )}
           <FontAwesomeIcon
-            className={styles.deleteIcon}
-            onClick={() =>
-              onClickDeleteOrder ? onClickDeleteOrder(order._id) : ""
-            }
+            className={styles.wppIcon}
+            onClick={handleGoToWhatsappChat}
             size="lg"
-            icon={faTrash}
+            icon={faWhatsapp}
             color="black"
+            title={`Iniciar conversa com ${order.username}`}
           />
-        )}
-        {order.status === "active" && connectedPrinter && (
-          <FontAwesomeIcon
-            className={styles.printIcon}
-            onClick={handlePrinter}
-            size="lg"
-            icon={faPrint}
-            color="black"
-            title="Imprimir comanda"
-          />
-        )}
+        </div>
       </div>
     </div>
   );

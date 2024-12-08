@@ -20,27 +20,38 @@
     outline: 1px solid transparent;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 
-    .deleteIcon {
-      top: 4px;
-      right: 4px;
+    .orderIcons {
+      display: flex;
+      top: 6px;
+      right: 6px;
       position: absolute;
-      transition: 0.3s ease-in-out;
+      gap: 8px;
 
-      &:hover {
-        cursor: pointer;
-        color: $invalid-color;
+      .wppIcon {
+        transition: 0.3s ease-in-out;
+
+        &:hover {
+          cursor: pointer;
+          color: green;
+        }
       }
-    }
 
-    .printIcon {
-      top: 4px;
-      right: 4px;
-      position: absolute;
-      transition: 0.3s ease-in-out;
+      .printIcon {
+        transition: 0.3s ease-in-out;
 
-      &:hover {
-        cursor: pointer;
-        color: $primary-color;
+        &:hover {
+          cursor: pointer;
+          color: $primary-color;
+        }
+      }
+
+      .deleteIcon {
+        transition: 0.3s ease-in-out;
+
+        &:hover {
+          cursor: pointer;
+          color: $invalid-color;
+        }
       }
     }
 

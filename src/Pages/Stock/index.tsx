@@ -13,8 +13,6 @@ import AdditionalItemRepositories from "../../Services/repositories/AdditionalIt
 import SubitemCard from "../../Components/Organism/SubitemCard";
 import UpdateItemModal from "../../Components/Organism/UpdateItemModal";
 import { useLocation, useNavigate } from "react-router";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faE, faEye } from "@fortawesome/free-solid-svg-icons";
 import AccessLimitedToAdmins from "../../Components/Organism/AccessLimitedToAdmins";
 
 const sort_options = ["Crescente", "Decrescente"];

@@ -89,6 +89,10 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
       (acc, order) => acc + order.money_payment,
       0
     );
+    const totalPix = finishedOrders.reduce(
+      (acc, order) => acc + order.pix_payment,
+      0
+    );
     const totalCredit = finishedOrders.reduce(
       (acc, order) => acc + order.credit_payment,
       0
@@ -114,6 +118,7 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
     // Retornar as somas calculadas
     return {
       totalMoney,
+      totalPix,
       totalCredit,
       totalDebit,
       subtotal,
@@ -126,6 +131,7 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
   // Chamar a função para calcular as somas
   const {
     totalMoney,
+    totalPix,
     totalCredit,
     totalDebit,
     subtotal,
@@ -157,6 +163,9 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
             <div className={styles.infoReport}>
               <Text>
                 <strong>Total em dinheiro:</strong> R$ {totalMoney.toFixed(2)}
+              </Text>
+              <Text>
+                <strong>Total em pix:</strong> R$ {totalPix.toFixed(2)}
               </Text>
               <Text>
                 <strong>Total em crédito:</strong> R$ {totalCredit.toFixed(2)}

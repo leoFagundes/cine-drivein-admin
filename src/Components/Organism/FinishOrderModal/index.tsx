@@ -37,6 +37,7 @@ export default function FinishOrderModal({
     credit: "",
     debit: "",
     money: "",
+    pix: "",
     discount: "",
   });
 
@@ -47,6 +48,7 @@ export default function FinishOrderModal({
       credit: "",
       debit: "",
       money: "",
+      pix: "",
       discount: "",
     });
   };
@@ -59,8 +61,9 @@ export default function FinishOrderModal({
     const totalDebit = parseFloat(inputValues.debit) || 0;
     const totalCredit = parseFloat(inputValues.credit) || 0;
     const totalMoney = parseFloat(inputValues.money) || 0;
+    const totalPix = parseFloat(inputValues.pix) || 0;
 
-    const subtotal = totalDebit + totalCredit + totalMoney;
+    const subtotal = totalDebit + totalCredit + totalMoney + totalPix;
 
     const total = subtotal;
     return total.toFixed(2);
@@ -104,7 +107,7 @@ export default function FinishOrderModal({
           continue;
         }
 
-        // Ignorar se o tipo do item for "bebida" ou "teste"
+        // Ignorar se o tipo do item for um dos citados abaixo
         if (
           existingItem.type === "Porções" ||
           existingItem.type === "Lanches" ||
@@ -136,6 +139,7 @@ export default function FinishOrderModal({
     const totalDebit = parseFloat(inputValues.debit) || 0;
     const totalCredit = parseFloat(inputValues.credit) || 0;
     const totalMoney = parseFloat(inputValues.money) || 0;
+    const totalPix = parseFloat(inputValues.pix) || 0;
     const discount = parseFloat(inputValues.discount) || 0;
 
     if (!validateForm()) {
@@ -152,6 +156,7 @@ export default function FinishOrderModal({
         credit_payment: totalCredit,
         debit_payment: totalDebit,
         money_payment: totalMoney,
+        pix_payment: totalPix,
         discount: discount,
         total_value: totalValue - discount,
         service_fee: serviceFee,
@@ -161,15 +166,16 @@ export default function FinishOrderModal({
         credit: "",
         debit: "",
         money: "",
+        pix: "",
         discount: "",
       });
       const updatedOrders = orders.filter(
         (order) => order._id !== orderData?._id
       );
-      // setOrders && setOrders(updatedOrders);
+      setOrders && setOrders(updatedOrders);
       setChecked(true);
       setIsLoading(false);
-      // showAlert && showAlert(FINISH_ORDER_MESSAGE, "success");
+      showAlert && showAlert(FINISH_ORDER_MESSAGE, "success");
       onClose();
     } catch (error) {
       console.error("Não foi possível finalizar o pedido", error);
@@ -231,12 +237,23 @@ export default function FinishOrderModal({
                   />
                   <Input
                     type="number"
-                    placeholder="Dinheiro / Pix"
+                    placeholder="Dinheiro"
                     value={inputValues.money}
                     onChange={(e) =>
                       setInputValues({
                         ...inputValues,
                         money: e.target.value,
+                      })
+                    }
+                  />
+                  <Input
+                    type="number"
+                    placeholder="Pix"
+                    value={inputValues.pix}
+                    onChange={(e) =>
+                      setInputValues({
+                        ...inputValues,
+                        pix: e.target.value,
                       })
                     }
                   />
@@ -308,6 +325,9 @@ export default function FinishOrderModal({
               <LoadingFullScreenTemplate />
             )}
           </div>
+          <span className={styles.observation}>
+            Observação: Utilize o ponto (.) como separador para casas decimais.
+          </span>
         </div>
       )}
     </>

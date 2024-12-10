@@ -125,8 +125,15 @@ export const printDailyReport = (
   if (connectedPrinter) {
     const config = qz.configs.create(connectedPrinter);
 
-    const { totalMoney, totalCredit, totalDebit, subtotal, serviceFee, total } =
-      reportData;
+    const {
+      totalMoney,
+      totalPix,
+      totalCredit,
+      totalDebit,
+      subtotal,
+      serviceFee,
+      total,
+    } = reportData;
 
     const today = new Date();
     const date = today.toLocaleDateString("pt-BR");
@@ -141,6 +148,7 @@ export const printDailyReport = (
       "\x1B" + "\x21" + "\x00", // normal text
       "\x1B" + "\x61" + "\x30", // left align
       `Total em dinheiro: R$ ${totalMoney.toFixed(2)}` + "\x0A",
+      `Total em pix: R$ ${totalPix.toFixed(2)}` + "\x0A",
       `Total em crédito: R$ ${totalCredit.toFixed(2)}` + "\x0A",
       `Total em débito: R$ ${totalDebit.toFixed(2)}` + "\x0A",
       `Subtotal: R$ ${subtotal.toFixed(2)}` + "\x0A",

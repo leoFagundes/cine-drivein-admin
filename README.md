@@ -3,10 +3,6 @@
 ## Descrição do Projeto
 <p>O front-end admin, criado para o do Cine Drive-in de Brasília, permite que os usuários administrem todos os itens, pedidos, usuários e dados da aplicação. É possível ver estatísticas, criar contas e gerar relatórios. </p>
 
-<h4 align="center"> 
-	🚧  Cine drive-in Admin 🚀 Em construção...  🚧
-</h4>
-
 <p align="center">
  <a href="#features">Features</a> •
  <a href="#demonstracao-da-aplicacao">Demonstração da Aplicação</a> • 

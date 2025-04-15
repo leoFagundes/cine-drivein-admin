@@ -120,8 +120,7 @@ export const connectWithPrinter = async (setConnectedPrinter) => {
 export const printDailyReport = (
   connectedPrinter,
   reportData,
-  groupedItems,
-  isDetailedReport = false
+  groupedItems
 ) => {
   if (connectedPrinter) {
     const config = qz.configs.create(connectedPrinter);
@@ -167,63 +166,15 @@ export const printDailyReport = (
     //   );
     // });
 
-    const getAdditionalItemsToDetailedReport = (itemsByCodeitem) => {
-      const additionalGrouped = {};
-
-      itemsByCodeitem.forEach((item) => {
-        const additions = [
-          { category: "Adicional", value: item.additional },
-          { category: "Bebida", value: item.additional_drink },
-          { category: "Molho", value: item.additional_sauce },
-          { category: "Doce", value: item.additional_sweet },
-        ];
-
-        additions.forEach(({ category, value }) => {
-          if (value) {
-            if (!additionalGrouped[category]) {
-              additionalGrouped[category] = {};
-            }
-            additionalGrouped[category][value] =
-              (additionalGrouped[category][value] || 0) + item.quantity;
-          }
-        });
+    Object.entries(groupedItems.allItems)
+      .sort(([, itemsA], [, itemsB]) => itemsB.length - itemsA.length)
+      .forEach(([codItem, items]) => {
+        data.push(
+          "\x1B" + "\x61" + "\x30", // left align
+          `${items.length}x ${items[0].name} (${items[0].cod_item})` + "\x0A"
+        );
+        console.log(`${items.length}x ${items[0].name} (${items[0].cod_item})`);
       });
-
-      return Object.entries(additionalGrouped).map(([category, items]) => {
-        const formattedItems = Object.entries(items)
-          .map(([name, count]) => `${count}x ${name}`)
-          .join(", ");
-        return `${category}: ${formattedItems}`;
-      });
-    };
-
-    if (isDetailedReport) {
-      Object.entries(groupedItems.allItems)
-        .sort(([, itemsA], [, itemsB]) => itemsB.length - itemsA.length)
-        .forEach(([codItem, items]) => {
-          const additionalReport = getAdditionalItemsToDetailedReport(items);
-          data.push(
-            "\x1B" + "\x61" + "\x30", // left align
-            `${items.length}x ${items[0].name} (${items[0].cod_item})` + "\x0A",
-            `${
-              additionalReport
-                ? additionalReport.map((additionalDetail) => additionalDetail) +
-                  "\x0A"
-                : ""
-            }`,
-            `${additionalReport ? "\x0A" : ""}`
-          );
-        });
-    } else {
-      Object.entries(groupedItems.allItems)
-        .sort(([, itemsA], [, itemsB]) => itemsB.length - itemsA.length)
-        .forEach(([codItem, items]) => {
-          data.push(
-            "\x1B" + "\x61" + "\x30", // left align
-            `${items.length}x ${items[0].name} (${items[0].cod_item})` + "\x0A"
-          );
-        });
-    }
 
     data.push(
       "\x0A",

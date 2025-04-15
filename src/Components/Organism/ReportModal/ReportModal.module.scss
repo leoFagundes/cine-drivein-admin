@@ -99,9 +99,18 @@
 
   .buttons {
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
     column-gap: 12px;
+
+    .printButtons {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 12px;
+      gap: 8px;
+    }
   }
 }
 

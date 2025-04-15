@@ -51,6 +51,7 @@ export type Order = {
   spot: number;
   status: "active" | "finished" | "canceled";
   money_payment: number;
+  pix_payment: number;
   credit_payment: number;
   debit_payment: number;
   service_fee: number;

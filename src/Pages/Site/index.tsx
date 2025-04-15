@@ -4,12 +4,7 @@ import styles from "./Site.module.scss";
 import { FilmProps, SiteConfig } from "../../Types/types";
 import FilmRepositories from "../../Services/repositories/FilmRepositorie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPlus,
-  faTrash,
-  faEdit,
-  faPaperPlane,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import UpdateFilmModal from "../../Components/Organism/UpdateFilmModal";
 import { LoadingFullScreenTemplate } from "../../Components/Templates/LoadingFullScreenTemplate";
 import DeleteModal from "../../Components/Organism/DeleteModal";
@@ -35,6 +30,7 @@ export default function Site() {
     isClosed: false,
     isChristmas: false,
     isHalloween: false,
+    isEaster: false,
     popUpImage: false,
     popUpText: false,
   });
@@ -79,6 +75,7 @@ export default function Site() {
         ...siteConfigsChecks,
         isChristmas: !siteConfigsChecks.isChristmas,
         isHalloween: false,
+        isEaster: false,
       });
     } catch (error) {
       console.error(
@@ -102,6 +99,31 @@ export default function Site() {
         ...siteConfigsChecks,
         isHalloween: !siteConfigsChecks.isHalloween,
         isChristmas: false,
+        isEaster: false,
+      });
+    } catch (error) {
+      console.error(
+        "Não foi possível alterar o status de evento do site: ",
+        error
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleEasterConfigClicked = async () => {
+    setIsLoading(true);
+    try {
+      if (!siteConfigsData) return;
+
+      await SiteConfigsRepository.updateConfig("66e399ad3b867fd49fe79d0b", {
+        isEvent: siteConfigsChecks.isEaster ? "default" : "easter",
+      });
+      setSiteConfigsChecks({
+        ...siteConfigsChecks,
+        isEaster: !siteConfigsChecks.isEaster,
+        isChristmas: false,
+        isHalloween: false,
       });
     } catch (error) {
       console.error(
@@ -213,6 +235,7 @@ export default function Site() {
           isClosed: currentConfig.isClosed,
           isChristmas: currentConfig.isEvent === "christmas" ? true : false,
           isHalloween: currentConfig.isEvent === "halloween" ? true : false,
+          isEaster: currentConfig.isEvent === "easter" ? true : false,
           popUpImage: currentConfig.popUpImage ? true : false,
           popUpText:
             currentConfig.popUpText.title &&
@@ -396,6 +419,19 @@ export default function Site() {
                 <CheckBox
                   id="halloween"
                   checked={siteConfigsChecks.isHalloween}
+                  onChange={() => {}}
+                />
+              }
+            />
+          </div>
+          <div onClick={handleEasterConfigClicked}>
+            <Caption
+              label="É Páscoa"
+              onClickCheckBox={handleEasterConfigClicked}
+              checkboxLeft={
+                <CheckBox
+                  id="easter"
+                  checked={siteConfigsChecks.isEaster}
                   onChange={() => {}}
                 />
               }

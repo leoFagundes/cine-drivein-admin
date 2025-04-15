@@ -2,7 +2,7 @@ import { MouseEvent, useEffect, useState } from "react";
 import styles from "./ReportModal.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { Order } from "../../../Types/types";
+import { AdditionalItem, Order } from "../../../Types/types";
 import OrderRepositories from "../../../Services/repositories/OrderRepositories";
 import Button from "../../Atoms/Button";
 import Text from "../../Atoms/Text";
@@ -18,7 +18,15 @@ type ModalType = {
 
 type GroupedItems = {
   allItems: {
-    [codItem: string]: { name: string; quantity: number; cod_item: string }[];
+    [codItem: string]: {
+      name: string;
+      quantity: number;
+      cod_item: string;
+      additional: string | undefined;
+      additional_drink: string | undefined;
+      additional_sauce: string | undefined;
+      additional_sweet: string | undefined;
+    }[];
   };
 };
 
@@ -42,13 +50,27 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
 
     finishedOrders.forEach((order) => {
       order.items.forEach((itemInOrder) => {
+        const {
+          additional,
+          additional_drink,
+          additional_sauce,
+          additional_sweet,
+        } = itemInOrder;
         const { cod_item, name, quantity } = itemInOrder.item;
 
         if (!groupedItems.allItems[cod_item]) {
           groupedItems.allItems[cod_item] = [];
         }
 
-        groupedItems.allItems[cod_item].push({ name, quantity, cod_item });
+        groupedItems.allItems[cod_item].push({
+          name,
+          quantity,
+          cod_item,
+          additional,
+          additional_drink,
+          additional_sauce,
+          additional_sweet,
+        });
       });
     });
 
@@ -142,8 +164,13 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
 
   const groupedItems = groupItemsByServiceFee(orders);
 
-  const handlePrintReport = () => {
-    printDailyReport(connectedPrinter, calculateSums(), groupedItems);
+  const handlePrintReport = (isDetailedReport = false) => {
+    printDailyReport(
+      connectedPrinter,
+      calculateSums(),
+      groupedItems,
+      isDetailedReport
+    );
   };
 
   return (
@@ -216,13 +243,19 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
               </div>
             </div>
             <div className={styles.buttons}>
-              <Button
+              {/* <Button
                 onClick={() => onClose()}
                 label="Fechar"
                 backGroundColor="invalid-color"
-              />
+              /> */}
               {connectedPrinter && (
-                <Button onClick={handlePrintReport} label="Imprimir" />
+                <div className={styles.printButtons}>
+                  <Button onClick={handlePrintReport} label="Imprimir" />
+                  <Button
+                    onClick={() => handlePrintReport(true)}
+                    label="Imprimir Detalhado"
+                  />
+                </div>
               )}
             </div>
           </div>

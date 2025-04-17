@@ -205,12 +205,7 @@ export const printDailyReport = (
           data.push(
             "\x1B" + "\x61" + "\x30", // left align
             `${items.length}x ${items[0].name} (${items[0].cod_item})` + "\x0A",
-            `${
-              additionalReport
-                ? additionalReport.map((additionalDetail) => additionalDetail) +
-                  "\x0A"
-                : ""
-            }`,
+            `${additionalReport ? additionalReport.join("\x0A") + "\x0A" : ""}`,
             `${additionalReport ? "\x0A" : ""}`
           );
         });
@@ -252,10 +247,14 @@ export const printOrder = (connectedPrinter, order, groupedItems) => {
     const config = qz.configs.create(connectedPrinter);
     const createdAtDate = new Date(order.createdAt ? order.createdAt : "");
 
+    const dia = createdAtDate.getDate().toString().padStart(2, "0");
+    const mes = (createdAtDate.getMonth() + 1).toString().padStart(2, "0");
+    const ano = createdAtDate.getFullYear();
+
     const hora = createdAtDate.getHours().toString().padStart(2, "0");
     const minuto = createdAtDate.getMinutes().toString().padStart(2, "0");
     const segundo = createdAtDate.getSeconds().toString().padStart(2, "0");
-    const horaFormatada = `${hora}:${minuto}:${segundo}`;
+    const dataHoraFormatada = `${dia}/${mes}/${ano} ${hora}:${minuto}:${segundo}`;
 
     let data = [
       "\x1B" + "\x40", // init
@@ -269,7 +268,7 @@ export const printOrder = (connectedPrinter, order, groupedItems) => {
       `Número da Comanda: ${order.order_number}` + "\x0A",
       `Telefone: ${order.phone}` + "\x0A",
       `Nome: ${order.username}` + "\x0A",
-      `Criado em ${horaFormatada}` + "\x0A",
+      `Criado em ${dataHoraFormatada}` + "\x0A",
       "\x0A",
       "\x1B" + "\x45" + "\x0A", // bold off
       "\x1B" + "\x61" + "\x31",

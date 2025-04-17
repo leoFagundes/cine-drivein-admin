@@ -250,7 +250,10 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
               /> */}
               {connectedPrinter && (
                 <div className={styles.printButtons}>
-                  <Button onClick={handlePrintReport} label="Imprimir" />
+                  <Button
+                    onClick={() => handlePrintReport(false)}
+                    label="Imprimir"
+                  />
                   <Button
                     onClick={() => handlePrintReport(true)}
                     label="Imprimir Detalhado"

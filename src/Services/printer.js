@@ -204,7 +204,8 @@ export const printDailyReport = (
           const additionalReport = getAdditionalItemsToDetailedReport(items);
           data.push(
             "\x1B" + "\x61" + "\x30", // left align
-            `${items.length}x ${items[0].name} (${items[0].cod_item})` + "\x0A",
+            `${items.length}x ${items[0].name} - R$${items[0].value} (${items[0].cod_item})` +
+              "\x0A",
             `${additionalReport ? additionalReport.join("\x0A") + "\x0A" : ""}`,
             `${additionalReport ? "\x0A" : ""}`
           );

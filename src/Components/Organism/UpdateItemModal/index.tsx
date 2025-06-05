@@ -10,6 +10,8 @@ type ModalType = {
   isOpen: boolean;
   onClose: VoidFunction;
   currentItem?: Item;
+  items: Item[];
+  setItems: React.Dispatch<React.SetStateAction<Item[]>>;
   showAlert?: VoidFunction;
   setIsLoading?: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -26,6 +28,8 @@ const ERROR_COD_ITEM_ALREADY_EXIST = "Já existe um item com esse código.";
 export default function UpdateItemModal({
   onClose,
   isOpen,
+  items,
+  setItems,
   currentItem,
   setIsLoading,
 }: ModalType) {
@@ -36,6 +40,7 @@ export default function UpdateItemModal({
     type: "",
     description: "",
     value: 0,
+    visibleValueToClient: 0,
     quantity: 0,
     photo: "",
     isVisible: true,
@@ -119,12 +124,12 @@ export default function UpdateItemModal({
       newItemError.typeError = "";
     }
 
-    if (!isNaN(item.value) && item.value !== null && item.value !== 0) {
-      newItemError.valueError = "";
-    } else {
-      newItemError.valueError = ERROR_VALUE_MESSAGE;
-      isValid = false;
-    }
+    // if (item.value >= 0) {
+    //   newItemError.valueError = "";
+    // } else {
+    //   newItemError.valueError = ERROR_VALUE_MESSAGE;
+    //   isValid = false;
+    // }
 
     if (
       !isNaN(item.quantity) &&
@@ -167,7 +172,11 @@ export default function UpdateItemModal({
 
     if (currentItem?._id) {
       try {
-        await ItemRepositories.updateItem(currentItem?._id, item);
+        let updatedItem = { ...item };
+        if (isNaN(item.value)) {
+          updatedItem = { ...item, value: 0 };
+        }
+        await ItemRepositories.updateItem(currentItem._id, updatedItem);
         setIsLoading && setIsLoading(false);
         setItem({
           cod_item: "",
@@ -175,6 +184,7 @@ export default function UpdateItemModal({
           type: "",
           description: "",
           value: 0,
+          visibleValueToClient: 0,
           quantity: 0,
           photo: "",
           isVisible: true,
@@ -184,7 +194,14 @@ export default function UpdateItemModal({
           additionals_sweets: [],
         });
         console.log("Dados do item alterados com sucesso");
-        window.location.href = `${window.location.pathname}?from=201:ItemUpdated`;
+
+        setItems((prevItems) =>
+          prevItems.map((item) =>
+            item._id === currentItem._id ? { ...items, ...updatedItem } : item
+          )
+        );
+
+        // window.location.href = `${window.location.pathname}?from=201:ItemUpdated`;
       } catch (error) {
         setIsLoading && setIsLoading(false);
         console.error("Erro ao alterar dados do item:", error);
@@ -259,6 +276,21 @@ export default function UpdateItemModal({
                   },
                   type: "number",
                   errorLabel: itemError.valueError,
+                },
+                {
+                  value:
+                    item.visibleValueToClient && item.visibleValueToClient !== 0
+                      ? item.visibleValueToClient.toString()
+                      : "",
+                  placeholder: "Valor visivel para o cliente",
+                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                    setItem({
+                      ...item,
+                      visibleValueToClient: parseFloat(e.target.value),
+                    });
+                  },
+                  type: "number",
+                  errorLabel: "",
                 },
                 {
                   value: item.quantity !== 0 ? item.quantity.toString() : "",

@@ -34,6 +34,7 @@ export type Item = {
   type: string;
   description: string;
   value: number;
+  visibleValueToClient?: number;
   quantity: number;
   photo?: string | File;
   isVisible: boolean;

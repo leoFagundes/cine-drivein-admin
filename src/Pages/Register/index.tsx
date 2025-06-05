@@ -47,6 +47,7 @@ export default function Register() {
     type: "",
     description: "",
     value: 0,
+    visibleValueToClient: 0,
     quantity: 0,
     photo: "",
     isVisible: true,
@@ -187,7 +188,7 @@ export default function Register() {
       newItemError.typeError = "";
     }
 
-    if (item.value === 0) {
+    if (item.value < 0) {
       newItemError.valueError = ERROR_VALUE_MESSAGE;
       isValid = false;
     } else {
@@ -260,6 +261,7 @@ export default function Register() {
         : "";
 
       const newItem = { ...item, photo: imageName };
+
       await ItemRepositories.createItem(newItem);
       setIsItemActive(false);
       showAlert(ALERT_MESSAGE_ITEM_CREATED, "success");
@@ -269,6 +271,7 @@ export default function Register() {
         type: "",
         description: "",
         value: 0,
+        visibleValueToClient: 0,
         quantity: 0,
         photo: "",
         isVisible: true,
@@ -412,6 +415,21 @@ export default function Register() {
                 },
                 type: "number",
                 errorLabel: itemError.valueError,
+              },
+              {
+                value:
+                  item.visibleValueToClient && item.visibleValueToClient !== 0
+                    ? item.visibleValueToClient.toString()
+                    : "",
+                placeholder: "Valor visivel para o cliente",
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                  setItem({
+                    ...item,
+                    visibleValueToClient: parseFloat(e.target.value),
+                  });
+                },
+                type: "number",
+                errorLabel: "",
               },
               {
                 value: item.quantity !== 0 ? item.quantity.toString() : "",

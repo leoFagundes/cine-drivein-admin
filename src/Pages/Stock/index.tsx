@@ -83,6 +83,8 @@ export default function Stock() {
         const fetchedItems = await ItemRepositories.getItems();
         const fetchedSubItems =
           await AdditionalItemRepositories.getAdditionalItems();
+
+        console.log(fetchedItems.filter((item: Item) => item.type === "teste"));
         setUniqueTypes(types);
         setItems(fetchedItems);
         setSubItems(fetchedSubItems);
@@ -344,6 +346,8 @@ export default function Stock() {
       />
       <UpdateItemModal
         currentItem={curretnClickedItem}
+        items={items}
+        setItems={setItems}
         onClose={() => setIsUpdateModalOpen(false)}
         isOpen={isUpdateModalOpen}
         setIsLoading={setIsLoading}

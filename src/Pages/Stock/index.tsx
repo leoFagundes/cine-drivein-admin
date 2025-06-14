@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Text from "../../Components/Atoms/Text";
 import styles from "./Stock.module.scss";
 import ItemRepositories from "../../Services/repositories/ItemRepositories";
-import { AdditionalItem, Item } from "../../Types/types";
+import { AdditionalItem, Item, SiteConfig } from "../../Types/types";
 import { LoadingFullScreenTemplate } from "../../Components/Templates/LoadingFullScreenTemplate";
 import { Input } from "../../Components/Atoms/Input/Input";
 import { Dropdown } from "../../Components/Atoms/Dropdown";
@@ -14,6 +14,11 @@ import SubitemCard from "../../Components/Organism/SubitemCard";
 import UpdateItemModal from "../../Components/Organism/UpdateItemModal";
 import { useLocation, useNavigate } from "react-router";
 import AccessLimitedToAdmins from "../../Components/Organism/AccessLimitedToAdmins";
+import Button from "../../Components/Atoms/Button";
+import SiteConfigsRepository from "../../Services/repositories/SiteConfigsRepositorie";
+import { Reorder } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
 
 const sort_options = ["Crescente", "Decrescente"];
 const visibility_options = ["Visível", "Invisível"];
@@ -32,6 +37,9 @@ export default function Stock() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [curretnClickedItem, setCurrentClickedItem] = useState<Item>();
+  const [newOrderType, setNewOrderType] = useState("");
+  const [NewOrderTypeError, setNewOrderTypeError] = useState("");
+  const [OrderTypes, setOrderTypes] = useState<string[]>([]);
   const [alertInfo, setAlertInfo] = useState<{
     isOpen: boolean;
     message: string;
@@ -46,6 +54,7 @@ export default function Stock() {
   const [isActive, setIsActive] = useState({
     itemActive: true,
     subitemActive: false,
+    OrderTypeActive: false,
   });
   const location = useLocation();
   const navigate = useNavigate();
@@ -67,6 +76,85 @@ export default function Stock() {
       type: "",
     });
   };
+
+  const addTypeToOrder = async () => {
+    if (!uniqueTypes.includes(newOrderType)) {
+      setNewOrderTypeError("Valor inválido, esse tipo não existe.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const currentConfig: SiteConfig =
+        await SiteConfigsRepository.getConfigById("66e399ad3b867fd49fe79d0b");
+      await SiteConfigsRepository.updateConfig("66e399ad3b867fd49fe79d0b", {
+        ...currentConfig,
+        orderTypes: [...OrderTypes, newOrderType],
+      });
+      setNewOrderType("");
+      setOrderTypes([...OrderTypes, newOrderType]);
+    } catch (error) {
+      console.error("Não foi possível adicionar o tipo: ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const sendNewOrderTypes = async () => {
+    setIsLoading(true);
+    try {
+      const currentConfig: SiteConfig =
+        await SiteConfigsRepository.getConfigById("66e399ad3b867fd49fe79d0b");
+      await SiteConfigsRepository.updateConfig("66e399ad3b867fd49fe79d0b", {
+        ...currentConfig,
+        orderTypes: OrderTypes,
+      });
+    } catch (error) {
+      console.error("Não foi possível confirmar essa ordem: ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const deleteOrderType = async (typeToDelete: string) => {
+    setIsLoading(true);
+    try {
+      const updatedOrderTypes = OrderTypes.filter(
+        (type) => type !== typeToDelete
+      );
+      setOrderTypes(updatedOrderTypes);
+
+      const currentConfig: SiteConfig =
+        await SiteConfigsRepository.getConfigById("66e399ad3b867fd49fe79d0b");
+      await SiteConfigsRepository.updateConfig("66e399ad3b867fd49fe79d0b", {
+        ...currentConfig,
+        orderTypes: updatedOrderTypes,
+      });
+    } catch (error) {
+      console.error("Não foi possível deletar essa tipo da ordenação: ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setNewOrderTypeError("");
+  }, [newOrderType]);
+
+  useEffect(() => {
+    async function fetchOrderTypes() {
+      try {
+        const currentConfig: SiteConfig =
+          await SiteConfigsRepository.getConfigById("66e399ad3b867fd49fe79d0b");
+
+        setOrderTypes(currentConfig.orderTypes);
+      } catch (error) {
+        console.error("Não foi possível carregar os tipos ordenados: ", error);
+      }
+    }
+
+    fetchOrderTypes();
+  }, []);
 
   useEffect(() => {
     if (from === "201:ItemUpdated") {
@@ -206,6 +294,7 @@ export default function Stock() {
             setIsActive({
               itemActive: true,
               subitemActive: false,
+              OrderTypeActive: false,
             });
           }}
           className={isActive.itemActive ? styles.isActive : ""}
@@ -217,11 +306,24 @@ export default function Stock() {
             setIsActive({
               itemActive: false,
               subitemActive: true,
+              OrderTypeActive: false,
             });
           }}
           className={isActive.subitemActive ? styles.isActive : ""}
         >
           <Text fontWeight="semibold">Subitens</Text>
+        </div>
+        <div
+          onClick={() => {
+            setIsActive({
+              itemActive: false,
+              subitemActive: false,
+              OrderTypeActive: true,
+            });
+          }}
+          className={isActive.OrderTypeActive ? styles.isActive : ""}
+        >
+          <Text fontWeight="semibold">Ordem dos tipos</Text>
         </div>
       </div>
       <div className={styles.stockContent}>
@@ -306,26 +408,61 @@ export default function Stock() {
               ))}
             </div>
           </>
+        ) : isActive.OrderTypeActive ? (
+          <div className={styles.orderTypeContainer}>
+            <div className={styles.orderTypeForm}>
+              <Text fontWeight="semibold" fontSize="large">
+                Adicionar um novo tipo a ordenação
+              </Text>
+              <Input
+                placeholder="Tipo"
+                value={newOrderType}
+                onChange={(e) => setNewOrderType(e.target.value)}
+                suggestions={uniqueTypes}
+                onSelectSuggestion={(value) => setNewOrderType(value)}
+                errorLabel={NewOrderTypeError}
+              />
+              <Button
+                label="Adicionar"
+                onClick={() => addTypeToOrder()}
+                marginTop="0"
+              />
+            </div>
+            {OrderTypes.length > 0 && (
+              <Reorder.Group
+                axis="y"
+                values={OrderTypes}
+                onReorder={setOrderTypes}
+                className={styles.reorderContainer}
+              >
+                <Text fontWeight="semibold" fontSize="large">
+                  Ordem dos tipos
+                </Text>
+                {OrderTypes.map((type, index) => (
+                  <Reorder.Item
+                    key={type}
+                    value={type}
+                    className={styles.reorderItem}
+                  >
+                    {index}. {type}
+                    <FontAwesomeIcon
+                      size="lg"
+                      icon={faClose}
+                      onClick={() => deleteOrderType(type)}
+                    />
+                  </Reorder.Item>
+                ))}
+                <Button
+                  label="Confirmar Ordem"
+                  onClick={() => sendNewOrderTypes()}
+                  marginTop="0"
+                />
+              </Reorder.Group>
+            )}
+          </div>
         ) : (
           ""
         )}
-        {/* {isActive.subitemActive && (
-          <div className={styles.eyeWarning}>
-            <Text fontColor="gray-color" fontSize="small">
-              <i>
-                <strong>Observação:</strong> A funcionalidade de visibilidade (
-                <FontAwesomeIcon
-                  className={styles.deleteIcon}
-                  size={"sm"}
-                  icon={faEye}
-                  color="white"
-                />
-                ) para os <strong>subitens</strong> não irá retirar a opção do
-                menu, serve apenas como um controle local.
-              </i>
-            </Text>
-          </div>
-        )} */}
       </div>
       <DeleteModal
         onClick={() =>

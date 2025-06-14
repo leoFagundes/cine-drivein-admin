@@ -93,6 +93,7 @@ export interface SiteConfig {
     title: string;
     description: string[];
   };
+  orderTypes: string[];
 }
 
 export interface FilmProps {

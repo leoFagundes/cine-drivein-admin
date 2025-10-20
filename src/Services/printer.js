@@ -183,8 +183,10 @@ export const printDailyReport = (
             if (!additionalGrouped[category]) {
               additionalGrouped[category] = {};
             }
+
+            // Conta apenas uma vez por item, ignorando quantity
             additionalGrouped[category][value] =
-              (additionalGrouped[category][value] || 0) + item.quantity;
+              (additionalGrouped[category][value] || 0) + 1;
           }
         });
       });

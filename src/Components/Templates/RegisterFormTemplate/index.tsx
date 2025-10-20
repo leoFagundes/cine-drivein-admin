@@ -246,47 +246,49 @@ export default function RegisterFormTemplate({
   };
 
   const renderAdditionals = (additionals: any, key: string) => {
-    return additionals.map((item: any, index: number) => {
-      if (item.additionalItem._id === undefined) {
-        const additionalItem = additionalItems?.find(
-          (additional) => additional._id === item.additionalItem
-        );
-
-        if (additionalItem) {
-          return (
-            <div key={index} className={styles.item}>
-              <Text fontSize="mediumSmall">{additionalItem.name}</Text>
-              <FontAwesomeIcon
-                onMouseOver={() => handleMouseOver(index)}
-                onMouseOut={() => handleMouseOut(index)}
-                onClick={() => handleItemRemove(key, item.additionalItem)}
-                icon={faClose}
-              />
-            </div>
+    return additionals
+      .filter((item: any) => item && item.additionalItem)
+      .map((item: any, index: number) => {
+        if (item.additionalItem._id === undefined) {
+          const additionalItem = additionalItems?.find(
+            (additional) => additional._id === item.additionalItem
           );
-        }
-      } else {
-        const additionalItem = additionalItems?.find(
-          (additional) => additional._id === item.additionalItem._id
-        );
 
-        if (additionalItem) {
-          return (
-            <div key={index} className={styles.item}>
-              <Text fontSize="mediumSmall">{additionalItem.name}</Text>
-              <FontAwesomeIcon
-                onMouseOver={() => handleMouseOver(index)}
-                onMouseOut={() => handleMouseOut(index)}
-                onClick={() => handleItemRemove(key, item.additionalItem)}
-                icon={faClose}
-              />
-            </div>
+          if (additionalItem) {
+            return (
+              <div key={index} className={styles.item}>
+                <Text fontSize="mediumSmall">{additionalItem.name}</Text>
+                <FontAwesomeIcon
+                  onMouseOver={() => handleMouseOver(index)}
+                  onMouseOut={() => handleMouseOut(index)}
+                  onClick={() => handleItemRemove(key, item.additionalItem)}
+                  icon={faClose}
+                />
+              </div>
+            );
+          }
+        } else {
+          const additionalItem = additionalItems?.find(
+            (additional) => additional._id === item.additionalItem._id
           );
-        }
-      }
 
-      return null;
-    });
+          if (additionalItem) {
+            return (
+              <div key={index} className={styles.item}>
+                <Text fontSize="mediumSmall">{additionalItem.name}</Text>
+                <FontAwesomeIcon
+                  onMouseOver={() => handleMouseOver(index)}
+                  onMouseOut={() => handleMouseOut(index)}
+                  onClick={() => handleItemRemove(key, item.additionalItem)}
+                  icon={faClose}
+                />
+              </div>
+            );
+          }
+        }
+
+        return null;
+      });
   };
 
   return (
@@ -343,8 +345,15 @@ export default function RegisterFormTemplate({
                   fontSize="small"
                   fontWeight="semibold"
                 >
-                  ({itemWithSubitems?.additionals?.length}{" "}
-                  {itemWithSubitems?.additionals?.length === 1
+                  (
+                  {
+                    itemWithSubitems?.additionals?.filter(
+                      (item: any) => item && item.additionalItem
+                    ).length
+                  }{" "}
+                  {itemWithSubitems?.additionals?.filter(
+                    (item: any) => item && item.additionalItem
+                  ).length === 1
                     ? "opção escolhida"
                     : "opções escolhidas"}
                   )
@@ -366,8 +375,15 @@ export default function RegisterFormTemplate({
                   fontSize="small"
                   fontWeight="semibold"
                 >
-                  ({itemWithSubitems?.additionals_sauces?.length}{" "}
-                  {itemWithSubitems?.additionals_sauces?.length === 1
+                  (
+                  {
+                    itemWithSubitems?.additionals_sauces?.filter(
+                      (item: any) => item && item.additionalItem
+                    ).length
+                  }{" "}
+                  {itemWithSubitems?.additionals_sauces?.filter(
+                    (item: any) => item && item.additionalItem
+                  ).length === 1
                     ? "opção escolhida"
                     : "opções escolhidas"}
                   )
@@ -389,8 +405,15 @@ export default function RegisterFormTemplate({
                   fontSize="small"
                   fontWeight="semibold"
                 >
-                  ({itemWithSubitems?.additionals_drinks?.length}{" "}
-                  {itemWithSubitems?.additionals_drinks?.length === 1
+                  (
+                  {
+                    itemWithSubitems?.additionals_drinks?.filter(
+                      (item: any) => item && item.additionalItem
+                    ).length
+                  }{" "}
+                  {itemWithSubitems?.additionals_drinks?.filter(
+                    (item: any) => item && item.additionalItem
+                  ).length === 1
                     ? "opção escolhida"
                     : "opções escolhidas"}
                   )
@@ -412,8 +435,15 @@ export default function RegisterFormTemplate({
                   fontSize="small"
                   fontWeight="semibold"
                 >
-                  ({itemWithSubitems?.additionals_sweets?.length}{" "}
-                  {itemWithSubitems?.additionals_sweets?.length === 1
+                  (
+                  {
+                    itemWithSubitems?.additionals_sweets?.filter(
+                      (item: any) => item && item.additionalItem
+                    ).length
+                  }{" "}
+                  {itemWithSubitems?.additionals_sweets?.filter(
+                    (item: any) => item && item.additionalItem
+                  ).length === 1
                     ? "opção escolhida"
                     : "opções escolhidas"}
                   )

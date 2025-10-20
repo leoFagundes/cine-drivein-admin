@@ -39,11 +39,9 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
   }, []);
 
   const groupItemsByServiceFee = (orders: Order[]): GroupedItems => {
-    const groupedItems: GroupedItems = {
-      allItems: {},
-    };
+    const groupedItems: GroupedItems = { allItems: {} };
 
-    // Filtra apenas as orders com status "finished"
+    // Considera apenas os pedidos finalizados
     const finishedOrders = orders.filter(
       (order) => order.status === "finished"
     );
@@ -56,21 +54,37 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
           additional_sauce,
           additional_sweet,
         } = itemInOrder;
+
         const { cod_item, name, quantity } = itemInOrder.item;
 
         if (!groupedItems.allItems[cod_item]) {
           groupedItems.allItems[cod_item] = [];
         }
 
-        groupedItems.allItems[cod_item].push({
-          name,
-          quantity,
-          cod_item,
-          additional,
-          additional_drink,
-          additional_sauce,
-          additional_sweet,
-        });
+        // Verifica se já existe um item igual (mesmo cod_item e mesmos adicionais)
+        const existingItem = groupedItems.allItems[cod_item].find(
+          (i) =>
+            i.additional === additional &&
+            i.additional_drink === additional_drink &&
+            i.additional_sauce === additional_sauce &&
+            i.additional_sweet === additional_sweet
+        );
+
+        if (existingItem) {
+          // Se já existe, soma a quantidade
+          existingItem.quantity += quantity;
+        } else {
+          // Se não existe, adiciona novo
+          groupedItems.allItems[cod_item].push({
+            name,
+            quantity,
+            cod_item,
+            additional,
+            additional_drink,
+            additional_sauce,
+            additional_sweet,
+          });
+        }
       });
     });
 
@@ -220,15 +234,7 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
                 <Text fontSize="mediumLarge" fontWeight="bold">
                   Itens dos pedidos finalizados
                 </Text>
-                {/* {Object.entries(groupedItems.allItems).map(
-                  ([codItem, items]) => (
-                    <div key={codItem}>
-                      <Text fontSize="mediumSmall">
-                        {items.length}x {items[0].name} ( {items[0].cod_item} )
-                      </Text>
-                    </div>
-                  )
-                )} */}
+
                 {Object.entries(groupedItems.allItems)
                   .sort(
                     ([, itemsA], [, itemsB]) => itemsB.length - itemsA.length

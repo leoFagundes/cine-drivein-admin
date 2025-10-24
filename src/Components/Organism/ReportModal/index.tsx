@@ -2,7 +2,7 @@ import { MouseEvent, useEffect, useState } from "react";
 import styles from "./ReportModal.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { AdditionalItem, Order } from "../../../Types/types";
+import { AdditionalItem, Item, Order } from "../../../Types/types";
 import OrderRepositories from "../../../Services/repositories/OrderRepositories";
 import Button from "../../Atoms/Button";
 import Text from "../../Atoms/Text";
@@ -179,12 +179,62 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
   const groupedItems = groupItemsByServiceFee(orders);
 
   const handlePrintReport = (isDetailedReport = false) => {
-    printDailyReport(
-      connectedPrinter,
-      calculateSums(),
-      groupedItems,
-      isDetailedReport
-    );
+    const getAdditionalItemsToDetailedReport = (
+      itemsByCodeitem: GroupedItems["allItems"][string]
+    ): string[] => {
+      const additionalGrouped: Record<string, Record<string, number>> = {};
+
+      itemsByCodeitem.forEach((item) => {
+        const additions = [
+          { category: "Adicional", value: item.additional },
+          { category: "Molho", value: item.additional_sauce },
+          { category: "Bebida", value: item.additional_drink },
+          { category: "Doce", value: item.additional_sweet },
+        ];
+
+        additions.forEach(({ category, value }) => {
+          const validValue = value?.trim();
+          if (validValue && validValue !== "") {
+            if (!additionalGrouped[category]) {
+              additionalGrouped[category] = {};
+            }
+
+            // Conta apenas a ocorrência, ignorando quantity
+            additionalGrouped[category][validValue] =
+              (additionalGrouped[category][validValue] || 0) + 1;
+          }
+        });
+      });
+
+      // Monta as strings formatadas para exibição
+      return Object.entries(additionalGrouped).map(([category, items]) => {
+        const formattedItems = Object.entries(items)
+          .map(([name, count]) => `${count}x ${name}`)
+          .join(", ");
+        return `${category}: ${formattedItems}`;
+      });
+    };
+
+    Object.entries(groupedItems.allItems)
+      .sort(([, itemsA], [, itemsB]) => itemsB.length - itemsA.length)
+      .forEach(([codItem, items]) => {
+        console.log(items);
+        const additionalReport = getAdditionalItemsToDetailedReport(items);
+
+        console.log(
+          "\x1B" + "\x61" + "\x30", // alinhamento à esquerda
+          `${items.length}x ${items[0].name} (${items[0].cod_item})` + "\x0A",
+          additionalReport.length ? additionalReport.join("\x0A") + "\x0A" : "",
+          additionalReport.length ? "\x0A" : ""
+        );
+      });
+
+    // printDailyReport(
+    //   connectedPrinter,
+    //   calculateSums(),
+    //   groupedItems,
+    //   isDetailedReport
+    // );
   };
 
   return (
@@ -254,7 +304,7 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
                 label="Fechar"
                 backGroundColor="invalid-color"
               /> */}
-              {connectedPrinter && (
+              {!connectedPrinter && (
                 <div className={styles.printButtons}>
                   <Button
                     onClick={() => handlePrintReport(false)}

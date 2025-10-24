@@ -160,33 +160,26 @@ export const printDailyReport = (
       "------------------------------------------" + "\x0A" + "\x0A",
     ];
 
-    // Object.entries(groupedItems.allItems).forEach(([codItem, items]) => {
-    //   data.push(
-    //     "\x1B" + "\x61" + "\x30", // left align
-    //     `${items.length}x ${items[0].name} (${items[0].cod_item})` + "\x0A"
-    //   );
-    // });
-
     const getAdditionalItemsToDetailedReport = (itemsByCodeitem) => {
       const additionalGrouped = {};
 
       itemsByCodeitem.forEach((item) => {
         const additions = [
           { category: "Adicional", value: item.additional },
-          { category: "Bebida", value: item.additional_drink },
           { category: "Molho", value: item.additional_sauce },
+          { category: "Bebida", value: item.additional_drink },
           { category: "Doce", value: item.additional_sweet },
         ];
 
         additions.forEach(({ category, value }) => {
-          if (value) {
+          const validValue = value?.trim();
+          if (validValue && validValue !== "") {
             if (!additionalGrouped[category]) {
               additionalGrouped[category] = {};
             }
 
-            // Conta apenas uma vez por item, ignorando quantity
-            additionalGrouped[category][value] =
-              (additionalGrouped[category][value] || 0) + 1;
+            additionalGrouped[category][validValue] =
+              (additionalGrouped[category][validValue] || 0) + 1;
           }
         });
       });
@@ -203,12 +196,16 @@ export const printDailyReport = (
       Object.entries(groupedItems.allItems)
         .sort(([, itemsA], [, itemsB]) => itemsB.length - itemsA.length)
         .forEach(([codItem, items]) => {
+          console.log(items);
           const additionalReport = getAdditionalItemsToDetailedReport(items);
-          data.push(
+
+          console.log(
             "\x1B" + "\x61" + "\x30", // left align
             `${items.length}x ${items[0].name} (${items[0].cod_item})` + "\x0A",
-            `${additionalReport ? additionalReport.join("\x0A") + "\x0A" : ""}`,
-            `${additionalReport ? "\x0A" : ""}`
+            additionalReport.length
+              ? additionalReport.join("\x0A") + "\x0A"
+              : "",
+            additionalReport.length ? "\x0A" : ""
           );
         });
     } else {

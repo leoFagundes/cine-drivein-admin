@@ -343,7 +343,7 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
                 label="Fechar"
                 backGroundColor="invalid-color"
               /> */}
-              {!connectedPrinter && (
+              {connectedPrinter && (
                 <div className={styles.printButtons}>
                   <Button
                     onClick={() => handlePrintReport(false)}

@@ -108,8 +108,16 @@
     .printButtons {
       display: flex;
       flex-wrap: wrap;
+      justify-content: center;
       column-gap: 12px;
       gap: 8px;
+
+      .detailedCheckbox {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin: 6px 0;
+      }
     }
   }
 }

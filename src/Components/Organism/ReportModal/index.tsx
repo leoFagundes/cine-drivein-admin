@@ -10,6 +10,7 @@ import {
   connectWithPrinter,
   printDailyReport,
 } from "../../../Services/printer";
+import CheckBox from "../../Atoms/CheckBox";
 
 type ModalType = {
   isOpen: boolean;
@@ -33,6 +34,7 @@ type GroupedItems = {
 export default function ReportModal({ onClose, isOpen }: ModalType) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [connectedPrinter, setConnectedPrinter] = useState(null);
+  const [showDetailedReport, setShowDetailedReport] = useState(false);
 
   useEffect(() => {
     connectWithPrinter(setConnectedPrinter);
@@ -41,7 +43,6 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
   const groupItemsByServiceFee = (orders: Order[]): GroupedItems => {
     const groupedItems: GroupedItems = { allItems: {} };
 
-    // Considera apenas os pedidos finalizados
     const finishedOrders = orders.filter(
       (order) => order.status === "finished"
     );
@@ -55,13 +56,15 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
           additional_sweet,
         } = itemInOrder;
 
-        const { cod_item, name, quantity } = itemInOrder.item;
+        const { cod_item, name } = itemInOrder.item;
+
+        // Aqui a quantidade correta (1 por padrão)
+        const quantity = 1;
 
         if (!groupedItems.allItems[cod_item]) {
           groupedItems.allItems[cod_item] = [];
         }
 
-        // Verifica se já existe um item igual (mesmo cod_item e mesmos adicionais)
         const existingItem = groupedItems.allItems[cod_item].find(
           (i) =>
             i.additional === additional &&
@@ -71,10 +74,8 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
         );
 
         if (existingItem) {
-          // Se já existe, soma a quantidade
           existingItem.quantity += quantity;
         } else {
-          // Se não existe, adiciona novo
           groupedItems.allItems[cod_item].push({
             name,
             quantity,
@@ -89,6 +90,41 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
     });
 
     return groupedItems;
+  };
+
+  const getAdditionalItemsToDetailedReport = (
+    itemsByCodeitem: GroupedItems["allItems"][string]
+  ): string[] => {
+    const additionalGrouped: Record<string, Record<string, number>> = {};
+
+    itemsByCodeitem.forEach((item) => {
+      const additions = [
+        { category: "Adicional", value: item.additional },
+        { category: "Molho", value: item.additional_sauce },
+        { category: "Bebida", value: item.additional_drink },
+        { category: "Doce", value: item.additional_sweet },
+      ] as const;
+
+      additions.forEach(({ category, value }) => {
+        const validValue = value?.trim();
+        if (validValue) {
+          if (!additionalGrouped[category]) {
+            additionalGrouped[category] = {};
+          }
+
+          // soma usando a quantidade do item
+          additionalGrouped[category][validValue] =
+            (additionalGrouped[category][validValue] || 0) + item.quantity;
+        }
+      });
+    });
+
+    return Object.entries(additionalGrouped).map(([category, items]) => {
+      const formattedItems = Object.entries(items)
+        .map(([name, count]) => `${count}x ${name}`)
+        .join(", ");
+      return `${category}: ${formattedItems}`;
+    });
   };
 
   const handleCloseModalWith = (event: MouseEvent) => {
@@ -235,17 +271,70 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
                   Itens dos pedidos finalizados
                 </Text>
 
-                {Object.entries(groupedItems.allItems)
-                  .sort(
-                    ([, itemsA], [, itemsB]) => itemsB.length - itemsA.length
-                  )
-                  .map(([codItem, items]) => (
-                    <div key={codItem}>
-                      <Text fontSize="mediumSmall">
-                        {items.length}x {items[0].name} ( {items[0].cod_item} )
-                      </Text>
-                    </div>
-                  ))}
+                {showDetailedReport ? (
+                  <>
+                    {Object.entries(groupedItems.allItems)
+                      .sort(
+                        ([, itemsA], [, itemsB]) =>
+                          itemsB.reduce((sum, i) => sum + i.quantity, 0) -
+                          itemsA.reduce((sum, i) => sum + i.quantity, 0)
+                      )
+                      .map(([codItem, items]) => {
+                        const totalQuantity = items.reduce(
+                          (sum, i) => sum + i.quantity,
+                          0
+                        );
+
+                        const additionalReport =
+                          getAdditionalItemsToDetailedReport(items);
+
+                        return (
+                          <div key={codItem}>
+                            <Text fontSize="mediumSmall">
+                              {totalQuantity}x {items[0].name} ({" "}
+                              {items[0].cod_item} )
+                            </Text>
+                            <br />
+                            <div
+                              style={{
+                                whiteSpace: "pre-line",
+                                fontSize: "0.8rem",
+                                marginBottom: "4px",
+                              }}
+                            >
+                              {additionalReport.length
+                                ? additionalReport.join("\n") + "\n"
+                                : ""}
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </>
+                ) : (
+                  <>
+                    {Object.entries(groupedItems.allItems)
+                      .sort(
+                        ([, itemsA], [, itemsB]) =>
+                          itemsB.reduce((sum, i) => sum + i.quantity, 0) -
+                          itemsA.reduce((sum, i) => sum + i.quantity, 0)
+                      )
+                      .map(([codItem, items]) => {
+                        const totalQuantity = items.reduce(
+                          (sum, i) => sum + i.quantity,
+                          0
+                        );
+
+                        return (
+                          <div key={codItem}>
+                            <Text fontSize="mediumSmall">
+                              {totalQuantity}x {items[0].name} ({" "}
+                              {items[0].cod_item} )
+                            </Text>
+                          </div>
+                        );
+                      })}
+                  </>
+                )}
               </div>
             </div>
             <div className={styles.buttons}>
@@ -254,7 +343,7 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
                 label="Fechar"
                 backGroundColor="invalid-color"
               /> */}
-              {connectedPrinter && (
+              {!connectedPrinter && (
                 <div className={styles.printButtons}>
                   <Button
                     onClick={() => handlePrintReport(false)}
@@ -264,6 +353,17 @@ export default function ReportModal({ onClose, isOpen }: ModalType) {
                     onClick={() => handlePrintReport(true)}
                     label="Imprimir Detalhado"
                   />
+
+                  <div className={styles.detailedCheckbox}>
+                    <CheckBox
+                      checked={showDetailedReport}
+                      onChange={() =>
+                        setShowDetailedReport(!showDetailedReport)
+                      }
+                      id="showDetailedReport"
+                    />
+                    Mostrar relatório detalhado
+                  </div>
                 </div>
               )}
             </div>

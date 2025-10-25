@@ -173,13 +173,14 @@ export const printDailyReport = (
 
         additions.forEach(({ category, value }) => {
           const validValue = value?.trim();
-          if (validValue && validValue !== "") {
+          if (validValue) {
             if (!additionalGrouped[category]) {
               additionalGrouped[category] = {};
             }
 
+            // soma usando a quantidade do item, não apenas +1
             additionalGrouped[category][validValue] =
-              (additionalGrouped[category][validValue] || 0) + 1;
+              (additionalGrouped[category][validValue] || 0) + item.quantity;
           }
         });
       });
@@ -194,14 +195,19 @@ export const printDailyReport = (
 
     if (isDetailedReport) {
       Object.entries(groupedItems.allItems)
-        .sort(([, itemsA], [, itemsB]) => itemsB.length - itemsA.length)
+        .sort(
+          ([, itemsA], [, itemsB]) =>
+            itemsB.reduce((sum, i) => sum + i.quantity, 0) -
+            itemsA.reduce((sum, i) => sum + i.quantity, 0)
+        )
         .forEach(([codItem, items]) => {
-          console.log(items);
           const additionalReport = getAdditionalItemsToDetailedReport(items);
+          const totalQuantity = items.reduce((sum, i) => sum + i.quantity, 0);
 
-          console.log(
-            "\x1B" + "\x61" + "\x30", // left align
-            `${items.length}x ${items[0].name} (${items[0].cod_item})` + "\x0A",
+          data.push(
+            "\x1B" + "\x61" + "\x30", // alinhamento à esquerda
+            `${totalQuantity}x ${items[0].name} (${items[0].cod_item})` +
+              "\x0A",
             additionalReport.length
               ? additionalReport.join("\x0A") + "\x0A"
               : "",
@@ -210,11 +216,17 @@ export const printDailyReport = (
         });
     } else {
       Object.entries(groupedItems.allItems)
-        .sort(([, itemsA], [, itemsB]) => itemsB.length - itemsA.length)
+        .sort(
+          ([, itemsA], [, itemsB]) =>
+            itemsB.reduce((sum, i) => sum + i.quantity, 0) -
+            itemsA.reduce((sum, i) => sum + i.quantity, 0)
+        )
         .forEach(([codItem, items]) => {
+          const totalQuantity = items.reduce((sum, i) => sum + i.quantity, 0);
+
           data.push(
             "\x1B" + "\x61" + "\x30", // left align
-            `${items.length}x ${items[0].name} (${items[0].cod_item})` + "\x0A"
+            `${totalQuantity}x ${items[0].name} (${items[0].cod_item})` + "\x0A"
           );
         });
     }

@@ -4,7 +4,12 @@ import styles from "./Site.module.scss";
 import { FilmProps, SiteConfig } from "../../Types/types";
 import FilmRepositories from "../../Services/repositories/FilmRepositorie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faTrash,
+  faEdit,
+  faCopy,
+} from "@fortawesome/free-solid-svg-icons";
 import UpdateFilmModal from "../../Components/Organism/UpdateFilmModal";
 import { LoadingFullScreenTemplate } from "../../Components/Templates/LoadingFullScreenTemplate";
 import DeleteModal from "../../Components/Organism/DeleteModal";
@@ -34,6 +39,11 @@ export default function Site() {
     popUpImage: false,
     popUpText: false,
   });
+  const [isConfigAlertOpen, setIsConfigAlertOpen] = useState(false);
+  const [configAlertMessage, setConfigAlertMessage] = useState("");
+  const [copyModalOpen, setCopyModalOpen] = useState(false);
+  const [copySourceFilm, setCopySourceFilm] = useState<FilmProps | null>(null);
+  const [copyTarget, setCopyTarget] = useState("");
 
   const handleClosedConfigClicked = async () => {
     setIsLoading(true);
@@ -48,6 +58,13 @@ export default function Site() {
         ...siteConfigsData,
         isClosed: !siteConfigsChecks.isClosed,
       });
+
+      setConfigAlertMessage(
+        !siteConfigsChecks.isClosed
+          ? "Aviso de site fechado ativado!"
+          : "Aviso de site fechado desativado!"
+      );
+      setIsConfigAlertOpen(true);
 
       setSiteConfigsChecks((prevState) => ({
         ...siteConfigsChecks,
@@ -71,6 +88,14 @@ export default function Site() {
       await SiteConfigsRepository.updateConfig("66e399ad3b867fd49fe79d0b", {
         isEvent: siteConfigsChecks.isChristmas ? "default" : "christmas",
       });
+
+      setConfigAlertMessage(
+        siteConfigsChecks.isChristmas
+          ? "Tema de Natal desativado!"
+          : "Tema de Natal ativado!"
+      );
+      setIsConfigAlertOpen(true);
+
       setSiteConfigsChecks({
         ...siteConfigsChecks,
         isChristmas: !siteConfigsChecks.isChristmas,
@@ -95,6 +120,13 @@ export default function Site() {
       await SiteConfigsRepository.updateConfig("66e399ad3b867fd49fe79d0b", {
         isEvent: siteConfigsChecks.isHalloween ? "default" : "halloween",
       });
+      setConfigAlertMessage(
+        siteConfigsChecks.isHalloween
+          ? "Tema de Halloween desativado!"
+          : "Tema de Halloween ativado!"
+      );
+      setIsConfigAlertOpen(true);
+
       setSiteConfigsChecks({
         ...siteConfigsChecks,
         isHalloween: !siteConfigsChecks.isHalloween,
@@ -119,6 +151,13 @@ export default function Site() {
       await SiteConfigsRepository.updateConfig("66e399ad3b867fd49fe79d0b", {
         isEvent: siteConfigsChecks.isEaster ? "default" : "easter",
       });
+      setConfigAlertMessage(
+        siteConfigsChecks.isEaster
+          ? "Tema de Páscoa desativado!"
+          : "Tema de Páscoa ativado!"
+      );
+      setIsConfigAlertOpen(true);
+
       setSiteConfigsChecks({
         ...siteConfigsChecks,
         isEaster: !siteConfigsChecks.isEaster,
@@ -137,6 +176,13 @@ export default function Site() {
 
   const handlePopUpImageConfigClicked = async () => {
     try {
+      setConfigAlertMessage(
+        !siteConfigsChecks.popUpImage
+          ? "Popup de imagem ativado!"
+          : "Popup de imagem desativado!"
+      );
+      setIsConfigAlertOpen(true);
+
       setSiteConfigsChecks({
         ...siteConfigsChecks,
         popUpImage: !siteConfigsChecks.popUpImage,
@@ -158,6 +204,8 @@ export default function Site() {
       await SiteConfigsRepository.updateConfig("66e399ad3b867fd49fe79d0b", {
         popUpImage: imageName,
       });
+      setConfigAlertMessage("Imagem enviada com sucesso!");
+      setIsConfigAlertOpen(true);
 
       if (siteConfigsData)
         setSiteConfigsData({
@@ -188,6 +236,9 @@ export default function Site() {
           popUpImage: "",
         });
 
+        setConfigAlertMessage("Imagem removida!");
+        setIsConfigAlertOpen(true);
+
         setSiteConfigsData({
           ...siteConfigsData,
           popUpImage: "",
@@ -200,6 +251,52 @@ export default function Site() {
       }
     } catch (error) {
       console.error("Erro ao deletar imagem: ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCopySubmit = async () => {
+    if (!copySourceFilm || !copyTarget) return;
+
+    setIsLoading(true);
+
+    try {
+      const targetFilm = data?.find((film) => film.screening === copyTarget);
+
+      if (!targetFilm) {
+        console.warn("Filme destino não encontrado");
+        return;
+      }
+
+      await FilmRepositories.updateFilm(targetFilm._id, {
+        title: copySourceFilm.title,
+        showtime: copySourceFilm.showtime,
+        image: copySourceFilm.image,
+        classification: copySourceFilm.classification,
+        synopsis: copySourceFilm.synopsis,
+        director: copySourceFilm.director,
+        writer: copySourceFilm.writer,
+        cast: copySourceFilm.cast,
+        genres: copySourceFilm.genres,
+        duration: copySourceFilm.duration,
+        language: copySourceFilm.language,
+        displayDate: copySourceFilm.displayDate,
+        trailer: copySourceFilm.trailer,
+      });
+
+      setConfigAlertMessage(
+        `Copiado de ${copySourceFilm.screening} para ${copyTarget}!`
+      );
+      setIsConfigAlertOpen(true);
+
+      setCopyModalOpen(false);
+
+      // Atualiza a lista
+      const updated = await FilmRepositories.getFilms();
+      setData(updated);
+    } catch (error) {
+      console.error("Erro ao copiar sessão: ", error);
     } finally {
       setIsLoading(false);
     }
@@ -301,6 +398,16 @@ export default function Site() {
                     <FontAwesomeIcon
                       className={styles.icon}
                       size="lg"
+                      icon={faCopy}
+                      onClick={() => {
+                        setCopySourceFilm(film);
+                        setCopyModalOpen(true);
+                      }}
+                    />
+
+                    <FontAwesomeIcon
+                      className={styles.icon}
+                      size="lg"
                       onClick={() => handleUpdate(film)}
                       icon={faEdit}
                     />
@@ -335,10 +442,14 @@ export default function Site() {
       </section>
       <section className={styles.configs}>
         <h2>Configurações extras</h2>
-        <div className={styles.captions}>
-          <div onClick={handleClosedConfigClicked}>
+
+        <div className={styles.configGrid}>
+          <div
+            className={styles.configCard}
+            onClick={handleClosedConfigClicked}
+          >
             <Caption
-              label="Ativar aviso: Cine Drivin-in Fechado"
+              label="Ativar aviso: Cine Drive-in Fechado"
               onClickCheckBox={handleClosedConfigClicked}
               checkboxLeft={
                 <CheckBox
@@ -349,56 +460,11 @@ export default function Site() {
               }
             />
           </div>
+
           <div
-            className={styles.popupImageContent}
-            onClick={handlePopUpImageConfigClicked}
+            className={styles.configCard}
+            onClick={handleChristmasConfigClicked}
           >
-            <Caption
-              marginBottom={siteConfigsChecks.popUpImage ? "16px" : "0"}
-              label="Adicionar pop-up de imagem"
-              onClickCheckBox={handlePopUpImageConfigClicked}
-              checkboxLeft={
-                <CheckBox
-                  id="popupImage"
-                  checked={siteConfigsChecks.popUpImage}
-                  onChange={() => {}}
-                />
-              }
-            />
-            {siteConfigsChecks.popUpImage && (
-              <>
-                {siteConfigsData?.popUpImage ? (
-                  <div
-                    className={styles.imageExist}
-                    onClick={(e) => handleDeleteImage(e)}
-                  >
-                    <FontAwesomeIcon size="lg" icon={faTrash} />
-                    <p>{siteConfigsData.popUpImage as string}</p>
-                  </div>
-                ) : (
-                  <div
-                    className={styles.imageDoesNotExist}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Input
-                      value=""
-                      placeholder="Foto"
-                      type="file"
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setImageFile(e?.target?.files?.[0] as File);
-                      }}
-                    />
-                    <Button
-                      marginTop="6px"
-                      label="Enviar"
-                      onClick={handleUpdateImage}
-                    />
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-          <div onClick={handleChristmasConfigClicked}>
             <Caption
               label="É Natal"
               onClickCheckBox={handleChristmasConfigClicked}
@@ -411,7 +477,11 @@ export default function Site() {
               }
             />
           </div>
-          <div onClick={handleHalloweenConfigClicked}>
+
+          <div
+            className={styles.configCard}
+            onClick={handleHalloweenConfigClicked}
+          >
             <Caption
               label="É Halloween"
               onClickCheckBox={handleHalloweenConfigClicked}
@@ -424,7 +494,11 @@ export default function Site() {
               }
             />
           </div>
-          <div onClick={handleEasterConfigClicked}>
+
+          <div
+            className={styles.configCard}
+            onClick={handleEasterConfigClicked}
+          >
             <Caption
               label="É Páscoa"
               onClickCheckBox={handleEasterConfigClicked}
@@ -437,21 +511,88 @@ export default function Site() {
               }
             />
           </div>
-          {/* <div onClick={handlePopUpTextConfigClicked}>
-            <Caption
-              label="Adicionar pop-up de texto"
-              onClickCheckBox={handlePopUpTextConfigClicked}
-              checkboxLeft={
-                <CheckBox
-                  id="popupText"
-                  checked={siteConfigsChecks.popUpText}
-                  onChange={() => {}}
-                />
-              }
-            />
-          </div> */}
+
+          <div className={styles.configCardWide}>
+            <div onClick={handlePopUpImageConfigClicked}>
+              <Caption
+                marginBottom={siteConfigsChecks.popUpImage ? "16px" : "0"}
+                label="Adicionar pop-up de imagem"
+                onClickCheckBox={handlePopUpImageConfigClicked}
+                checkboxLeft={
+                  <CheckBox
+                    id="popupImage"
+                    checked={siteConfigsChecks.popUpImage}
+                    onChange={() => {}}
+                  />
+                }
+              />
+            </div>
+
+            {siteConfigsChecks.popUpImage && (
+              <>
+                {siteConfigsData?.popUpImage ? (
+                  <div
+                    className={styles.imageExist}
+                    onClick={(e) => handleDeleteImage(e)}
+                  >
+                    <FontAwesomeIcon size="lg" icon={faTrash} />
+                    <p>{siteConfigsData.popUpImage as string}</p>
+                  </div>
+                ) : (
+                  <div className={styles.imageDoesNotExist}>
+                    <Input
+                      value=""
+                      placeholder="Foto"
+                      type="file"
+                      onChange={(e) =>
+                        setImageFile(e?.target?.files?.[0] as File)
+                      }
+                    />
+                    <Button
+                      marginTop="6px"
+                      label="Enviar"
+                      onClick={handleUpdateImage}
+                    />
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </section>
+
+      {copyModalOpen && (
+        <div className={styles.copyModalOverlay}>
+          <div className={styles.copyModal}>
+            <h3>Copiar dados de {copySourceFilm?.screening}</h3>
+
+            <p>Selecione a sessão destino:</p>
+
+            <select
+              onChange={(e) => setCopyTarget(e.target.value)}
+              className={styles.selectSession}
+            >
+              <option value="">Selecione</option>
+              {["Sessão 1", "Sessão 2", "Sessão 3", "Sessão 4"]
+                .filter((s) => s !== copySourceFilm?.screening)
+                .map((session) => (
+                  <option key={session} value={session}>
+                    {session}
+                  </option>
+                ))}
+            </select>
+
+            <div className={styles.modalActions}>
+              <Button
+                label="Cancelar"
+                onClick={() => setCopyModalOpen(false)}
+              />
+              <Button label="Copiar" onClick={handleCopySubmit} />
+            </div>
+          </div>
+        </div>
+      )}
+
       <DeleteModal
         itemType={`filme (${currentFilm?.title})`}
         onClick={() =>
@@ -473,6 +614,15 @@ export default function Site() {
         setData={setData}
         setIsAlertOpen={setIsAlertOpen}
       />
+      <Alert
+        type="success"
+        isAlertOpen={isConfigAlertOpen}
+        setIsAlertOpen={setIsConfigAlertOpen}
+        onClose={() => setIsConfigAlertOpen(false)}
+        message={configAlertMessage}
+        alertDisplayTime={2500}
+      />
+
       <Alert
         type="success"
         isAlertOpen={isAlertOpen}

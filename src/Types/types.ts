@@ -101,7 +101,7 @@ export interface FilmProps {
   title: string;
   showtime: string;
   image: string;
-  classification: "L" | "12" | "14" | "16" | "18" | "";
+  classification: "L" | "6" | "12" | "14" | "16" | "18" | "";
   synopsis: string;
   director: string;
   writer: string[];

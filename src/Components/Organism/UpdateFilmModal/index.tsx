@@ -72,6 +72,9 @@ export default function UpdateFilmModal({
       classification: "L",
     },
     {
+      classification: "6",
+    },
+    {
       classification: "10",
     },
     {
